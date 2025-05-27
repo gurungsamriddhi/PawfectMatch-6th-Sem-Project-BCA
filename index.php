@@ -1,3 +1,8 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="assests/css/style.css">
+    </head>
+
 <?php
 // index.php — Main Router
 
@@ -25,3 +30,6 @@ switch ($page) {
         echo "404 - Page Not Found";
         break;
 }
+?>
+
+</html>
