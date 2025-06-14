@@ -242,9 +242,10 @@ a {
       border-color: white;
       color: #ffffff; 
     }
-
+/*---------------------------------------------Hero section-----------*/
 .section-title {
-  color: #2f2f2f; }
+  color: #2f2f2f; 
+}
 
 .product-section {
   padding: 7rem 0; }
