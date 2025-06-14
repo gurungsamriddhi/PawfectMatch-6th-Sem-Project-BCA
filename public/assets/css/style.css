@@ -242,7 +242,7 @@ a {
       border-color: white;
       color: #ffffff; 
     }
-/*---------------------------------------------Hero section-----------*/
+/*---------------------------------------------Hero section-----------------------------------*/
 .section-title {
   color: #2f2f2f; 
 }
@@ -783,4 +783,5 @@ textarea {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: rgba(59, 93, 80, 0.2); }
+    background: rgba(59, 93, 80, 0.2); 
+  }
