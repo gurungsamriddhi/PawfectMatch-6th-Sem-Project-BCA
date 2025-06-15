@@ -13,4 +13,8 @@ class HomeController {
     public function adoptionprocess(){
         include 'app/views/adoptionprocess.php';
     }
+    public function volunteer() {
+        include 'app/views/volunteer.php';
+}
+
 }

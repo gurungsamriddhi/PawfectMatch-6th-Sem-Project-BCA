@@ -1,20 +1,19 @@
 <?php include 'app/views/partials/header.php'; ?>
 <main>
-  <!-- Start Hero Section -->
+  <!-- Start Contact us Hero Section -->
   <div class="hero">
     <div class="container">
-      <div class="row justify-content-between">
+      <div class="row justify-content-between mb-5">
         <div class="col-lg-5">
           <div class="intro-excerpt">
             <h1>Let's Get in Touch</h1>
             <p class="mb-4">Have questions about adopting a pet, making a donation, or rescuing an animal in need? We’d love to hear from you!</p>
-            <a href="index.php?page=contactus" class="btn btn-secondary me-2">Explore</a>
-            <a href="#" class="btn btn-white-outline">Donate</a>
           </div>
         </div>
+        
         <div class="col-lg-7">
           <div class="hero-img-wrap">
-            <img src="public/assets/images/couch.png" class="img-fluid" alt="Hero Image">
+            <img src="public/assets/images/herosection.png" class="img-fluid" alt="Hero Image">
           </div>
         </div>
       </div>
