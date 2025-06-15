@@ -10,7 +10,8 @@ body {
   line-height: 28px;
   color: #6a6a6a;
   font-size: 14px;
-  background-color: #eff2f1; 
+  background-color: #eff2f1;
+  padding-top: 68px; 
 }
 /*------------------------------------link--------------------------------------*/
 a {
@@ -783,3 +784,6 @@ textarea {
     height: 50px;
     border-radius: 50%;
     background: rgba(59, 93, 80, 0.2); }
+    
+
+
