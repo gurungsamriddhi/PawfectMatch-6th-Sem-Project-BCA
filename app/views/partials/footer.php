@@ -63,7 +63,7 @@
 
 							<div class="col-6 col-sm-6 col-md-3">
 								<ul class="list-unstyled">
-									<li><a href="#">Volunteer</a></li>
+									<li><a href="index.php?page=volunteer">Volunteer</a></li>
 									<li><a href="#">Rescue Centers</a></li>
 									<li><a href="#">Leadership</a></li>
 									<li><a href="#">Privacy Policy</a></li>
@@ -93,9 +93,9 @@
 		<!-- End Footer Section -->	
 
 
-		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/tiny-slider.js"></script>
-		<script src="js/custom.js"></script>
+		<script src="public/assets/js/bootstrap.bundle.min.js"></script>
+		<script src="public/assets/js/tiny-slider.js"></script>
+		<script src="public/assets/js/custom.js"></script>
 	</body>
 
 </html>

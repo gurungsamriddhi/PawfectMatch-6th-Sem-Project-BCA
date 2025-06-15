@@ -30,6 +30,15 @@
         case 'register':
             (new UserController)->showRegisterForm();
             break;
+
+        case 'volunteer':
+            (new HomeController)->volunteer();
+            break;
+
+        case 'petdetails':
+            (new PetController)-> showpetdetails();
+        break;
+
         default:
             echo "404 - Page Not Found";
             break;

@@ -22,7 +22,9 @@
 	<body>
 
 		<!-- Start Header/Navigation -->
-		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark">
+
+		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark  sticky-top">
+
 
 			<div class="container">
 				<a class="navbar-brand" href="index.php?page=home">PawfectMatch</a>
@@ -39,11 +41,15 @@
 						<li class="nav-item <?=($current_page=='browse')?'active':''?>">
                             <a class="nav-link" href="index.php?page=browse">Browse</a>
                         </li>
-						<li class="nav-item <?=($current_page=='aboutus')?'active':''?>">
-                            <a class="nav-link" href="index.php?page=aboutus">About us</a>
-                        </li>
+						
 						<li class="nav-item <?=($current_page=='adoptionprocess')? 'active' :''?>">
                             <a class="nav-link" href="index.php?page=adoptionprocess">Adoption Process</a>
+                        </li>
+						<li class="nav-item <?=($current_page=='volunteer')? 'active' :''?>">
+                            <a class="nav-link" href="index.php?page=volunteer">Volunteer</a>
+                        </li>
+						<li class="nav-item <?=($current_page=='aboutus')?'active':''?>">
+                            <a class="nav-link" href="index.php?page=aboutus">About us</a>
                         </li>
 						<li class="nav-item <?=($current_page=='contactus')?'active' :''?>">
                             <a class="nav-link" href="index.php?page=contactus">Contact us</a>
@@ -51,7 +57,7 @@
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="index.php?page=register"><img src="public/assets/images/user.svg"></a></li>
+						<li><a class="nav-link" href="index.php?page=register" ><img src="public/assets/images/user.svg"></a></li>
 						
 					</ul>
 				</div>
