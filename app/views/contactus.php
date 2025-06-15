@@ -22,7 +22,7 @@
   <!-- End Hero Section -->
 
   <!-- Start Contact Section -->
-  <div class="untree_co-section mt-0 pt-5">
+  <div class="co-section">
     <div class="container">
       <div class="block">
         <div class="row justify-content-center">
@@ -121,6 +121,7 @@
       </div>
     </div>
   </div>
+</div>
   <!-- End Contact Section -->
 </main>
 

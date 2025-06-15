@@ -34,7 +34,6 @@ a {
   }
 /*------------------------------------link--------------------------------------*/
 
-
 /*------------------------------------Navbar-header------------------------------*/
 .custom-navbar {
   background:#436c5d!important;
@@ -312,8 +311,10 @@ a {
      }
 /*---------------------------------------WHy choose us-------------------------------*/
 .why-choose-section {
-  /* padding: 7rem 0; } */
-  padding-top:50px;
+  padding-top: 5rem ;
+  padding-bottom: 3rem;
+  background-color: #e2e9e8;
+
 }
   .why-choose-section .img-wrap {
     position: relative; 
@@ -329,7 +330,7 @@ a {
       top: -5px;
       left: 3px;
       transform: 0;
-      z-index: -1; 
+      z-index: 0; 
     }
     .why-choose-section .img-wrap img {
       border-radius: 20px;
@@ -354,9 +355,9 @@ a {
       height: 33px;
       position: absolute;
       background: rgba(59, 93, 80, 0.2);
-      border-radius: 50%;
-      right: -10px;
-      bottom:-1.5px;
+      border-radius: 30%;
+      right: -7px;
+      bottom: 0; 
     }
     .feature .icon i {
     font-weight: bold;
@@ -398,9 +399,10 @@ a {
       top: -28px;
      }
 
-
 .testimonial-section {
-  padding: 8rem 0 7rem 0; }
+  padding: 1rem 0 7rem 0; 
+  background-color: #e2e9e8;
+}
 
 .testimonial-slider-wrap {
   position: relative; }
@@ -632,10 +634,9 @@ a {
 
     }
 /*-------------------------------------------Footer------------------------------------------*/
-.untree_co-section {
-  /* padding: 7rem 0; } */
-padding-top:0px 
-}
+.co-section {
+  padding: 2rem 0;
+ }
 
 .form-control {
   height: 50px;
@@ -723,7 +724,12 @@ textarea {
     height: 50px;
     border-radius: 50%;
 
-    background: rgba(59, 93, 80, 0.2); }
+    background: rgba(59, 93, 80, 0.2);
+   }
+   .br-20 {
+  border-radius: 20px;
+}
     
+
 
 
