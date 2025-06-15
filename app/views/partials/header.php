@@ -22,7 +22,9 @@
 	<body>
 
 		<!-- Start Header/Navigation -->
+
 		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark  sticky-top">
+
 
 			<div class="container">
 				<a class="navbar-brand" href="index.php?page=home">PawfectMatch</a>
