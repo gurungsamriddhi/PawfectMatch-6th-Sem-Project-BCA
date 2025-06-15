@@ -16,7 +16,7 @@
 				</div>
 				<div class="col-lg-7">
 					<div class="hero-img-wrap">
-						<img src="public/assets/images/pets.png" class="img-fluid">
+						<img src="public/assets/images/herosection.png" class="img-fluid">
 					</div>
 
 				</div>
@@ -25,8 +25,8 @@
 	</div>
 	<!-- End Hero Section -->
 
-	<!-- Start Product Section -->
-	<div class="product-section">
+	<!-- Start pet Section -->
+	<div class="pet-section">
 		<div class="container">
 			<div class="row">
 
@@ -39,27 +39,24 @@
 						<li>Ready for adoption</li>
 					</ul>
 					</p>
-					<p><a href="shop.html" class="btn">Explore</a></p>
+					<p><a href="index.php?page=browse" class="btn">Explore</a></p>
 				</div>
 				<!-- End Column 1 -->
 
 				<!-- Start Column 2 -->
 				<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-					<a class="product-item" href="cart.html">
-						<img src="public/assets/images/pet-1.jpg" class="img-fluid product-thumbnail">
-						<h3 class="product-title">Dexter</h3>
-						\
-
-
+					<a class="pet-item" href="index.php?page=petdetails">
+						<img src="public/assets/images/pet-1.jpg" class="img-fluid pet-thumbnail">
+						<h3 class="pet-title">Dexter</h3>
 					</a>
 				</div>
 				<!-- End Column 2 -->
 
 				<!-- Start Column 3 -->
 				<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-					<a class="product-item" href="cart.html">
-						<img src="public/assets/images/pet-2.png" class="img-fluid product-thumbnail">
-						<h3 class="product-title">Milo</h3>
+					<a class="pet-item" href="index.php?page=petdetails">
+						<img src="public/assets/images/pet-2.png" class="img-fluid pet-thumbnail">
+						<h3 class="pet-title">Milo</h3>
 
 
 					</a>
@@ -68,9 +65,9 @@
 
 				<!-- Start Column 4 -->
 				<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-					<a class="product-item" href="cart.html">
-						<img src="public/assets/images/pet-3.jpg" class="img-fluid product-thumbnail">
-						<h3 class="product-title">Nile</h3>
+					<a class="pet-item" href="index.php?page=petdetails">
+						<img src="public/assets/images/pet-3.jpg" class="img-fluid pet-thumbnail">
+						<h3 class="pet-title">Nile</h3>
 
 
 					</a>
@@ -80,63 +77,57 @@
 			</div>
 		</div>
 	</div>
-	<!-- End Product Section -->
+	<!-- End pet Section -->
 
 	<!-- Start Why Choose Us Section -->
 	<div class="why-choose-section">
 		<div class="container">
 			<div class="row justify-content-between">
 				<div class="col-lg-6">
-					<h2 class="section-title">Why Choose Us</h2>
-					<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+					<h2 class="section-title">Why Choose PawfectMatch?</h2>
+					<p>At PawfectMatch, we believe every pet deserves a loving home. We carefully match pets with compassionate families,
+						ensuring a safe, happy, and lifelong bond. With our trusted adoption process and dedicated support, finding your
+						perfect furry friend has never been easier.</p>
+
 
 					<div class="row my-5">
-						<div class="col-6 col-md-6">
+						<div class="col-12">
 							<div class="feature">
 								<div class="icon">
-									<img src="images/truck.svg" alt="Image" class="imf-fluid">
+									<i class="fa-solid fa-heart"></i>
 								</div>
-								<h3>Fast &amp; Free Shipping</h3>
-								<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								<h3>Fast &amp; Kind to everyone</h3>
+								<p>We ensure a smooth and compassionate experience for every visitor, making the adoption process quick and friendly.</p>
 							</div>
 						</div>
 
-						<div class="col-6 col-md-6">
+						<div class="col-12">
 							<div class="feature">
 								<div class="icon">
-									<img src="images/bag.svg" alt="Image" class="imf-fluid">
+									<i class="fa-solid fa-paw"></i>
 								</div>
-								<h3>Easy to Shop</h3>
-								<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								<h3>Advocate Adoption</h3>
+								 <p>Our mission is to promote pet adoption and raise awareness about the importance of giving animals a loving home.</p>
 							</div>
 						</div>
 
-						<div class="col-6 col-md-6">
+						<div class="col-12">
 							<div class="feature">
 								<div class="icon">
-									<img src="images/support.svg" alt="Image" class="imf-fluid">
+									<i class="fa-solid fa-house"></i>
 								</div>
-								<h3>24/7 Support</h3>
-								<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+								<h3>Responsible Rehoming</h3>
+								  <p>We carefully match pets with families to ensure lifelong, responsible care and happy homes for every animal.</p>
 							</div>
 						</div>
 
-						<div class="col-6 col-md-6">
-							<div class="feature">
-								<div class="icon">
-									<img src="images/return.svg" alt="Image" class="imf-fluid">
-								</div>
-								<h3>Hassle Free Returns</h3>
-								<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
-							</div>
-						</div>
 
 					</div>
 				</div>
 
 				<div class="col-lg-5">
 					<div class="img-wrap">
-						<img src="images/why-choose-us-img.jpg" alt="Image" class="img-fluid">
+						<img src="public/assets/images/why-choose-us-img.png" alt="Image" class="img-fluid">
 					</div>
 				</div>
 
@@ -173,15 +164,15 @@
 	</div>
 	<!-- End We Help Section -->
 
-	<!-- Start Popular Product -->
-	<div class="popular-product">
+	<!-- Start Popular pet -->
+	<div class="popular-pet">
 		<div class="container">
 			<div class="row">
 
 				<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
-					<div class="product-item-sm d-flex">
+					<div class="pet-item-sm d-flex">
 						<div class="thumbnail">
-							<img src="images/product-1.png" alt="Image" class="img-fluid">
+							<img src="images/pet-1.png" alt="Image" class="img-fluid">
 						</div>
 						<div class="pt-3">
 							<h3>Nordic Chair</h3>
@@ -192,9 +183,9 @@
 				</div>
 
 				<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
-					<div class="product-item-sm d-flex">
+					<div class="pet-item-sm d-flex">
 						<div class="thumbnail">
-							<img src="images/product-2.png" alt="Image" class="img-fluid">
+							<img src="images/pet-2.png" alt="Image" class="img-fluid">
 						</div>
 						<div class="pt-3">
 							<h3>Kruzo Aero Chair</h3>
@@ -205,9 +196,9 @@
 				</div>
 
 				<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
-					<div class="product-item-sm d-flex">
+					<div class="pet-item-sm d-flex">
 						<div class="thumbnail">
-							<img src="images/product-3.png" alt="Image" class="img-fluid">
+							<img src="images/pet-3.png" alt="Image" class="img-fluid">
 						</div>
 						<div class="pt-3">
 							<h3>Ergonomic Chair</h3>
@@ -220,7 +211,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- End Popular Product -->
+	<!-- End Popular pet -->
 
 	<!-- Start Testimonial Slider -->
 	<div class="testimonial-section">

@@ -93,9 +93,9 @@
 		<!-- End Footer Section -->	
 
 
-		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/tiny-slider.js"></script>
-		<script src="js/custom.js"></script>
+		<script src="public/assets/js/bootstrap.bundle.min.js"></script>
+		<script src="public/assets/js/tiny-slider.js"></script>
+		<script src="public/assets/js/custom.js"></script>
 	</body>
 
 </html>

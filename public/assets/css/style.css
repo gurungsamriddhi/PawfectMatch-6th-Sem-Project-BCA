@@ -1,5 +1,7 @@
-
+/*----importing inter font from google fonts ,weight,regular,medium,semibold,bold,extrabold,swap to load fallback font----*/
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Edu+NSW+ACT+Cursive:wght@500&display=swap');
+
 body {
   overflow-x: hidden;
   position: relative; }
@@ -36,12 +38,14 @@ a {
   background:#436c5d!important;
   padding-top: 12px;
   padding-bottom: 12px; 
+  
 }
 
   .custom-navbar .navbar-brand {
-    font-size: 30px;
-    font-weight: 600; 
+    font-family: "Caveat Brush", cursive;
+    font-size: 40px;
     padding-top: 10px;
+    
   }
 
   .custom-navbar .navbar-toggler {
@@ -114,7 +118,7 @@ a {
 /*------------------------------------Navbar-Header--------------------------------------*/
 
 /*-------------------------------------Home-----------------------------------------------*/
-
+/*-------------------------------------Hero-section---------------------------------------*/
  
  .hero {
   background: #3b5d50;
@@ -243,36 +247,44 @@ a {
       color: #ffffff; 
     }
 /*---------------------------------------------Hero section-----------------------------------*/
+/*--------------------------------------------Pet section explore ----------------------------*/
 .section-title {
   color: #2f2f2f; 
+  font-weight: 700;
 }
 
-.product-section {
-  padding: 7rem 0; }
-  .product-section .product-item {
+.pet-section {
+  padding-top: 10rem;
+ }
+  .pet-section .pet-item {
     text-align: center;
+    
     text-decoration: none;
     display: block;
     position: relative;
     padding-bottom: 50px;
-    cursor: pointer; }
-    .product-section .product-item .product-thumbnail {
+    cursor: pointer; 
+  }
+    .pet-section .pet-item .pet-thumbnail {
       margin-bottom: 30px;
+      border-radius: 32px;
       position: relative;
       top: 0;
       -webkit-transition: .3s all ease;
       -o-transition: .3s all ease;
-      transition: .3s all ease; }
-    .product-section .product-item h3 {
+      transition: .3s all ease; 
+    }
+    .pet-section .pet-item h3 {
       font-weight: 600;
-      font-size: 16px; }
-    .product-section .product-item strong {
+      font-size: 16px; 
+    }
+    .pet-section .pet-item strong {
       font-weight: 800 !important;
       font-size: 18px !important; }
-    .product-section .product-item h3, .product-section .product-item strong {
+    .pet-section .pet-item h3, .pet-section .pet-item strong {
       color: #2f2f2f;
       text-decoration: none; }
-    .product-section .product-item .icon-cross {
+    .pet-section .pet-item .icon-cross {
       position: absolute;
       width: 35px;
       height: 35px;
@@ -290,14 +302,14 @@ a {
       -webkit-transition: .3s all ease;
       -o-transition: .3s all ease;
       transition: .3s all ease; }
-      .product-section .product-item .icon-cross img {
+      .pet-section .pet-item .icon-cross img {
         position: absolute;
         left: 50%;
         top: 50%;
         -webkit-transform: translate(-50%, -50%);
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%); }
-    .product-section .product-item:before {
+    .pet-section .pet-item:before {
       bottom: 0;
       left: 0;
       right: 0;
@@ -310,15 +322,15 @@ a {
       -webkit-transition: .3s all ease;
       -o-transition: .3s all ease;
       transition: .3s all ease; }
-    .product-section .product-item:hover .product-thumbnail {
+    .pet-section .pet-item:hover .pet-thumbnail {
       top: -25px; }
-    .product-section .product-item:hover .icon-cross {
+    .pet-section .pet-item:hover .icon-cross {
       bottom: 0;
       opacity: 1;
       visibility: visible; }
-    .product-section .product-item:hover:before {
+    .pet-section .pet-item:hover:before {
       height: 70%; }
-
+/*---------------------------------------WHy choose us-------------------------------*/
 .why-choose-section {
   padding: 7rem 0; }
   .why-choose-section .img-wrap {
@@ -665,10 +677,11 @@ a {
       margin-bottom: 10px; 
     }
   .footer-section .footer-logo-wrap .footer-logo {
-    font-size: 32px;
-    font-weight: 500;
+    font-family: "Caveat Brush", cursive;
+    font-size: 40px;
     text-decoration: none;
     color: #3b5d50; 
+    
   }
   .footer-section .custom-social li {
     margin: 2px;
