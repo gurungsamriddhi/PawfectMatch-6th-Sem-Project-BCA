@@ -332,7 +332,9 @@ a {
       height: 70%; }
 /*---------------------------------------WHy choose us-------------------------------*/
 .why-choose-section {
-  padding: 7rem 0; }
+  /* padding: 7rem 0; } */
+  padding-top:50px;
+}
   .why-choose-section .img-wrap {
     position: relative; }
     .why-choose-section .img-wrap:before {
@@ -355,7 +357,9 @@ a {
   .feature .icon {
     display: inline-block;
     position: relative;
-    margin-bottom: 20px; }
+    margin-bottom: 20px;
+    margin-bottom: 20px;
+  }
     .feature .icon:before {
       content: "";
       width: 33px;
@@ -363,8 +367,9 @@ a {
       position: absolute;
       background: rgba(59, 93, 80, 0.2);
       border-radius: 50%;
-      right: -8px;
-      bottom: 0; }
+      right: -10px;
+      bottom:-1.5px;
+     }
   .feature h3 {
     font-size: 14px;
     color: #2f2f2f; }
@@ -709,7 +714,9 @@ a {
     }
 /*-------------------------------------------Footer------------------------------------------*/
 .untree_co-section {
-  padding: 7rem 0; }
+  /* padding: 7rem 0; } */
+padding-top:0px 
+}
 
 .form-control {
   height: 50px;
