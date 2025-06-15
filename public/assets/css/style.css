@@ -354,18 +354,14 @@ a {
       height: 33px;
       position: absolute;
       background: rgba(59, 93, 80, 0.2);
-      border-radius: 30%;
-      right: -7px;
-      bottom: 0; 
+      border-radius: 50%;
+      right: -10px;
+      bottom:-1.5px;
     }
     .feature .icon i {
     font-weight: bold;
     font-size: 18px;
    }
-      border-radius: 50%;
-      right: -10px;
-      bottom:-1.5px;
-     }
   .feature h3 {
     font-size: 14px;
     color: #2f2f2f; 
