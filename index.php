@@ -46,8 +46,12 @@
             (new DonateController)-> donate();
             break;
         case 'adoptionprocess':
-    (new AdoptionprocessController)->adoptionprocess();
-    break;
+        (new AdoptionprocessController)->adoptionprocess();
+        break;
+        case 'login':
+            (new UserController)->Login();
+            break;
+
   
 
         default:

@@ -54,14 +54,115 @@
 						<li class="nav-item <?=($current_page=='contactus')?'active' :''?>">
                             <a class="nav-link" href="index.php?page=contactus">Contact us</a>
                         </li>
-					</ul>
+						<button class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+  Login
+</button>
 
-					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="index.php?page=register" ><img src="public/assets/images/user.svg"></a></li>
-						
 					</ul>
 				</div>
 			</div>
 				
 		</nav>
 		<!-- End Header/Navigation -->
+
+		 <!-- Login Modal -->
+<style>
+  body {
+    background: rgb(196, 221, 196);
+    font-family: 'Poppins', sans-serif;
+  }
+  /* Modal content container */
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    max-width: 420px;
+    margin: auto;
+  }
+  /* Title styling */
+  .modal-title {
+    color: #4caf50;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+  }
+  /* Links below form */
+  .login-links {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .login-links a {
+    color: #4caf50;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .login-links a:hover {
+    text-decoration: underline;
+  }
+
+  /* Icon color */
+  .input-group-text i {
+    color: #4caf50;
+  }
+
+  /* Input box styling */
+  .form-control {
+    border: 2px solid #4caf50;
+    background-color: #f9fff9;
+    color: #155724;
+  }
+  .form-control:focus {
+    border-color: #388e3c;
+    box-shadow: 0 0 5px #388e3c;
+    background-color: #e6f4e6;
+    color: #1b4d1b;
+  }
+
+  /* Button styling */
+  .btn-success {
+    background-color: #4caf50;
+    border: none;
+    font-weight: 600;
+  }
+  .btn-success:hover {
+    background-color: #388e3c;
+  }
+</style>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="loginModalLabel">Login to Pawfect Match</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <form method="POST" action="login.php" autocomplete="off">
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label fw-semibold">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100 fw-semibold">Login</button>
+        </form>
+        <div class="login-links">
+          <a href="forgot_password.php">Forgot Password?</a><br>
+          Don’t have an account? <a href="register.php">Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
