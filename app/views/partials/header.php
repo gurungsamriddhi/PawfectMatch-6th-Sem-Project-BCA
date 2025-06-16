@@ -160,9 +160,45 @@
         </form>
         <div class="login-links">
           <a href="forgot_password.php">Forgot Password?</a><br>
-          Don’t have an account? <a href="register.php">Register</a>
+          Don’t have an account?
+<a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Register</a>
+
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="registerModalLabel">Register for Pawfect Match</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <form method="POST" action="register.php" autocomplete="off">
+          <div class="mb-3">
+            <label for="name" class="form-label fw-semibold">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="emailReg" class="form-label fw-semibold">Email</label>
+            <input type="email" class="form-control" id="emailReg" name="email" placeholder="Email" required>
+          </div>
+          <div class="mb-3">
+            <label for="passwordReg" class="form-label fw-semibold">Password</label>
+            <input type="password" class="form-control" id="passwordReg" name="password" placeholder="Password" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100 fw-semibold">Register</button>
+        </form>
+        <div class="login-links mt-3 text-center small">
+          Already have an account? 
+          <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Login here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
