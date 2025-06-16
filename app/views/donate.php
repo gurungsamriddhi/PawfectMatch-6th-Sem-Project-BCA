@@ -72,7 +72,7 @@
             <label class="btn btn-outline-success" for="annually">Annually</label>
           </div>
         </div>
-
+ 
         <!-- Donation Form -->
         <form id="donationForm">
           <div class="mb-3">
