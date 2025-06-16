@@ -6,6 +6,10 @@
     require_once 'app/controllers/PetController.php';
     require_once 'app/controllers/UserController.php';
     require_once 'app/controllers/AdminController.php';
+    require_once 'app/controllers/DonateController.php';
+    require_once 'app/controllers/AdoptionprocessController.php';
+
+
 
     // Get 'page' from the URL like ?page=home
     $page = $_GET['page'] ?? 'home';
@@ -18,9 +22,9 @@
         case 'browse':
             (new PetController)->browse();
             break;
-        case 'adoptionprocess':
-            (new HomeController)->adoptionprocess();
-            break;
+        // case 'adoptionprocess':
+        //     (new HomeController)->adoptionprocess();
+        //     break;
         case 'aboutus':
             (new HomeController)->aboutus();
             break;
@@ -38,6 +42,13 @@
         case 'petdetails':
             (new PetController)-> showpetdetails();
         break;
+        case 'donate':
+            (new DonateController)-> donate();
+            break;
+        case 'adoptionprocess':
+    (new AdoptionprocessController)->adoptionprocess();
+    break;
+  
 
         default:
             echo "404 - Page Not Found";
