@@ -106,6 +106,7 @@ a {
     -ms-flex-direction: row;
     flex-direction: row; 
   }
+  
     @media (min-width: 768px) {
       .custom-navbar .custom-navbar-cta {
         margin-left: 40px !important; } 
