@@ -11,10 +11,10 @@
 					<div class="intro-excerpt">
 						<h1>Find Your <span>PawfectMatch</span></h1>
 						<p class="mb-4">Browse adorable pets waiting to be adopted. Bring love home today.</p>
-<p>
-  <a href="index.php?page=browse" class="btn btn-secondary me-2">Browse</a>
-  <a href="index.php?page=donate" class="btn btn-white-outline">Donate</a>
-</p>
+						<p>
+							<a href="index.php?page=browse" class="btn btn-secondary me-2">Browse</a>
+							<a href="index.php?page=donate" class="btn btn-white-outline">Donate</a>
+						</p>
 					</div>
 				</div>
 				<div class="col-lg-7">
@@ -129,7 +129,7 @@
 								</div>
 							</div>
 						</div>
-                    </div>
+					</div>
 				</div>
 
 				<div class="col-lg-5">
@@ -147,16 +147,16 @@
 	<div class="we-help-section">
 		<div class="container">
 			<div class="row justify-content-between">
-					<div class="col-lg-5">
+				<div class="col-lg-5">
 					<div class="img-wrap">
 						<img src="public/assets/images/adoptionprocess.png" alt="Image" class="img-fluid">
 					</div>
 				</div>
 				<div class="col-lg-5 ps-lg-5">
 					<h2 class="section-title mb-4">How Our Adoption Process Works</h2>
-				<p>We believe every pet deserves a loving home. Our adoption process is designed to 
-					be simple, safe, and supportive — helping you find the perfect furry friend while
-					 ensuring the best care for every animal.</p>
+					<p>We believe every pet deserves a loving home. Our adoption process is designed to
+						be simple, safe, and supportive — helping you find the perfect furry friend while
+						ensuring the best care for every animal.</p>
 
 
 					<p><a href="index.php?page=adoptionprocess" class="btn">See in detail -></a></p>
@@ -166,7 +166,7 @@
 	</div>
 	<!-- End We Help Section -->
 
-	
+
 
 	<!-- Start Testimonial Slider -->
 	<!-- <div class="testimonial-section">
@@ -209,9 +209,9 @@
 									</div>
 								</div>
 							</div> -->
-							<!-- END item -->
+	<!-- END item -->
 
-							<!-- <div class="item">
+	<!-- <div class="item">
 								<div class="row justify-content-center">
 									<div class="col-lg-8 mx-auto">
 
@@ -232,9 +232,9 @@
 									</div>
 								</div>
 							</div> -->
-							<!-- END item -->
+	<!-- END item -->
 
-							<!-- <div class="item">
+	<!-- <div class="item">
 								<div class="row justify-content-center">
 									<div class="col-lg-8 mx-auto">
 
@@ -255,8 +255,8 @@
 									</div>
 								</div>
 							</div> -->
-							<!-- END item -->
-<!-- 
+	<!-- END item -->
+	<!-- 
 						</div>
 
 					</div>

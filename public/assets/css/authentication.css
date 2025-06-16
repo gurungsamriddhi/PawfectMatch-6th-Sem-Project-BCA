@@ -1,0 +1,81 @@
+/*----importing inter font from google fonts ,weight,regular,medium,semibold,bold,extrabold,swap to load fallback font----*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Edu+NSW+ACT+Cursive:wght@500&display=swap');
+/* body {
+    background: rgb(196, 221, 196);
+    font-family: 'Poppins', sans-serif;
+  } */
+  button.login-btn {
+    font-weight: 500;
+  padding:0px 14px;
+  border-radius: 30px;
+  color:#2f2f2f;
+  background: #f5b71b;
+  border-color:#f5b71b; 
+   }
+    button.login-btn:hover {
+      opacity: 0.9;
+      color:#2f2f2f;
+      background: #f8b810;
+      border-color: #f8b810; 
+    }
+  /* Modal content container */
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    max-width: 450px;
+    
+    margin: auto;
+  }
+  /* Title styling */
+  .modal-title {
+    color: #3b5d50;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+  }
+  /* Links below form */
+  .login-links {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .login-links a {
+    color: #3b5d50;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .login-links a:hover {
+    text-decoration: underline;
+  }
+
+  /* Icon color */
+  .input-group-text i {
+    color: #3b5d50;
+  }
+
+  /* Input box styling */
+  .form-control {
+    border: 2px solid #3b5d50;
+    background-color: #f9fff9;
+    color: #155724;
+  }
+  .form-control:focus {
+    border-color: #3b5d50;
+    box-shadow: 0 0 5px #3b5d50;
+    background-color: #e6f4e6;
+    color: #1b4d1b;
+  }
+
+  /* Button styling */
+  .btn-success {
+    background-color:#3b5d50;
+    border: none;
+    font-weight: 600;
+  }
+  .btn-success:hover {
+    background-color:#3b5d50;
+  }
