@@ -1,6 +1,4 @@
-<?php global $current_page; ?><!-- to apply css for active pages  -->
-
-
+<?php global $current_page;?><!-- to apply css for active pages  -->
 <!doctype html>
 <html lang="en">
 <head>
