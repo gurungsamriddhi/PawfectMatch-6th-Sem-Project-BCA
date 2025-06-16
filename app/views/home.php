@@ -11,7 +11,10 @@
 					<div class="intro-excerpt">
 						<h1>Find Your <span>PawfectMatch</span></h1>
 						<p class="mb-4">Browse adorable pets waiting to be adopted. Bring love home today.</p>
-						<p><a href="index.php?page=browse" class="btn btn-secondary me-2">Browse</a><a href="#" class="btn btn-white-outline">Donate</a></p>
+<p>
+  <a href="index.php?page=browse" class="btn btn-secondary me-2">Browse</a>
+  <a href="index.php?page=donate" class="btn btn-white-outline">Donate</a>
+</p>
 					</div>
 				</div>
 				<div class="col-lg-7">
