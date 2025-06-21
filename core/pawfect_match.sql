@@ -9,7 +9,7 @@ CREATE TABLE users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    user_type ENUM('admin', 'user', 'adoption_center') DEFAULT 'user',
+    user_type ENUM('admin', 'user', 'adoption_center') NOT NULL DEFAULT 'user',
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE pets (
     gender ENUM('male', 'female') NOT NULL,
     health_status VARCHAR(255),
     image_path VARCHAR(255),
-    status ENUM('available', 'adopted') DEFAULT 'available',
+    status ENUM('available', 'adopted') NOT NULL DEFAULT 'available',
     posted_by INT,
     description TEXT,
     FOREIGN KEY (posted_by) REFERENCES users(user_id) ON DELETE SET NULL
@@ -79,11 +79,12 @@ CREATE TABLE volunteers (
 CREATE TABLE feedback (
     feedback_id INT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT NOT NULL,
-    recipient_type ENUM('admin', 'adoption_center'),
-    recipient_id INT,
+    recipient_type ENUM('admin', 'adoption_center') NOT NULL,
+    recipient_id INT NULL,
     message TEXT NOT NULL,
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sender_id) REFERENCES users(user_id)
+    FOREIGN KEY (sender_id) REFERENCES users(user_id),
+    FOREIGN KEY (recipient_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
 -- 8. TRAINING TIPS TABLE
@@ -94,7 +95,7 @@ CREATE TABLE training_tips (
     description TEXT,
     created_by INT,  -- FK to users.user_id
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES users(user_id)
+    FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL --Use SET NULL if you want the video to remain but no longer have an owner.
 );
 
 -- 9. DONATIONS TABLE
