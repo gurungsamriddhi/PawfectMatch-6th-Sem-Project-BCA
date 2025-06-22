@@ -1,27 +1,3 @@
-<?php
-// Sample donation data
-$donations = [
-  ['user_id' => 101, 'donor_name' => 'Asmita Chhetri', 'email' => 'asmita11@gmail.com', 'amount' => 500.50, 'date' => '2024-06-20', 'payment_method' => 'Credit Card', 'message' => 'Keep up the great work!'],
-  ['user_id' => 102, 'donor_name' => 'Mamata Paudel', 'email' => 'mamata22@gmail.com', 'amount' => 1000.00, 'date' => '2024-06-21', 'payment_method' => 'Paypal', 'message' => 'Happy to support!'],
-  ['user_id' => 103, 'donor_name' => 'Rejina Pokharel', 'email' => 'rejina10@gmail.com', 'amount' => 250.75, 'date' => '2024-06-22', 'payment_method' => 'Bank Transfer', 'message' => 'Hope this helps a lot!'],
-  ['user_id' => 104, 'donor_name' => 'Samriddhi Gurnung', 'email' => 'samriddhi13@gmail.com', 'amount' => 800.00, 'date' => '2024-06-23', 'payment_method' => 'Credit Card', 'message' => 'Great cause!'],
-];
-
-// Calculate summary
-$totalDonations = 0;
-$totalDonors = [];
-$paymentMethods = [];
-
-foreach ($donations as $donation) {
-  $totalDonations += $donation['amount'];
-  $totalDonors[$donation['user_id']] = true;
-  $paymentMethods[$donation['payment_method']] = ($paymentMethods[$donation['payment_method']] ?? 0) + 1;
-}
-
-$totalDonorsCount = count($totalDonors);
-$averageDonation = $totalDonations / count($donations);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,17 +86,17 @@ $averageDonation = $totalDonations / count($donations);
 </head>
 <body>
 
-  <h2>📊 Donation Summary Report</h2>
+   <!--<h2>📊 Donation Summary Report</h2>
 
   <div class="summary-box">
-    <div><strong>Total Donation Amount:</strong> NPR <?= number_format($totalDonations, 2) ?></div>
-    <div><strong>Total Number of Donors:</strong> <?= $totalDonorsCount ?></div>
-    <div><strong>Average Donation:</strong> NPR <?= number_format($averageDonation, 2) ?></div>
+    <div><strong>Total Donation Amount:</strong> NPR 2,551.25</div>
+    <div><strong>Total Number of Donors:</strong> 4</div>
+    <div><strong>Average Donation:</strong> NPR 637.81</div>
     <div><strong>Donations by Payment Method:</strong></div>
     <ul>
-      <?php foreach ($paymentMethods as $method => $count): ?>
-        <li><?= htmlspecialchars($method) ?> – <?= $count ?> donation(s)</li>
-      <?php endforeach; ?>
+      <li>Credit Card – 2 donation(s)</li>
+      <li>Paypal – 1 donation(s)</li>
+      <li>Bank Transfer – 1 donation(s)</li>
     </ul>
   </div>
 
@@ -140,17 +116,42 @@ $averageDonation = $totalDonations / count($donations);
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($donations as $donation): ?>
         <tr>
-          <td><?= htmlspecialchars($donation['user_id']) ?></td>
-          <td><?= htmlspecialchars($donation['donor_name']) ?></td>
-          <td><?= htmlspecialchars($donation['email']) ?></td>
-          <td><?= number_format($donation['amount'], 2) ?></td>
-          <td><?= htmlspecialchars($donation['date']) ?></td>
-          <td><?= htmlspecialchars($donation['payment_method']) ?></td>
-          <td><?= htmlspecialchars($donation['message']) ?></td>
+          <td>101</td>
+          <td>Asmita Chhetri</td>
+          <td>asmita11@gmail.com</td>
+          <td>500.50</td>
+          <td>2024-06-20</td>
+          <td>Credit Card</td>
+          <td>Keep up the great work!</td>
         </tr>
-        <?php endforeach; ?>
+        <tr>
+          <td>102</td>
+          <td>Mamata Paudel</td>
+          <td>mamata22@gmail.com</td>
+          <td>1000.00</td>
+          <td>2024-06-21</td>
+          <td>Paypal</td>
+          <td>Happy to support!</td>
+        </tr>
+        <tr>
+          <td>103</td>
+          <td>Rejina Pokharel</td>
+          <td>rejina10@gmail.com</td>
+          <td>250.75</td>
+          <td>2024-06-22</td>
+          <td>Bank Transfer</td>
+          <td>Hope this helps a lot!</td>
+        </tr>
+        <tr>
+          <td>104</td>
+          <td>Samriddhi Gurnung</td>
+          <td>samriddhi13@gmail.com</td>
+          <td>800.00</td>
+          <td>2024-06-23</td>
+          <td>Credit Card</td>
+          <td>Great cause!</td>
+        </tr>
       </tbody>
     </table>
   </div>

@@ -1,49 +1,7 @@
-<?php
-// Simulated animal data (you can replace this with DB queries later)
-$animals = [
-    [
-        'image' => 'admin/views/Images/charlie.png',
-        'name' => 'Charlie',
-        'type' => 'Dog',
-        'breed' => 'Labrador',
-        'age' => 2,
-        'gender' => 'Male',
-        'status' => 'Available',
-        'posted_by' => 'Admin',
-        'description' => 'Very friendly, playful and house-trained.',
-        'health' => 'Vaccinated',
-    ],
-    [
-        'image' => 'uploads/Coco.jpg',
-        'name' => 'Coco',
-        'type' => 'Dog',
-        'breed' => 'Labrador',
-        'age' => 3,
-        'gender' => 'Female',
-        'status' => 'Available',
-        'posted_by' => 'Admin',
-        'description' => 'Very friendly',
-        'health' => 'Not Vaccinated',
-    ],
-    [
-        'image' => 'uploads/luna.jpg',
-        'name' => 'Luna',
-        'type' => 'Cat',
-        'breed' => 'Siamese',
-        'age' => 1,
-        'gender' => 'Female',
-        'status' => 'Adopted',
-        'posted_by' => 'Rejina',
-        'description' => 'Calm and affectionate. Good with kids.',
-        'health' => 'Healthy',
-    ],
-];
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Animal Management</title>
   <style>
     body {
@@ -64,7 +22,7 @@ $animals = [
     .actions button {
       padding: 10px 15px;
       margin-right: 10px;
-      background-color: #2e8b57;
+      background-color:rgb(78, 203, 124);
       color: white;
       border: none;
       border-radius: 5px;
@@ -72,7 +30,7 @@ $animals = [
     }
 
     .actions button:hover {
-      background-color: #256f46;
+      background-color:rgb(78, 203, 124);
     }
 
     table {
@@ -90,7 +48,7 @@ $animals = [
     }
 
     th {
-      background-color: #2e8b57;
+      background-color:rgb(78, 203, 124);
       color: white;
     }
 
@@ -186,30 +144,80 @@ $animals = [
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($animals as $animal): ?>
-      <tr data-type="<?= htmlspecialchars($animal['type']) ?>">
-        <td><img src="<?= htmlspecialchars($animal['image']) ?>" alt="<?= htmlspecialchars($animal['name']) ?>"></td>
-        <td><?= htmlspecialchars($animal['name']) ?></td>
-        <td><?= htmlspecialchars($animal['type']) ?></td>
-        <td><?= htmlspecialchars($animal['breed']) ?></td>
-        <td><?= htmlspecialchars($animal['age']) ?></td>
-        <td><?= htmlspecialchars($animal['gender']) ?></td>
-        <td style="color: <?= $animal['status'] === 'Available' ? 'green' : ($animal['status'] === 'Adopted' ? 'red' : 'orange') ?>;">
-          <?= htmlspecialchars($animal['status']) ?>
-        </td>
-        <td><?= htmlspecialchars($animal['posted_by']) ?></td>
-        <td><?= htmlspecialchars($animal['description']) ?></td>
-        <td><?= htmlspecialchars($animal['health']) ?></td>
+
+
+
+
+
+
+    
+   <!--Sample Animal Row -->
+      <tr data-type="Dog">
+        <td><img src="admin/views/Images/charlie.png" alt="Charlie"></td>
+        <td>Charlie</td>
+        <td>Dog</td>
+        <td>Labrador</td>
+        <td>2</td>
+        <td>Male</td>
+        <td style="color: green;">Available</td>
+        <td>Admin</td>
+        <td>Very friendly, playful and house-trained.</td>
+        <td>Vaccinated</td>
         <td>
           <button class="button-small"> Edit</button>
           <button class="button-small delete"> Delete</button>
+        
         </td>
       </tr>
-      <?php endforeach; ?>
+
+      
+ <tr data-type="Dog">
+        <td><img src="uploads/charlie.jpg" alt="Coco"></td>
+        <td>Coco</td>
+        <td>Dog</td>
+        <td>Labrador</td>
+        <td>3</td>
+        <td>Female</td>
+        <td style="color: green;">Available</td>
+        <td>Admin</td>
+        <td>Very friendly</td>
+        <td>Not Vaccinated</td>
+        <td>
+          <button class="button-small"> Edit</button>
+          <button class="button-small delete"> Delete</button>
+        
+        </td>
+      </tr>
+
+      <tr data-type="Cat">
+        <td><img src="uploads/luna.jpg" alt="Luna"></td>
+        <td>Luna</td>
+        <td>Cat</td>
+        <td>Siamese</td>
+        <td>1</td>
+        <td>Female</td>
+        <td style="color: red;">Adopted</td>
+        <td>Rejina</td>
+        <td>Calm and affectionate. Good with kids.</td>
+        <td>Healthy</td>
+        <td>
+          <button class="button-small"> Edit</button>
+          <button class="button-small delete"> Delete</button>
+          
+        </td>
+      </tr>
     </tbody>
   </table>
 
-  <!-- Add New Animal Form (toggle) -->
+
+
+
+
+
+
+
+   <!--Add New Animal Form (toggle) -->
+
   <div id="addFormContainer">
     <h3>➕ Add New Animal</h3>
     <form action="add_pet.php" method="POST" enctype="multipart/form-data">
@@ -245,13 +253,12 @@ $animals = [
         <option value="Adopted">Adopted</option>
         <option value="Reserved">Reserved</option>
       </select>
-
       <label>Health:</label>
-      <select name="health" required>
+      <select name="Health" required>
         <option value="">Select</option>
-        <option value="Vaccinated">Vaccinated</option>
-        <option value="Vaccinated And Healthy">Vaccinated And Healthy</option>
-        <option value="Not Vaccinated">Not Vaccinated</option>
+        <option value="Male">Vaccinated</option>
+        <option value="Female">Vaccinated And Healthy</option>
+        <option value="Female"> Not Vaccinated</option>
       </select>
 
       <label>Posted By:</label>
@@ -267,6 +274,8 @@ $animals = [
       <input type="date" name="created_date" required>
 
       <button type="submit">💾 Save Animal</button>
+
+      
     </form>
   </div>
 
@@ -282,7 +291,7 @@ $animals = [
 
     function toggleAddForm() {
       const form = document.getElementById("addFormContainer");
-      form.style.display = (form.style.display === "none" || form.style.display === '') ? "block" : "none";
+      form.style.display = (form.style.display === "none") ? "block" : "none";
     }
   </script>
 

@@ -115,15 +115,14 @@
       width: 100%;
       max-width: 600px;
     }
-
-    
-
-    
-
-    
-    
+ 
   </style>
+
 </head>
+
+
+
+
 <body>
   
   <div class="container">

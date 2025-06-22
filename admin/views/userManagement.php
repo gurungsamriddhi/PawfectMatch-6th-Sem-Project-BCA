@@ -1,39 +1,24 @@
-<?php
-
-$users = [
-    [
-        'sn' => 1,
-        'name' => 'Asmita Chhetri',
-        'username' => 'asmita11',
-        'email' => 'asmita11@gmail.com',
-        'role' => 'Staff',
-        'created_date' => '2020-03-15'
-    ],
-    [
-        'sn' => 2,
-        'name' => 'Mamata Paudel',
-        'username' => 'mamata22',
-        'email' => 'mamata22@gmail.com',
-        'role' => 'User',
-        'created_date' => '2020-03-15'
-    ]
-];
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>User Management</title>
+  <title>User Management </title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f2f6fa;
-      padding: 20px;
     }
 
-    h2, h3 {
+    body {
+      background-color: #f4f6f9;
+      padding: 30px;
+    }
+
+    h2 {
       color: #2e8b57;
+      margin-bottom: 20px;
     }
 
     .actions {
@@ -41,35 +26,47 @@ $users = [
     }
 
     .actions button {
-      padding: 10px 15px;
-      background-color: #2e8b57;
+         background-color:rgb(78, 203, 124);
       color: white;
       border: none;
+      padding: 10px 18px;
       border-radius: 5px;
+      font-size: 15px;
       cursor: pointer;
     }
 
     .actions button:hover {
-      background-color: #256f46;
+         background-color:rgb(78, 203, 124);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      margin-top: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
+      padding: 14px;
       text-align: left;
+      border-bottom: 1px solid #eee;
     }
 
     th {
       background-color: #2e8b57;
       color: white;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background-color: #f0f9f0;
     }
 
     .button-small {
@@ -77,42 +74,49 @@ $users = [
       color: white;
       padding: 6px 10px;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      border-radius: 4px;
       margin-right: 5px;
+      cursor: pointer;
     }
 
     .button-small.delete {
       background-color: #dc2626;
     }
 
-    #addUserForm, #editUserForm {
-      display: none;
+    .form-container {
       margin-top: 30px;
-      background-color: white;
+      background: white;
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       max-width: 600px;
+      display: none;
     }
 
-    input, select {
+    .form-container h3 {
+      margin-bottom: 15px;
+      color: #2e8b57;
+    }
+
+    .form-container input,
+    .form-container select {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
     }
 
-    form button {
+    .form-container button {
       background-color: #2e8b57;
       color: white;
       padding: 10px 20px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
-    form button:hover {
+    .form-container button:hover {
       background-color: #256f46;
     }
   </style>
@@ -122,11 +126,10 @@ $users = [
   <h2>👤 User Management</h2>
 
   <div class="actions">
-    <button onclick="toggleUserForm()">➕ Add New User</button>
+    <button onclick="toggleAddForm()">➕ Add New User</button>
   </div>
 
-  <!-- Table of Users -->
-  <table id="userTable">
+  <table>
     <thead>
       <tr>
         <th>SN</th>
@@ -139,102 +142,74 @@ $users = [
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($users as $user): ?>
       <tr>
-        <td><?= htmlspecialchars($user['sn']) ?></td>
-        <td><?= htmlspecialchars($user['name']) ?></td>
-        <td><?= htmlspecialchars($user['username']) ?></td>
-        <td><?= htmlspecialchars($user['email']) ?></td>
-        <td><?= htmlspecialchars($user['role']) ?></td>
-        <td><?= htmlspecialchars($user['created_date']) ?></td>
+        <td>1</td>
+        <td>Asmita Chhetri</td>
+        <td>asmita11</td>
+        <td>asmita11@gmail.com</td>
+        <td>Staff</td>
+        <td>2020-03-15</td>
         <td>
-          <button class="button-small" onclick="showEditForm(this)"> Edit</button>
+          <button class="button-small" onclick="toggleEditForm(this)"> Edit</button>
           <button class="button-small delete"> Delete</button>
         </td>
       </tr>
-      <?php endforeach; ?>
+      <tr>
+        <td>2</td>
+        <td>Mamata Paudel</td>
+        <td>mamata22</td>
+        <td>mamata22@gmail.com</td>
+        <td>User</td>
+        <td>2020-03-15</td>
+        <td>
+          <button class="button-small" onclick="toggleEditForm(this)"> Edit</button>
+          <button class="button-small delete"> Delete</button>
+        </td>
+      </tr>
     </tbody>
   </table>
 
   <!-- Add User Form -->
-  <div id="addUserForm">
+  <div class="form-container" id="addUserForm">
     <h3>➕ Add New User</h3>
-    <form action="add_user.php" method="POST">
-      <label>Full Name:</label>
-      <input type="text" name="name" required>
-
-      <label>Username:</label>
-      <input type="text" name="username" required>
-
-      <label>Email:</label>
-      <input type="email" name="email" required>
-
-      <label>Password:</label>
-      <input type="password" name="password" required>
-
-      <label>Role:</label>
-      <select name="role" required>
-        <option value="">Select</option>
-        <option value="Admin">Admin</option>
-        <option value="Staff">Staff</option>
-        <option value="User">User</option>
-      </select>
-
-      <label>Created Date:</label>
-      <input type="date" name="created_date" required>
-
-      <button type="submit">💾 Save User</button>
-    </form>
+    <input type="text" placeholder="Full Name">
+    <input type="text" placeholder="Username">
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <select>
+      <option value="">Select Role</option>
+      <option value="Admin">Admin</option>
+      <option value="Staff">Staff</option>
+      <option value="User">User</option>
+    </select>
+    <input type="date" placeholder="Created Date">
+    <button>💾 Save User</button>
   </div>
 
   <!-- Edit User Form -->
-  <div id="editUserForm">
-    <h3>✏️ Edit User</h3>
-    <form action="update_user.php" method="POST">
-      <label>Full Name:</label>
-      <input type="text" name="name" id="edit_name" required>
-
-      <label>Username:</label>
-      <input type="text" name="username" id="edit_username" required>
-
-      <label>Email:</label>
-      <input type="email" name="email" id="edit_email" required>
-
-      <label>New Password:</label>
-      <input type="password" name="password" placeholder="Leave blank to keep old password">
-
-      <label>Role:</label>
-      <select name="role" id="edit_role" required>
-        <option value="">Select</option>
-        <option value="Admin">Admin</option>
-        <option value="Staff">Staff</option>
-        <option value="User">User</option>
-      </select>
-
-      <label>Created Date:</label>
-      <input type="date" name="created_date" id="edit_created_date" required>
-
-      <button type="submit">💾 Update User</button>
-    </form>
+  <div class="form-container" id="editUserForm">
+    <h3> Edit User</h3>
+    <input type="text" placeholder="Full Name">
+    <input type="text" placeholder="Username">
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="New Password (optional)">
+    <select>
+      <option value="">Select Role</option>
+      <option value="Admin">Admin</option>
+      <option value="Staff">Staff</option>
+      <option value="User">User</option>
+    </select>
+    <input type="date" placeholder="Created Date">
+    <button>💾 Update User</button>
   </div>
 
   <script>
-    function toggleUserForm() {
-      const form = document.getElementById('addUserForm');
-      form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+    function toggleAddForm() {
+      document.getElementById('addUserForm').style.display = 'block';
       document.getElementById('editUserForm').style.display = 'none';
     }
 
-    function showEditForm(button) {
-      const row = button.closest('tr');
-      const cells = row.querySelectorAll('td');
-
-      document.getElementById('edit_name').value = cells[1].innerText;
-      document.getElementById('edit_username').value = cells[2].innerText;
-      document.getElementById('edit_email').value = cells[3].innerText;
-      document.getElementById('edit_role').value = cells[4].innerText;
-      document.getElementById('edit_created_date').value = cells[5].innerText;
-
+    function toggleEditForm(button) {
       document.getElementById('editUserForm').style.display = 'block';
       document.getElementById('addUserForm').style.display = 'none';
     }

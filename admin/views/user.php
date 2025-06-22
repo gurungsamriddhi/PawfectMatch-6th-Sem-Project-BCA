@@ -1,19 +1,8 @@
-<?php
-// User data array
-$users = [
-    ['sn' => 1, 'name' => 'Asmita Chhetri', 'username' => 'asmita11', 'email' => 'asmita11@gmail.com', 'password' => '12345', 'role' => 'staff', 'created_date' => '2020-03-15'],
-    ['sn' => 2, 'name' => 'Mamata Paudel', 'username' => 'mamata22', 'email' => 'mamata22@gmail.com', 'password' => '12345', 'role' => 'user', 'created_date' => '2020-03-15'],
-    ['sn' => 3, 'name' => 'Rejina Pokharel', 'username' => 'rejina10', 'email' => 'rejina10gmail.com', 'password' => '12345', 'role' => 'user', 'created_date' => '2020-03-15'],
-    ['sn' => 4, 'name' => 'Samriddhi Gurnung', 'username' => 'samriddhi13', 'email' => 'samriddhi13@gmail.com', 'password' => '12345', 'role' => 'Admin', 'created_date' => '2020-03-15'],
-    ['sn' => 5, 'name' => 'Shyam adhikari', 'username' => 'shyam7', 'email' => 'adhikarishyam7@gmail.com', 'password' => '12345', 'role' => 'user', 'created_date' => '2020-03-15'],
-];
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>User Management</title>
+  <title>User </title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,7 +26,7 @@ $users = [
     }
 
     th {
-      background: #3b5f51;
+         background-color:rgb(78, 203, 124);
       color: white;
       font-weight: 600;
       text-transform: uppercase;
@@ -56,16 +45,12 @@ $users = [
     tr:hover {
       background-color: #e0f2f1;
     }
-
-    select {
-      padding: 5px;
-      border-radius: 5px;
-    }
   </style>
 </head>
 <body>
 
   <div class="table-container">
+    <h2 style="margin-bottom: 15px; color: #2e3a59;">👤 Users</h2>
     <table>
       <thead>
         <tr>
@@ -79,17 +64,51 @@ $users = [
         </tr>
       </thead>
       <tbody>
-        <?php foreach($users as $user): ?>
-          <tr>
-            <td><?= htmlspecialchars($user['sn']) ?></td>
-            <td><?= htmlspecialchars($user['name']) ?></td>
-            <td><?= htmlspecialchars($user['username']) ?></td>
-            <td><?= htmlspecialchars($user['email']) ?></td>
-            <td><?= htmlspecialchars($user['password']) ?></td>
-            <td><?= htmlspecialchars($user['role']) ?></td>
-            <td><?= htmlspecialchars($user['created_date']) ?></td>
-          </tr>
-        <?php endforeach; ?>
+        <tr>
+          <td>1</td>
+          <td>Asmita Chhetri</td>
+          <td>asmita11</td>
+          <td>asmita11@gmail.com</td>
+          <td>12345</td>
+          <td>staff</td>
+          <td>2020-03-15</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Mamata Paudel</td>
+          <td>mamata22</td>
+          <td>mamata22@gmail.com</td>
+          <td>12345</td>
+          <td>user</td>
+          <td>2020-03-15</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Rejina Pokharel</td>
+          <td>rejina10</td>
+          <td>rejina10gmail.com</td>
+          <td>12345</td>
+          <td>user</td>
+          <td>2020-03-15</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Samriddhi Gurnung</td>
+          <td>samriddhi13</td>
+          <td>samriddhi13@gmail.com</td>
+          <td>12345</td>
+          <td>Admin</td>
+          <td>2020-03-15</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Shyam adhikari</td>
+          <td>shyam7</td>
+          <td>adhikarishyam7@gmail.com</td>
+          <td>12345</td>
+          <td>user</td>
+          <td>2020-03-15</td>
+        </tr>
       </tbody>
     </table>
   </div>

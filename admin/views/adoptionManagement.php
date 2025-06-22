@@ -1,43 +1,8 @@
-<?php
-// Simulated data (In real use case, fetch from DB)
-$adoptionRequests = [
-    [
-        'id' => 101,
-        'applicant' => 'Asmita Chhetri',
-        'pet' => 'Charlie (Dog)',
-        'status' => 'pending',
-        'date' => '2025-07-10'
-    ],
-    [
-        'id' => 102,
-        'applicant' => 'Samriddhi Gurnung',
-        'pet' => 'Milo (Cat)',
-        'status' => 'approved',
-        'date' => '2025-07-15'
-    ],
-];
-
-// Handle form submission to update status
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'], $_POST['new_status'])) {
-    $requestId = intval($_POST['request_id']);
-    $newStatus = $_POST['new_status'];
-
-    // Update the status in the $adoptionRequests array (simulate DB update)
-    foreach ($adoptionRequests as &$request) {
-        if ($request['id'] === $requestId) {
-            $request['status'] = $newStatus;
-            break;
-        }
-    }
-    unset($request); // break reference
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Adoption Management</title>
+  <title>Adoption Management UI</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -48,14 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'], $_POST[
 
     h2 {
       color: #333;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
+      background: #fff;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     th, td {
@@ -65,8 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'], $_POST[
     }
 
     th {
-      background-color: #3b8beb;
+      background-color:rgb(79, 225, 110);
       color: white;
+      font-size: 14px;
+      text-transform: uppercase;
     }
 
     select, button {
@@ -77,24 +46,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'], $_POST[
     }
 
     .actions button {
-      background-color: #3b8beb;
+      background-color:rgb(78, 203, 124);
       color: white;
       cursor: pointer;
+      font-size: 13px;
     }
 
     .actions button:hover {
-      background-color: #2563eb;
+      background-color:rgb(78, 203, 124);
     }
 
-    .status-pending { color: orange; font-weight: bold; }
-    .status-approved { color: green; font-weight: bold; }
-    .status-rejected { color: red; font-weight: bold; }
+    .status-pending {
+      color: orange;
+      font-weight: bold;
+    }
 
+    .status-approved {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-rejected {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Adoption Requests</h2>
+  <h2>🐾 Adoption Requests</h2>
 
   <table>
     <thead>
@@ -108,34 +88,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'], $_POST[
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($adoptionRequests as $request): ?>
       <tr>
-        <td>#<?= htmlspecialchars($request['id']) ?></td>
-        <td><?= htmlspecialchars($request['applicant']) ?></td>
-        <td><?= htmlspecialchars($request['pet']) ?></td>
-        <td>
-          <?php
-            $statusClass = 'status-' . $request['status'];
-            $statusText = ucfirst($request['status']);
-          ?>
-          <span class="<?= $statusClass ?>"><?= $statusText ?></span>
-        </td>
-        <td><?= htmlspecialchars($request['date']) ?></td>
+        <td>#101</td>
+        <td>Asmita Chhetri</td>
+        <td>Charlie (Dog)</td>
+        <td><span class="status-pending">Pending</span></td>
+        <td>2025-07-10</td>
         <td class="actions">
-          <form method="post" style="display:inline;">
-            <input type="hidden" name="request_id" value="<?= htmlspecialchars($request['id']) ?>">
-            <select name="new_status">
-              <option value="pending" <?= $request['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
-              <option value="approved" <?= $request['status'] === 'approved' ? 'selected' : '' ?>>Approve</option>
-              <option value="rejected" <?= $request['status'] === 'rejected' ? 'selected' : '' ?>>Reject</option>
-            </select>
-            <button type="submit">Update</button>
-          </form>
-          <button onclick="alert('View form for request #<?= $request['id'] ?>')">View Form</button>
-          <button onclick="alert('Match pet for request #<?= $request['id'] ?>')">Match Pet</button>
+          <select>
+            <option value="pending" selected>Pending</option>
+            <option value="approved">Approve</option>
+            <option value="rejected">Reject</option>
+          </select>
+          <button>Update</button>
+          <button onclick="alert('View form for request #101')">View Form</button>
+          <button onclick="alert('Match pet for request #101')">Match Pet</button>
         </td>
       </tr>
-      <?php endforeach; ?>
+
+      <tr>
+        <td>#102</td>
+        <td>Samriddhi Gurnung</td>
+        <td>Milo (Cat)</td>
+        <td><span class="status-approved">Approved</span></td>
+        <td>2025-07-15</td>
+        <td class="actions">
+          <select>
+            <option value="pending">Pending</option>
+            <option value="approved" selected>Approve</option>
+            <option value="rejected">Reject</option>
+          </select>
+          <button>Update</button>
+          <button onclick="alert('View form for request #102')">View Form</button>
+          <button onclick="alert('Match pet for request #102')">Match Pet</button>
+        </td>
+      </tr>
     </tbody>
   </table>
 

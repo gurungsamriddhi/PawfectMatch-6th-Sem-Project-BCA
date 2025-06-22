@@ -1,12 +1,3 @@
-<?php
-// Sample donation data array
-$donations = [
-    ['user_id' => 101, 'donor_name' => 'Asmita Chhetri', 'email' => 'asmita11@gmail.com', 'amount' => 500.50, 'date' => '2024-06-20', 'payment_method' => 'Credit Card', 'message' => 'Keep up the great work!'],
-    ['user_id' => 102, 'donor_name' => 'Mamata Paudel', 'email' => 'mamata22@gmail.com', 'amount' => 1000.00, 'date' => '2024-06-21', 'payment_method' => 'Paypal', 'message' => 'Happy to support!'],
-    ['user_id' => 103, 'donor_name' => 'Rejina Pokharel', 'email' => 'rejina10@gmail.com', 'amount' => 250.75, 'date' => '2024-06-22', 'payment_method' => 'Bank Transfer', 'message' => 'Hope this helps a lot!'],
-];
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,13 +17,17 @@ $donations = [
       border-radius: 15px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
+    h2 {
+      color: #3b5f51;
+      margin-bottom: 20px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
       min-width: 900px;
     }
     th {
-      background: #3b5f51;
+       background-color:rgb(78, 203, 124);
       color: white;
       font-weight: 600;
       text-transform: uppercase;
@@ -56,29 +51,7 @@ $donations = [
   <div class="table-container">
     <h2>💖 Donation Records</h2>
     <table>
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Donor Name</th>
-          <th>Email</th>
-          <th>Donation Amount (NRs.)</th>
-          <th>Donation Date</th>
-          <th>Payment Method</th>
-          <th>Message</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach($donations as $donation): ?>
-          <tr>
-            <td><?= htmlspecialchars($donation['user_id']) ?></td>
-            <td><?= htmlspecialchars($donation['donor_name']) ?></td>
-            <td><?= htmlspecialchars($donation['email']) ?></td>
-            <td><?= number_format($donation['amount'], 2) ?></td>
-            <td><?= htmlspecialchars($donation['date']) ?></td>
-            <td><?= htmlspecialchars($donation['payment_method']) ?></td>
-            <td><?= htmlspecialchars($donation['message']) ?></td>
-          </tr>
-        <?php endforeach; ?>
+      
       </tbody>
     </table>
   </div>
