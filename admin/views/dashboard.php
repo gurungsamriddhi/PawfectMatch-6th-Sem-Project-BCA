@@ -16,7 +16,7 @@
       display: flex;
       height: 100vh;
       background-color:rgb(185, 199, 194);
-      background-image: url ()
+      background-image: url ();
       
       background-size: contain;
       background-repeat: no-repeat;
