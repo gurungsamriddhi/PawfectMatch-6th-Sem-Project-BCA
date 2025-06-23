@@ -9,11 +9,13 @@
     require_once 'app/controllers/DonateController.php';
     require_once 'app/controllers/AdoptionprocessController.php';
 
-
+    // Start session (important for logout)
+    //session is used to keep track of user data cross multiple page requests(since http itself is stateless) called once at the top of every php file that uses session variables
+    session_start();
 
     // Get 'page' from the URL like ?page=home
     $page = $_GET['page'] ?? 'home';
-  $current_page = $page; // set this for use in header.php
+    $current_page = $page; // set this for use in header.php
     // Route based on the value of 'page'
     switch ($page) {
         case 'home':
@@ -32,7 +34,7 @@
             (new HomeController)->contactus();
             break;
         case 'register':
-            (new UserController)->showRegisterForm();
+            (new UserController)->Register();
             break;
 
         case 'volunteer':
@@ -40,19 +42,23 @@
             break;
 
         case 'petdetails':
-            (new PetController)-> showpetdetails();
-        break;
+            (new PetController)->showpetdetails();
+            break;
         case 'donate':
-            (new DonateController)-> donate();
+            (new DonateController)->donate();
             break;
         case 'adoptionprocess':
-        (new AdoptionprocessController)->adoptionprocess();
-        break;
-        case 'login':
-            (new UserController)->Login();
+            (new AdoptionprocessController)->adoptionprocess();
             break;
-
-  
+        case 'login':
+            (new UserController)->Login(); // call Login() method in UserController
+            break;
+        case 'logout':
+            session_unset();
+            session_destroy();
+            header('Location: index.php?page=home');
+            exit();
+            break;
 
         default:
             echo "404 - Page Not Found";
