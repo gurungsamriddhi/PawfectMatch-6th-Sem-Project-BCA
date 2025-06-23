@@ -274,8 +274,6 @@ a {
       border-radius: 32px;
       position: relative;
       top: 0;
-      -webkit-transition: .3s all ease;
-      -o-transition: .3s all ease;
       transition: .3s all ease; 
     }
     .pet-section .pet-item h3 {
@@ -284,10 +282,12 @@ a {
     }
     .pet-section .pet-item strong {
       font-weight: 800 !important;
-      font-size: 18px !important; }
+      font-size: 18px !important; 
+    }
     .pet-section .pet-item h3, .pet-section .pet-item strong {
       color: #2f2f2f;
-      text-decoration: none; }
+      text-decoration: none; 
+    }
    
     .pet-section .pet-item:before {
       bottom: 0;
@@ -299,8 +299,6 @@ a {
       height: 0%;
       z-index: -1;
       border-radius: 10px;
-      -webkit-transition: .3s all ease;
-      -o-transition: .3s all ease;
       transition: .3s all ease;
      }
     .pet-section .pet-item:hover .pet-thumbnail {
@@ -713,7 +711,7 @@ textarea {
   border-radius: 10px !important; }
 
 .text-primary {
-  color: #3b5d50 !important; }
+  color:#436c5d !important; }
 
 .thankyou-icon {
   position: relative;
@@ -731,6 +729,42 @@ textarea {
   border-radius: 20px;
 }
     
+/*----adoption process hover effects applied for cards-----*/
+.step-hover {
+  position: relative;
+  overflow: hidden;
+  background-color: #e6f1ee;
+  color: #333;
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: 12px; /* softer corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* subtle shadow */
+}
 
+/* The pseudo-element will fill from bottom with a gentle fade */
+.step-hover::before {
+  content: "";
+  position: absolute;
+  left: 0;      
+  right: 0;
+  bottom: 0;
+  height: 0%;
+  background: rgba(233, 237, 237, 0.7); 
+  z-index: -1;
+  border-radius: 8px; 
+  transition: height 0.3s ease-in-out;
+  pointer-events: none; 
+} 
+
+.step-hover:hover {
+  transform: scale(1.05);
+  background-color: #f6f9f9;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.step-hover:hover::before {
+  height: 70%;
+}
 
 

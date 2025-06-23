@@ -1,31 +1,6 @@
 <?php include 'app/views/partials/header.php'; ?>
 
-  <style>
-    .step-hover:hover {
-      transform: translateY(-5px);
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    }
-
-    .icon-circle {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: auto;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-    .card.step-hover {
-  background-color:rgb(214, 224, 233); 
-  color: #333; 
-}
-
-  </style>
-
-  <section class="py-5 bg-light">
+   <section class="py-5 bg-light">
     <div class="container">
       <h1 class="text-center mb-5 fw-bold">How the Adoption Process Works</h1>
       <div class="row g-4 justify-content-center">
@@ -40,7 +15,7 @@
 
         foreach ($steps as $i => $step): ?>
           <div class="col-md-6 col-lg-4">
-            <div class="card step-hover h-100 border-0 shadow-sm p-4 text-center rounded-4 ">
+            <div class="step-hover h-100 border-0 shadow-sm p-4 text-center rounded-4 ">
               <div class="icon-circle mb-3">
                 <i class="fa <?= $step['icon'] ?> fa-lg text-primary"></i>
               </div>
