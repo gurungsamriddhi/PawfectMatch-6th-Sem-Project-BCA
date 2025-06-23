@@ -10,7 +10,7 @@ class Database {
             die('Database connection failed: ' . $this->conn->connect_error);
         }
 
-        echo "✅ Database connection successful.<br>";
+        // echo "✅ Database connection successful.<br>";
         return $this->conn;
     }
 }
