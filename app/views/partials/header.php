@@ -75,20 +75,25 @@ unset(
 					<li class="nav-item  <?= ($current_page == 'home') ? 'active' : '' ?>"><!--class active to the list-->
 						<a class="nav-link" href="index.php?page=home">Home</a>
 					</li>
-					<li class="nav-item <?= ($current_page == 'browse') ? 'active' : '' ?>">
-						<a class="nav-link" href="index.php?page=browse">Browse</a>
-					</li>
-
-					<li class="nav-item <?= ($current_page == 'adoptionprocess') ? 'active' : '' ?>">
-						<a class="nav-link" href="index.php?page=adoptionprocess">Adoption Process</a>
-					</li>
-					<li class="nav-item <?= ($current_page == 'volunteer') ? 'active' : '' ?>">
-						<a class="nav-link" href="index.php?page=volunteer">Volunteer</a>
-					</li>
 					<li class="nav-item <?= ($current_page == 'aboutus') ? 'active' : '' ?>">
 						<a class="nav-link" href="index.php?page=aboutus">About us</a>
 					</li>
-					<li class="nav-item <?= ($current_page == 'contactus') ? 'active' : '' ?>">
+					<li class="nav-item <?= ($current_page == 'browse') ? 'active' : '' ?>">
+						<a class="nav-link" href="index.php?page=browse">Browse</a>
+					</li>
+				<ul class="navbar-nav custom-navbar-nav ms-auto">
+                    <li class="nav-item dropdown <?= ($current_page == 'donate' || $current_page == 'volunteer') ? 'active' : '' ?>">
+                       <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Services</a>
+					   <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+						<li><a class="dropdown-item <?= ($current_page == 'donate') ? 'active' : '' ?>" href="index.php?page=donate">Donation</a></li>
+						<li><a class="dropdown-item <?= ($current_page == 'volunteer') ? 'active' : '' ?>" href="index.php?page=volunteer">Volunteer</a></li>
+					   </ul>
+				    </li>
+				</ul>
+                    <li class="nav-item <?= ($current_page == 'adoptionprocess') ? 'active' : '' ?>">
+						<a class="nav-link" href="index.php?page=adoptionprocess">Adoption Process</a>
+					</li>
+                    <li class="nav-item <?= ($current_page == 'contactus') ? 'active' : '' ?>">
 						<a class="nav-link" href="index.php?page=contactus">Contact us</a>
 					</li>
 					<?php if (isset($_SESSION['user'])): ?>
