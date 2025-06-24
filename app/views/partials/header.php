@@ -50,10 +50,9 @@ unset(
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="shortcut icon" href="favicon.png">
-
-	<meta name="description" content="" />
-	<meta name="keywords" content="bootstrap, bootstrap4" />
+	<!--<link rel="shortcut icon" href="favicon.png">
+    <meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap4" />-->
 
 	<!-- Bootstrap CSS -->
 	<link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -185,7 +184,7 @@ unset(
 					<div class="login-links">
 						<a href="forgot_password.php">Forgot Password?</a><br>
 						Don’t have an account?
-						<a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Register</a>
+						<a href="#"  data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Register</a>
 
 					</div>
 				</div>

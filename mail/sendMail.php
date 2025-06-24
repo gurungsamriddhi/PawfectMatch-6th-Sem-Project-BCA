@@ -15,7 +15,7 @@ function sendVerificationEmail($toEmail, $name, $token)
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'pawfectmatch.pkr@gmail.com';
-        $mail->Password = 'phoo gzdi byuv uvpr';
+        $mail->Password = 'phoogzdibyuvuvpr';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 

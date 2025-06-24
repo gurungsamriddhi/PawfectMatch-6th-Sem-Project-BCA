@@ -96,7 +96,7 @@
 		<script src="public/assets/js/bootstrap.bundle.min.js"></script>
 		<script src="public/assets/js/tiny-slider.js"></script> <!--this ensures dom is fully loaded before scipt runs-->
 		<script src="public/assets/js/custom.js"></script>
-		<script src="public/assets/js/register.js"></script>
+		<script src="public/assets/js/modalHandling.js"></script>
 	</body>
 
 </html>

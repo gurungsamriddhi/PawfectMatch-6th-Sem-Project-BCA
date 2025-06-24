@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('registerForm');
   const showPasswordCheck = document.getElementById('showPasswordCheck');
-
+//register form checkbox and password comparison
   if (form) {
     form.addEventListener('submit', function (e) {
       const password = document.getElementById('passwordReg')?.value.trim();
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-     const inputs = form.querySelectorAll('input');
+    const inputs = form.querySelectorAll('input');
 
     inputs.forEach(input => {
       input.addEventListener('input', () => {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-   const loginForm = document.getElementById('loginForm');
+  const loginForm = document.getElementById('loginForm');
   const ShowLoginPasswordCheck = document.getElementById('ShowLoginPasswordCheck');
 
   if (loginForm) {

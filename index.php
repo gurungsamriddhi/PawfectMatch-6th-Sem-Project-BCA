@@ -7,7 +7,7 @@
     require_once 'app/controllers/UserController.php';
     require_once 'app/controllers/AdminController.php';
     require_once 'app/controllers/DonateController.php';
-    require_once 'app/controllers/AdoptionprocessController.php';
+    require_once 'app/controllers/CenterController.php';
 
     // Start session (important for logout)
     //session is used to keep track of user data cross multiple page requests(since http itself is stateless) called once at the top of every php file that uses session variables
@@ -24,9 +24,9 @@
         case 'browse':
             (new PetController)->browse();
             break;
-        // case 'adoptionprocess':
-        //     (new HomeController)->adoptionprocess();
-        //     break;
+        case 'adoptionprocess':
+            (new HomeController)->adoptionprocess();
+            break;
         case 'aboutus':
             (new HomeController)->aboutus();
             break;
@@ -47,11 +47,27 @@
         case 'donate':
             (new DonateController)->donate();
             break;
-        case 'adoptionprocess':
-            (new AdoptionprocessController)->adoptionprocess();
-            break;
         case 'login':
             (new UserController)->Login(); // call Login() method in UserController
+            break;
+
+        // ✅ Admin Pages
+        case 'admin/admin_login':
+            (new AdminController)->showadminloginform();
+            break;
+        case 'admin/admin_dashboard':
+            (new AdminController)->showdashboard();
+            break;
+        case 'admin/addpet':
+            (new AdminController)->showaddpetform();
+            break;
+
+        // ✅ Adoption Center Pages (example controller)
+        case 'adoptioncenter/center_login':
+            (new centerController)->showLoginForm(); 
+            break;
+        case 'adoptioncenter/center_dashboard':
+            (new centerController)->showDashboard(); 
             break;
         case 'logout':
             session_unset();
