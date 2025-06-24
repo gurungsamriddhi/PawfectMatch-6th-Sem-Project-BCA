@@ -7,13 +7,15 @@
     require_once 'app/controllers/UserController.php';
     require_once 'app/controllers/AdminController.php';
     require_once 'app/controllers/DonateController.php';
-    require_once 'app/controllers/AdoptionprocessController.php';
+    require_once 'app/controllers/CenterController.php';
 
-
+    // Start session (important for logout)
+    //session is used to keep track of user data cross multiple page requests(since http itself is stateless) called once at the top of every php file that uses session variables
+    session_start();
 
     // Get 'page' from the URL like ?page=home
     $page = $_GET['page'] ?? 'home';
-  $current_page = $page; // set this for use in header.php
+    $current_page = $page; // set this for use in header.php
     // Route based on the value of 'page'
     switch ($page) {
         case 'home':
@@ -22,9 +24,9 @@
         case 'browse':
             (new PetController)->browse();
             break;
-        // case 'adoptionprocess':
-        //     (new HomeController)->adoptionprocess();
-        //     break;
+        case 'adoptionprocess':
+            (new HomeController)->adoptionprocess();
+            break;
         case 'aboutus':
             (new HomeController)->aboutus();
             break;
@@ -32,7 +34,7 @@
             (new HomeController)->contactus();
             break;
         case 'register':
-            (new UserController)->showRegisterForm();
+            (new UserController)->Register();
             break;
 
         case 'volunteer':
@@ -40,19 +42,39 @@
             break;
 
         case 'petdetails':
-            (new PetController)-> showpetdetails();
-        break;
-        case 'donate':
-            (new DonateController)-> donate();
+            (new PetController)->showpetdetails();
             break;
-        case 'adoptionprocess':
-        (new AdoptionprocessController)->adoptionprocess();
-        break;
+        case 'donate':
+            (new DonateController)->donate();
+            break;
         case 'login':
-            (new UserController)->Login();
+            (new UserController)->Login(); // call Login() method in UserController
             break;
 
-  
+        // ✅ Admin Pages
+        case 'admin/admin_login':
+            (new AdminController)->showadminloginform();
+            break;
+        case 'admin/admin_dashboard':
+            (new AdminController)->showdashboard();
+            break;
+        case 'admin/addpet':
+            (new AdminController)->showaddpetform();
+            break;
+
+        // ✅ Adoption Center Pages (example controller)
+        case 'adoptioncenter/center_login':
+            (new centerController)->showLoginForm(); 
+            break;
+        case 'adoptioncenter/center_dashboard':
+            (new centerController)->showDashboard(); 
+            break;
+        case 'logout':
+            session_unset();
+            session_destroy();
+            header('Location: index.php?page=home');
+            exit();
+            break;
 
         default:
             echo "404 - Page Not Found";

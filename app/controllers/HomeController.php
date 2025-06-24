@@ -10,9 +10,9 @@ class HomeController {
     public function contactus(){
         include 'app/views/contactus.php';
     }
-    // public function adoptionprocess(){
-    //     include 'app/views/adoptionprocess.php';
-    // }
+    public function adoptionprocess(){
+         include 'app/views/adoptionprocess.php';
+    }
     public function volunteer() {
         include 'app/views/volunteer.php';
 }
