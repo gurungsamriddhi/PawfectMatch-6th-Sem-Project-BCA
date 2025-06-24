@@ -1,14 +1,14 @@
 <?php include 'app/views/partials/header.php'; ?>
 
 <!-- Hero Section -->
-<section class="text-white d-flex align-items-center" style="height: 70vh; background: linear-gradient(rgb(56, 94, 80), #436c5d); overflow: hidden;">
+<section class="text-white d-flex align-items-center" style="height: 100vh; background: linear-gradient(rgb(56, 94, 80), #436c5d); overflow: hidden;">
   <div class="container h-100">
     <div class="row align-items-center h-100">
       <!-- Left side: Text -->
       <div class="col-md-6 text-start">
         <h1 class="display-4 fw-bold mb-3">Join Us in Giving Hope to Homeless Animals</h1>
         <p class="lead mb-4">Every contribution provides food, shelter, and care for abandoned animals.</p>
-        <a href="#donate-form" class="btn btn-lg btn-success px-5 py-2">Donate Now</a>
+        <a href="#donate-form" class="btn btn-secondary me-2">Donate Now</a>
       </div>
 
       <!-- Right side: Image -->
