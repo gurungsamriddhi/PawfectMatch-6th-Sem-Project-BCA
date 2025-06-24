@@ -754,7 +754,7 @@ textarea {
   z-index: -1;
   border-radius: 8px; 
   transition: height 0.3s ease-in-out;
-  pointer-events: none; 
+  pointer-events: none;  
 } 
 
 .step-hover:hover {

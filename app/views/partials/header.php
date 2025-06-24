@@ -20,6 +20,14 @@ $login_old = [];
 if (!empty($login_errors)) {
 	$login_old = $_SESSION['old_login'] ?? [];
 }
+
+$verification_success=$_SESSION['verification_success']??null;
+$verification_error=$_SESSION['verification_error']??null;
+
+unset(
+	$_SESSION['verification_success'],
+	$_SESSION['verification_error']
+);
 // Clear for next request
 unset(
 	$_SESSION['register_errors'],
@@ -302,16 +310,28 @@ unset(
 		</div>
 	</div>
 
-	<?php if (!empty($register_errors) || $register_success || $keep_login_modal_open): ?>
-		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-				<?php if (!empty($register_errors) || $register_success): ?>
-					new bootstrap.Modal(document.getElementById('registerModal')).show();
-				<?php endif; ?>
+	<?php if (
+    !empty($register_errors) || 
+    $register_success || 
+    $keep_login_modal_open || 
+    $verification_success || 
+    $verification_error
+): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php if (!empty($register_errors) || $register_success): ?>
+            new bootstrap.Modal(document.getElementById('registerModal')).show();
+        <?php endif; ?>
 
-				<?php if ($keep_login_modal_open): ?>
-					new bootstrap.Modal(document.getElementById('loginModal')).show();
-				<?php endif; ?>
-			});
-		</script>
-	<?php endif; ?>
+        <?php if ($keep_login_modal_open || $verification_success): ?>
+            new bootstrap.Modal(document.getElementById('loginModal')).show();
+        <?php endif; ?>
+
+        <?php if ($verification_success): ?>
+            alert("<?= addslashes($verification_success) ?>");
+        <?php elseif ($verification_error): ?>
+            alert("<?= addslashes($verification_error) ?>");
+        <?php endif; ?>
+    });
+</script>
+<?php endif; ?>

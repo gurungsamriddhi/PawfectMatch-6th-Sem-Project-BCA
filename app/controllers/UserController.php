@@ -15,30 +15,31 @@ class UserController
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = "Invalid email format.";
         }
-        if(empty($password)){
-            $errors['password']= "Password is required.";
+        if (empty($password)) {
+            $errors['password'] = "Password is required.";
         }
-        
-        if(empty($errors)){
-            $user=user::findByEmail($email);
-            if(!$user || !password_Verify($password,$user['password'])){
-                $errors['login']="Invalid email or password.";
+
+        if (empty($errors)) {
+            $user = user::findByEmail($email);
+            if (!$user || !password_Verify($password, $user['password'])) {
+                $errors['login'] = "Invalid email or password.";
+            } else if ($user['is_verified'] == 0) {
+                $errors['login'] = "Please verify your email first.";
             }
         }
 
         //if there are errors store them in session and return to the index.php page
-        if(!empty($errors)){
-            $_SESSION['login_errors']=$errors;
-            $_SESSION['old_login']=['email'=>$email];
-            $_SESSION['keep_login_modal_open']=true;
+        if (!empty($errors)) {
+            $_SESSION['login_errors'] = $errors;
+            $_SESSION['keep_login_modal_open'] = true;
             header('Location: index.php');
             exit();
         }
-        $_SESSION['user']=[
-                  'id'=>$user['user_id'],
-                  'name'=>$user['name'],
-                  'email'=>$user['email'],
-                  'type'=>$user['user_type']
+        $_SESSION['user'] = [
+            'id' => $user['user_id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'type' => $user['user_type']
         ];
         header('Location:index.php');
         exit();
@@ -47,7 +48,9 @@ class UserController
 
     public function Register()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
         $name = $_POST['name'] ?? ''; //if $_Post ['name'] exists then assign that value otherwise assign empty string.
         $email = $_POST['email'] ?? '';
@@ -88,7 +91,7 @@ class UserController
 
 
         if ($created) {
-            $_SESSION['success_message'] = 'Registration successful! Please Log in.';
+            $_SESSION['success_message'] = 'Registration successful! Check your email.';
             $_SESSION['keep_register_modal_open'] = true;
         } else {
             $_SESSION['register_errors'] = ['email' => 'Email already exists or registration failed.'];
