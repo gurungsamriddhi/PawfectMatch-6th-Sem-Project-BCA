@@ -1,5 +1,7 @@
+
 <?php
-require_once 'core/databaseconn.php';
+require_once __DIR__ . '/../../core/databaseconn.php';
+require_once __DIR__ . '/../../mail/sendMail.php';
 
 class User
 {
@@ -19,9 +21,17 @@ class User
     {   $db= new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password, user_type) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param('ssss', $name, $email, $password, $user_type);
+        $verify_token =bin2hex(random_bytes(16));
+        $is_verified=0;
 
-        return $stmt->execute();  // returns true if success, false otherwise
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password,verify_token,is_verified, user_type) VALUES (?, ?, ?,?,?, ?)");
+        $stmt->bind_param('ssssis', $name, $email, $password, $verify_token, $is_verified, $user_type);
+
+        if($stmt->execute()){
+            sendVerificationEmail($email,$name,$verify_token);
+            return true;
+        }
+
+              return false;
     }
 }

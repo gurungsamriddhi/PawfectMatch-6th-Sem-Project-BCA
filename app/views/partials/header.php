@@ -20,6 +20,14 @@ $login_old = [];
 if (!empty($login_errors)) {
 	$login_old = $_SESSION['old_login'] ?? [];
 }
+
+$verification_success = $_SESSION['verification_success'] ?? null;
+$verification_error = $_SESSION['verification_error'] ?? null;
+
+unset(
+	$_SESSION['verification_success'],
+	$_SESSION['verification_error']
+);
 // Clear for next request
 unset(
 	$_SESSION['register_errors'],
@@ -116,7 +124,7 @@ unset(
 	</nav>
 	<!-- End Header/Navigation -->
 
-	
+
 
 	<!-- Login Modal -->
 	<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -292,14 +300,14 @@ unset(
 	<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
-				<div class="modal-header border-0">
-					<h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+				<div class="modal-header border-0 d-flex justify-content-between align-items-center">
+					<h5 class="modal-title mb-0" id="logoutModalLabel">Confirm Logout</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body d-flex justify-content-center align-items-center" style="height: 100px;">
 					Are you sure you want to log out?
 				</div>
-				<div class="modal-footer border-0">
+				<div class="modal-footer border-0 d-flex justify-content-center align-items-center">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 					<a href="index.php?page=logout" class="btn btn-danger">Logout</a>
 				</div>
@@ -307,15 +315,27 @@ unset(
 		</div>
 	</div>
 
-	<?php if (!empty($register_errors) || $register_success || $keep_login_modal_open): ?>
+	<?php if (
+		!empty($register_errors) ||
+		$register_success ||
+		$keep_login_modal_open ||
+		$verification_success ||
+		$verification_error
+	): ?>
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
 				<?php if (!empty($register_errors) || $register_success): ?>
 					new bootstrap.Modal(document.getElementById('registerModal')).show();
 				<?php endif; ?>
 
-				<?php if ($keep_login_modal_open): ?>
+				<?php if ($keep_login_modal_open || $verification_success): ?>
 					new bootstrap.Modal(document.getElementById('loginModal')).show();
+				<?php endif; ?>
+
+				<?php if ($verification_success): ?>
+					alert("<?= addslashes($verification_success) ?>");
+				<?php elseif ($verification_error): ?>
+					alert("<?= addslashes($verification_error) ?>");
 				<?php endif; ?>
 			});
 		</script>
