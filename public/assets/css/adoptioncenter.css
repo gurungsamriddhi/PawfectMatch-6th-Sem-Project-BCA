@@ -20,13 +20,11 @@ body {
 }
 
 .left-sidebar {
-  width: 240px;
-  background-color: var(--primary-color);
+  width: 260px;
+  background: var(--primary-color);
+  border-right: 1px solid #e5e5e5;
+  min-height: 100vh;
   color: #fff;
-  position: fixed;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 .brand-logo {
@@ -43,6 +41,7 @@ body {
   flex-grow: 1;
   overflow-y: auto;
   padding-top: 10px;
+  max-height: calc(100vh - 80px);
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -54,33 +53,70 @@ body {
   border-radius: 10px;
 }
 
-
 .sidebar-nav ul {
-  list-style: none;
-  padding: 0;
+  padding-left: 0;
+  margin-bottom: 0;
 }
 
 .sidebar-item {
-  margin-bottom: 10px;
+  position: relative;
+  margin-bottom: 5px;
 }
 
 .sidebar-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
   color: #fff;
-  padding: 10px 15px;
   text-decoration: none;
-  border-radius: 6px;
-  transition: background 0.3s;
+  transition: background 0.2s, color 0.2s, border-radius 0.2s;
+  cursor: pointer;
+  border-radius: 8px;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
-  background-color: var(--accent-color);
-  color: #000;
+.sidebar-link.active, .sidebar-link:hover {
+  background: var(--accent-color) !important;
+  color: #333 !important;
+  border-radius: 8px;
+}
+
+.sidebar-link.has-arrow:after {
+  content: '\25B6';
+  font-size: 0.8em;
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+
+.sidebar-item.open > .sidebar-link.has-arrow:after {
+  transform: rotate(90deg);
+}
+
+.first-level {
+  display: none;
+  /* background: #f8f9fa; */
+  padding-left: 0;
+}
+
+.sidebar-item.open > .first-level {
+  display: block;
+}
+
+.first-level .sidebar-link {
+  padding-left: 35px;
+  font-size: 0.97em;
+  color: #fff;
+  /* background: #f8f9fa; */
+  border-radius: 8px;
+}
+
+.first-level .sidebar-link:hover {
+  background: var(--accent-color) !important;
+  color: #333 !important;
+  border-radius: 8px;
 }
 
 .body-wrapper {
-  margin-left: 240px;
+  margin-left: 0;
   flex: 1;
   padding: 20px;
   background-color: var(--light-bg);
@@ -111,4 +147,8 @@ body {
 
 .card h5 {
   color: #666;
+}
+
+.ps-3 {
+  padding-left: 10px !important;
 }
