@@ -76,4 +76,32 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+const adminLoginForm = document.getElementById('adminLoginForm');
+const showAdminPasswordCheck = document.getElementById('showAdminPasswordCheck');
+
+if (adminLoginForm) {
+  const adminInputs = adminLoginForm.querySelectorAll('input');
+  adminInputs.forEach(input => {
+    input.addEventListener('input', () => {
+      if (input.classList.contains('is-invalid')) {
+        input.classList.remove('is-invalid');
+        const feedback = input.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+          feedback.style.display = 'none';
+        }
+      }
+    });
+  });
+}
+
+if (showAdminPasswordCheck) {
+  showAdminPasswordCheck.addEventListener('change', function () {
+    const adminPassword = document.getElementById('adminPassword');
+    if (adminPassword) {
+      adminPassword.type = this.checked ? 'text' : 'password';
+    }
+  });
+}
+
 });

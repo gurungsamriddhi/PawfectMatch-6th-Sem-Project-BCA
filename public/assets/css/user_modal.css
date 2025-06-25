@@ -79,13 +79,3 @@ button.login-btn:hover {
   color: #1b4d1b;
 }
 
-/* Button styling */
-.btn-success {
-  background-color: #3b5d50;
-  border: none;
-  font-weight: 600;
-}
-
-.btn-success:hover {
-  background-color: #3b5d50;
-}

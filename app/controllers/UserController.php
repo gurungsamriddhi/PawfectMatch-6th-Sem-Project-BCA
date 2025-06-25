@@ -1,11 +1,11 @@
 
 <?php
+
 require_once __DIR__ . '/../models/User.php';
 class UserController
 {
     public function Login()
     {
-        session_start();
 
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -48,9 +48,7 @@ class UserController
 
     public function Register()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+
 
         $name = $_POST['name'] ?? ''; //if $_Post ['name'] exists then assign that value otherwise assign empty string.
         $email = $_POST['email'] ?? '';

@@ -55,20 +55,25 @@
         case 'admin/admin_login':
             (new AdminController)->showadminloginform();
             break;
+
+        case 'admin/verify_admin':
+            (new AdminController)->verify_adminLogin();
+            break;
         case 'admin/admin_dashboard':
             (new AdminController)->showdashboard();
             break;
-        case 'admin/addpet':
-            (new AdminController)->showaddpetform();
-            break;
+        // case 'admin/addpet':
+        //     (new AdminController)->showaddpetform();
+        //     break;
 
         // ✅ Adoption Center Pages (example controller)
         case 'adoptioncenter/center_login':
-            (new centerController)->showLoginForm(); 
+            (new centerController)->showLoginForm();
             break;
         case 'adoptioncenter/center_dashboard':
-            (new centerController)->showDashboard(); 
+            (new centerController)->showDashboard();
             break;
+
         case 'logout':
             session_unset();
             session_destroy();
