@@ -48,6 +48,7 @@ a {
     padding-top: 10px;
     
   }
+  
 
   .custom-navbar .navbar-toggler {
     border-color: transparent; }
@@ -808,5 +809,6 @@ textarea {
 .step-hover:hover::before {
   height: 70%;
 }
+
 
 
