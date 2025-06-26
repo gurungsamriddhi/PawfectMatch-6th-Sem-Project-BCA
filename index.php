@@ -13,6 +13,8 @@
     //session is used to keep track of user data cross multiple page requests(since http itself is stateless) called once at the top of every php file that uses session variables
     session_start();
 
+
+
     // Get 'page' from the URL like ?page=home
     $page = $_GET['page'] ?? 'home';
     $current_page = $page; // set this for use in header.php
@@ -51,6 +53,8 @@
             (new UserController)->Login(); // call Login() method in UserController
             break;
 
+
+
         // ✅ Admin Pages
         case 'admin/admin_login':
             (new AdminController)->showadminloginform();
@@ -59,9 +63,11 @@
         case 'admin/verify_admin':
             (new AdminController)->verify_adminLogin();
             break;
+
         case 'admin/admin_dashboard':
             (new AdminController)->showdashboard();
             break;
+
         case 'admin/addpet':
             (new AdminController)->showaddpetform();
             break;
@@ -72,12 +78,27 @@
             (new AdminController)-> ManageAdoption();
             break;
 
+
+
         // ✅ Adoption Center Pages (example controller)
         case 'adoptioncenter/center_login':
-            (new centerController)->showLoginForm();
+            (new CenterController)->showLoginForm();
             break;
+
         case 'adoptioncenter/center_dashboard':
-            (new centerController)->showDashboard();
+            (new CenterController)->showDashboard();
+            break;
+
+        case 'adoptioncenter/adoptioncenter_profile':
+            (new CenterController)->showprofile();
+            break;
+
+        case 'adoptioncenter/add_pets':
+            (new CenterController)->showaddpetform();
+            break;
+
+      case 'adoptioncenter/managepets':
+            (new CenterController)->managepetsform();
             break;
 
         case 'logout':

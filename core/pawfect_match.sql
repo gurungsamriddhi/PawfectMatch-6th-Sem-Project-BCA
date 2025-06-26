@@ -75,7 +75,6 @@ CREATE TABLE volunteers (
     status ENUM('pending', 'assigned', 'rejected') DEFAULT 'pending',
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
- 
 );
 
 -- 7. FEEDBACK TABLE
