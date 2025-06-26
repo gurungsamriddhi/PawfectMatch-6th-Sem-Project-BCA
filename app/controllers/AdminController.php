@@ -62,12 +62,30 @@ class AdminController
         $this->loadAdminView('admin_dashboard.php');
     }
 
-//     public function showaddpetform()
-//     {
-//         if (!isset($_SESSION['admin'])) {
-//             header("Location: index.php?page=admin/admin_login");
-//             exit();
-//         }
-//         $this->loadAdminView('addpet.php');
-//     }
+     public function showaddpetform()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+           exit();
+        }
+        $this->loadAdminView('addpet.php');
+    }
+
+     public function ManageAdoption()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+           exit();
+        }
+        $this->loadAdminView('adoptionManagement.php');
+    }
+
+     public function ManagePets()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+           exit();
+        }
+        $this->loadAdminView('PetManagement.php');
+    }
 }

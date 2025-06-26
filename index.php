@@ -62,9 +62,15 @@
         case 'admin/admin_dashboard':
             (new AdminController)->showdashboard();
             break;
-        // case 'admin/addpet':
-        //     (new AdminController)->showaddpetform();
-        //     break;
+        case 'admin/addpet':
+            (new AdminController)->showaddpetform();
+            break;
+        case 'admin/PetManagement':
+            (new AdminController)->ManagePets();
+            break;
+        case 'admin/adoptionManagement':
+            (new AdminController)-> ManageAdoption();
+            break;
 
         // ✅ Adoption Center Pages (example controller)
         case 'adoptioncenter/center_login':

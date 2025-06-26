@@ -8,224 +8,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="/PawfectMatch/public/assets/css/dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <style>
-    .top-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-    .add-pet-btn {
-      background: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 28px;
-      font-size: 17px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(67, 108, 93, 0.10);
-      text-decoration: none;
-    }
-    .add-pet-btn:hover {
-      background: #3b5d50;
-      color: #fff;
-      transform: translateY(-2px);
-      text-decoration: none;
-    }
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .filter-group label {
-      font-weight: 500;
-      color: var(--primary-color);
-      font-size: 16px;
-    }
-    .filter-group select {
-      border-radius: 6px;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-    }
-    .pet-table {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 0;
-    }
-    .pet-table th, .pet-table td {
-      vertical-align: middle;
-      font-size: 15px;
-      padding: 18px 14px;
-      border: none;
-    }
-    .pet-table th {
-      background: var(--primary-color);
-      color: #fff;
-      text-transform: uppercase;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      border: none;
-      font-weight: 700;
-    }
-    .pet-table tr {
-      transition: background 0.15s;
-    }
-    .pet-table tbody tr:hover {
-      background: #ececec;
-    }
-    .pet-table td {
-      background: #fff;
-      font-weight: 500;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .status-available {
-      background: #e6f7ea;
-      color: #22a722;
-      border: 1px solid #b6e2c6;
-    }
-    .status-adopted {
-      background: #ffeaea;
-      color: #e53935;
-      border: 1px solid #f7bdbd;
-    }
-    .status-reserved {
-      background: #fffbe6;
-      color: #f9bf29;
-      border: 1px solid #f7e6b6;
-    }
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: flex-start;
-      padding-right: 10px;
-    }
-    .edit-btn {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 18px;
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
-      margin-bottom: 4px;
-      width: 100%;
-    }
-    .edit-btn:last-child {
-      margin-bottom: 0;
-    }
-    .edit-btn:hover {
-      background: #1746a2;
-      color: #fff;
-    }
-    .delete-btn {
-      background: #e53935;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 18px;
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(229,57,53,0.08);
-      width: 100%;
-    }
-    .delete-btn:hover {
-      background: #b71c1c;
-      color: #fff;
-    }
-    .table-responsive {
-      overflow-x: unset !important;
-    }
-    @media (max-width: 768px) {
-      .top-actions {
-        flex-direction: column;
-        gap: 16px;
-        align-items: stretch;
-      }
-      .pet-table th, .pet-table td {
-        font-size: 13px;
-        padding: 10px 6px;
-      }
-      .action-buttons {
-        width: 100%;
-        padding-right: 0;
-      }
-      .edit-btn, .delete-btn {
-        width: 100%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/PawfectMatch/public/assets/css/addpet.css" />
+ <link rel="stylesheet" href="/PawfectMatch/public/assets/css/viewtable.css" />
 </head>
 <body>
-  <div class="page-wrapper d-flex">
-    <!-- Sidebar -->
-    <aside class="left-sidebar d-flex flex-column">
-      <div class="brand-logo text-center py-3 sticky-top" style="z-index: 2;">
-        <h2 class="m-0">PawfectMatch</h2>
-      </div>
-      <nav class="sidebar-nav flex-grow-1 overflow-y-auto">
-        <ul class="list-unstyled px-2">
-          <li class="sidebar-item">
-            <a href="admin_dashboard.php" class="sidebar-link"><i class="fas fa-home me-2"></i> Dashboard</a>
-          </li>
-          <li class="sidebar-item has-submenu open">
-            <a href="#" class="sidebar-link has-arrow active" data-toggle="submenu"><i class="fas fa-paw me-2"></i> Pet Management</a>
-            <ul class="first-level list-unstyled ps-3" style="display:block;">
-              <li class="sidebar-item"><a href="animalManagement.php" class="sidebar-link active"><i class="fa-solid fa-clipboard-list me-2"></i>All Pets</a></li>
-              <li class="sidebar-item"><a href="addpet.php" class="sidebar-link"><i class="fa-solid fa-plus me-2"></i>Add New Pet</a></li>
-            </ul>
-          </li>
-          <li class="sidebar-item has-submenu">
-            <a href="#" class="sidebar-link has-arrow" data-toggle="submenu"><i class="fa-solid fa-user me-2"></i> User Management</a>
-            <ul class="first-level list-unstyled ps-3">
-              <li class="sidebar-item"><a href="userManagement.php" class="sidebar-link"><i class="fa-solid fa-user me-2"></i>Add User</a></li>
-              <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fa-solid fa-house-chimney me-2"></i>Adoption Centers</a></li>
-              <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fa-solid fa-plus me-2"></i>Add Adoption Center</a></li>
-            </ul>
-          </li>
-          <li class="sidebar-item">
-            <a href="#" class="sidebar-link"><i class="fas fa-envelope-open-text me-2"></i>Message Requests</a>
-          </li>
-          <li class="sidebar-item">
-            <a href="#" class="sidebar-link"><i class="fas fa-handshake me-2"></i>Volunteer Requests</a>
-          </li>
-          <li class="sidebar-item">
-            <a href="#" class="sidebar-link"><i class="fas fa-comment-dots me-2"></i>View Feedback</a>
-          </li>
-          <li class="sidebar-item">
-            <a href="donation.php" class="sidebar-link"><i class="fas fa-donate me-2"></i>Donation</a>
-          </li>
-          <li class="sidebar-item">
-            <a href="#" class="sidebar-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
-              <i class="fas fa-sign-out-alt me-2"></i> Logout
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
+  <?php include 'app/views/partials/sidebar.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->
@@ -241,7 +28,7 @@
       <!-- Content -->
       <div class="container-fluid py-4">
         <div class="top-actions">
-          <a href="addpet.php" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Pet</a>
+          <a href="index.php?page=admin/addpet" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Pet</a>
           <div class="filter-group">
             <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by Type:</label>
             <select class="filter" id="typeFilter" onchange="filterByType(this)">
@@ -253,7 +40,7 @@
             </select>
           </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-5">
           <table class="table pet-table" id="animalTable">
             <thead>
               <tr>
