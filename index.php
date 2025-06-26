@@ -51,23 +51,42 @@
             (new UserController)->Login(); // call Login() method in UserController
             break;
 
+
+
         // ✅ Admin Pages
         case 'admin/admin_login':
             (new AdminController)->showadminloginform();
             break;
+
         case 'admin/admin_dashboard':
             (new AdminController)->showdashboard();
             break;
+
         case 'admin/addpet':
             (new AdminController)->showaddpetform();
             break;
 
+
+
         // ✅ Adoption Center Pages (example controller)
         case 'adoptioncenter/center_login':
-            (new CenterController)->showLoginForm(); 
+            (new CenterController)->showLoginForm();
             break;
+
         case 'adoptioncenter/center_dashboard':
-            (new CenterController)->showDashboard(); 
+            (new CenterController)->showDashboard();
+            break;
+
+        case 'adoptioncenter/adoptioncenter_profile':
+            (new CenterController)->showprofile();
+            break;
+
+        case 'adoptioncenter/add_pets':
+            (new CenterController)->showaddpetform();
+            break;
+
+      case 'adoptioncenter/managepets':
+            (new CenterController)->managepetsform();
             break;
         case 'logout':
             session_unset();

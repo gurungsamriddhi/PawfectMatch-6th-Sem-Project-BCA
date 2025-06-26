@@ -1,6 +1,6 @@
-<?php include 'sidebar.php'; ?>
+<?php include 'app/views/partials/sidebarcenter.php'; ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="/animal_adoption/pawfectmatch/public/assets/css/adoptioncenter.css" />
+<link rel="stylesheet" href="public/assets/css/adoptioncenter.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
 <div class="body-wrapper">
@@ -17,7 +17,7 @@
         <div class="rounded-circle overflow-hidden border border-success mx-auto mb-3" 
              style="width: 150px; height: 150px; background: #e9ecef;">
           <!-- Show current logo -->
-          <img id="logoPreview" src="/animal_adoption/pawfectmatch/public/assets/images/Pawfectmatch-about.png" alt="Current Logo" 
+          <img id="logoPreview" src="public/assets/images/Pawfectmatch-about.png" alt="Current Logo" 
                class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
         <!-- Upload new logo button -->

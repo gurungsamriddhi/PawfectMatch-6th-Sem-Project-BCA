@@ -1,21 +1,15 @@
-<?php
-session_start();
-include '../../../core/databaseconn.php';
+ <!--
 
-$sql = "SELECT * FROM pets ORDER BY pet_id DESC";
-$result = mysqli_query($conn, $sql);
+// require_once __DIR__ . '/../../../core/databaseconn.php';
 
-if (!$result) {
-    die("Query failed: " . mysqli_error($conn));
-}
-?>
+// $sql = "SELECT * FROM pets ORDER BY pet_id DESC";
+// $result = mysqli_query($conn, $sql);
 
-<?php include 'sidebar.php'; ?>
-
-<!-- Stylesheets -->
-<link rel="stylesheet" href="/animal_adoption/pawfectmatch/public/assets/css/adoptioncenter.css" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+// if (!$result) {
+//     die("Query failed: " . mysqli_error($conn));
+// }
+-->
+<?php include 'app/views/partials/sidebarcenter.php'; ?>
 
 <div class="body-wrapper">
 

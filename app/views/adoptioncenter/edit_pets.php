@@ -1,5 +1,4 @@
-<?php include 'sidebar.php'; ?>
-<link rel="stylesheet" href="/animal_adoption/pawfectmatch/public/assets/css/adoptioncenter.css" />
+<?php include 'app/views/partials/sidebarcenter.php'; ?>
 <?php
 include '../../../core/databaseconn.php'; // make sure this file exists and defines $conn
 

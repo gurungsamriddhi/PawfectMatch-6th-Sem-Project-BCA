@@ -1,5 +1,6 @@
+<?php include 'app/views/partials/sidebarcenter.php'; ?>
 <?php
-session_start();
+
 include '../../../core/databaseconn.php';
 
 // Check if pet_id is provided
