@@ -73,7 +73,7 @@ CREATE TABLE volunteers (
     availability_days VARCHAR(100),
     status ENUM('pending', 'assigned', 'rejected') DEFAULT 'pending',
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
   
 );
 

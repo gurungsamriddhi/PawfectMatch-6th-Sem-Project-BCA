@@ -64,10 +64,10 @@
 
         // ✅ Adoption Center Pages (example controller)
         case 'adoptioncenter/center_login':
-            (new centerController)->showLoginForm(); 
+            (new CenterController)->showLoginForm(); 
             break;
         case 'adoptioncenter/center_dashboard':
-            (new centerController)->showDashboard(); 
+            (new CenterController)->showDashboard(); 
             break;
         case 'logout':
             session_unset();
