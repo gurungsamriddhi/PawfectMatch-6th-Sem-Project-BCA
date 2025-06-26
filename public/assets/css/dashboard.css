@@ -24,10 +24,15 @@ body {
 }
 
 .left-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 260px;
+  height: 100vh;
   background: var(--primary-color);
+  z-index: 1000;
+  overflow-y: auto;
   border-right: 1px solid #e5e5e5;
-  min-height: 100vh;
   color: #fff;
 }
 
@@ -125,7 +130,8 @@ body {
 }
 
 .body-wrapper {
-  margin-left: 0;
+  margin-left: 260px;
+  width: calc(100% - 260px);
   flex: 1;
   padding: 20px;
   background-color: var(--light-bg);
@@ -476,4 +482,51 @@ body {
   .stats-card .label {
     font-size: 0.5rem;
   }
+}
+
+.sidebar-item.has-submenu > .sidebar-link.has-arrow {
+  background: transparent;
+  color: #fff;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-item.has-submenu.open > .sidebar-link.has-arrow {
+  background: #f9bf29;
+  color: #333;
+  z-index: 1;
+}
+.first-level .sidebar-link {
+  background: transparent;
+  color: #fff;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+}
+.first-level .sidebar-link.active {
+  background: #fff8e1;
+  color: #333;
+  border-left: 4px solid #f9bf29;
+  z-index: 2;
+}
+.first-level .sidebar-link:hover {
+  background: #ffe082;
+  color: #333;
+}
+.sidebar-link.active:not(.has-arrow) {
+  background: #f9bf29;
+  color: #333;
+}
+.sidebar-link:not(.active):hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+/* Remove double yellow: only one highlight at a time */
+.sidebar-item.has-submenu.open > .first-level .sidebar-link.active {
+  background: #fff8e1;
+  color: #333;
+  border-left: 4px solid #f9bf29;
+}
+.sidebar-item.has-submenu.open > .sidebar-link.has-arrow.active {
+  background: #f9bf29;
+  color: #333;
 }

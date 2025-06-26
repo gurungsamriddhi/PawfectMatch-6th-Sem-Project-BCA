@@ -23,18 +23,19 @@
   <nav class="sidebar-nav flex-grow-1 overflow-y-auto">
     <ul class="list-unstyled px-2">
       <li class="sidebar-item">
-        <a href="#" class="sidebar-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
+        <a href="admin_dashboard.php" class="sidebar-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
       </li>
       <li class="sidebar-item has-submenu">
         <a href="#" class="sidebar-link has-arrow" data-toggle="submenu"><i class="fas fa-paw me-2"></i> Pet Management</a>
         <ul class="first-level list-unstyled ps-3">
-          <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fa-solid fa-clipboard-list me-2"></i>All Pets</a></li>
-          <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fa-solid fa-plus me-2"></i>Add New Pet</a></li>
+          <li class="sidebar-item"><a href="animalManagement.php" class="sidebar-link"><i class="fa-solid fa-clipboard-list me-2"></i>All Pets</a></li>
+          <li class="sidebar-item"><a href="addpet.php" class="sidebar-link"><i class="fa-solid fa-plus me-2"></i>Add New Pet</a></li>
         </ul>
       </li>
       <li class="sidebar-item has-submenu">
         <a href="#" class="sidebar-link has-arrow" data-toggle="submenu"><i class="fa-solid fa-user me-2"></i> User Management</a>
         <ul class="first-level list-unstyled ps-3">
+          <li class="sidebar-item"><a href="userManagement.php" class="sidebar-link"><i class="fa-solid fa-user me-2"></i>Add User</a></li>
           <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fa-solid fa-house-chimney me-2"></i>Adoption Centers</a></li>
           <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="fa-solid fa-plus me-2"></i>Add Adoption Center</a></li>
         </ul>
@@ -49,7 +50,7 @@
         <a href="#" class="sidebar-link"><i class="fas fa-comment-dots me-2"></i>View Feedback</a>
       </li>
       <li class="sidebar-item">
-        <a href="#" class="sidebar-link"><i class="fas fa-donate me-2"></i>Donation</a>
+        <a href="donation.php" class="sidebar-link"><i class="fas fa-donate me-2"></i>Donation</a>
       </li>
       <li class="sidebar-item">
         <a href="#" class="sidebar-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
@@ -151,7 +152,7 @@
             <div class="quick-actions">
               <h5 class="section-title"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
               <div class="d-flex flex-wrap">
-                <a href="#" class="action-btn">
+                <a href="addpet.php" class="action-btn">
                   <i class="fas fa-plus"></i>Add New Pet
                 </a>
                 <a href="#" class="action-btn">
@@ -163,10 +164,10 @@
                 <a href="#" class="action-btn">
                   <i class="fas fa-user-check"></i>Approve Volunteers
                 </a>
-                <a href="#" class="action-btn">
+                <a href="report.php" class="action-btn">
                   <i class="fas fa-chart-bar"></i>View Reports
                 </a>
-                <a href="#" class="action-btn">
+                <a href="donation.php" class="action-btn">
                   <i class="fas fa-donate"></i>Donation
                 </a>
               </div>

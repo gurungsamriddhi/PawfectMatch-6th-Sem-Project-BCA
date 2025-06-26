@@ -70,6 +70,12 @@
       color: red;
       font-weight: bold;
     }
+
+    .pet-table > tbody > tr:hover, 
+    .pet-table tbody tr:hover, 
+    .table.pet-table tbody tr:hover {
+      background: #e0e0e0 !important;
+    }
   </style>
 </head>
 <body>
