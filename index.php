@@ -58,12 +58,6 @@
             (new AdminController)->showadminloginform();
             break;
 
-<<<<<<< HEAD
-=======
-        case 'admin/verify_admin':
-            (new AdminController)->verify_adminLogin();
-            break;
->>>>>>> d9037b53744a851365af4eb16967bdea5c049918
         case 'admin/admin_dashboard':
             (new AdminController)->showdashboard();
             break;
@@ -82,15 +76,10 @@
 
         // ✅ Adoption Center Pages (example controller)
         case 'adoptioncenter/center_login':
-<<<<<<< HEAD
             (new CenterController)->showLoginForm();
-=======
-            (new centerController)->showLoginForm();
->>>>>>> d9037b53744a851365af4eb16967bdea5c049918
             break;
 
         case 'adoptioncenter/center_dashboard':
-<<<<<<< HEAD
             (new CenterController)->showDashboard();
             break;
 
@@ -104,9 +93,6 @@
 
       case 'adoptioncenter/managepets':
             (new CenterController)->managepetsform();
-=======
-            (new centerController)->showDashboard();
->>>>>>> d9037b53744a851365af4eb16967bdea5c049918
             break;
 
         case 'logout':
