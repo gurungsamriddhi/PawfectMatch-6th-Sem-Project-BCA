@@ -13,6 +13,8 @@
     //session is used to keep track of user data cross multiple page requests(since http itself is stateless) called once at the top of every php file that uses session variables
     session_start();
 
+
+
     // Get 'page' from the URL like ?page=home
     $page = $_GET['page'] ?? 'home';
     $current_page = $page; // set this for use in header.php
@@ -56,6 +58,10 @@
         // ✅ Admin Pages
         case 'admin/admin_login':
             (new AdminController)->showadminloginform();
+            break;
+
+        case 'admin/verify_admin':
+            (new AdminController)->verify_adminLogin();
             break;
 
         case 'admin/admin_dashboard':
