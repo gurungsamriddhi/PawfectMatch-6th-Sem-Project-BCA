@@ -58,4 +58,11 @@ class Admin
 
         return $stats;
     }
+
+    public function createAdoptionCenter($name, $email, $hashedPassword)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO users (name, email, password, user_type, is_verified, status) VALUES (?, ?, ?, 'adoption_center', 1, 'active')");
+        $stmt->bind_param("sss", $name, $email, $hashedPassword);
+        return $stmt->execute();
+    }
 }

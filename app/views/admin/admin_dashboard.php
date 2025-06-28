@@ -136,5 +136,6 @@
       </div>
     </div>
   </div>
+  <script src="public/assets/js/sidebartoggle.js"></script>
 </body>
 </html>

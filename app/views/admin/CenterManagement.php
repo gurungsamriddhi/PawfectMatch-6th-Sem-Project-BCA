@@ -1,19 +1,6 @@
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Animal Management - PawfectMatch</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="/PawfectMatch/public/assets/css/dashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="/PawfectMatch/public/assets/css/addpet.css" />
-  <link rel="stylesheet" href="/PawfectMatch/public/assets/css/viewtable.css" />
-</head>
-<body>
+
   <?php include 'app/views/partials/sidebar.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
@@ -30,7 +17,7 @@
       <!-- Content -->
       <div class="container-fluid py-4">
         <div class="top-actions">
-          <a href="index.php?page=admin/addAdoptionCenter" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Adoption Center</a>
+          <a href="index.php?page=admin/add_centerform" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Adoption Center</a>
           <div class="filter-group">
             <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by Location:</label>
             <select class="filter" id="typeFilter" onchange="filterByType(this)">
@@ -242,82 +229,6 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Sidebar submenu toggle logic
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.sidebar-link.has-arrow').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-          // Only toggle if the arrow itself is clicked
-          e.preventDefault();
-          var parent = link.closest('.sidebar-item');
-          parent.classList.toggle('open');
-        });
-      });
-      // Prevent closing submenus when clicking submenu items
-      document.querySelectorAll('.first-level .sidebar-link').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-          // Do nothing: keep submenu open
-          var parent = link.closest('.sidebar-item');
-          parent.classList.add('open');
-        });
-      });
-    });
-    // Filter by type
-    function filterByType(select) {
-      var type = select.value;
-      var rows = document.querySelectorAll('#animalTable tbody tr');
-      rows.forEach(function(row) {
-        if (type === 'All' || row.getAttribute('data-type') === type) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
-    }
-    // Edit Pet Modal Logic (UI only)
-    const editBtns = document.querySelectorAll('.edit-btn');
-    const editPetForm = document.getElementById('editPetForm');
-    let currentEditRow = null;
-    editBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        const row = btn.closest('tr');
-        currentEditRow = row;
-        document.getElementById('editPetName').value = row.children[0].textContent;
-        document.getElementById('editPetType').value = row.children[1].textContent;
-        document.getElementById('editBreed').value = row.children[2].textContent;
-        document.getElementById('editAge').value = row.children[3].textContent;
-        document.getElementById('editGender').value = row.children[4].textContent;
-        document.getElementById('editDescription').value = row.children[8].textContent;
-        document.getElementById('editAdoptionCenter').value = row.children[7].textContent;
-        // The rest can be filled similarly if you store them in the table or as data-attributes
-        document.getElementById('editDateArrival').value = '';
-        document.getElementById('editSize').value = '';
-        document.getElementById('editWeight').value = '';
-        document.getElementById('editColor').value = '';
-        document.getElementById('editHealthStatus').value = '';
-        document.getElementById('editContactName').value = '';
-        document.getElementById('editContactPhone').value = '';
-        document.getElementById('editContactEmail').value = '';
-        document.getElementById('editCenterAddress').value = '';
-        document.getElementById('editCenterWebsite').value = '';
-        document.getElementById('editAdoptionNotes').value = '';
-      });
-    });
-    editPetForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (currentEditRow) {
-        currentEditRow.children[0].textContent = document.getElementById('editPetName').value;
-        currentEditRow.children[1].textContent = document.getElementById('editPetType').value;
-        currentEditRow.children[2].textContent = document.getElementById('editBreed').value;
-        currentEditRow.children[3].textContent = document.getElementById('editAge').value;
-        currentEditRow.children[4].textContent = document.getElementById('editGender').value;
-        currentEditRow.children[8].textContent = document.getElementById('editDescription').value;
-        currentEditRow.children[7].textContent = document.getElementById('editAdoptionCenter').value;
-        // The rest can be updated similarly if you store them in the table
-      }
-      var modal = bootstrap.Modal.getInstance(document.getElementById('editPetModal'));
-      modal.hide();
-    });
-  </script>
+  
 </body>
 </html>

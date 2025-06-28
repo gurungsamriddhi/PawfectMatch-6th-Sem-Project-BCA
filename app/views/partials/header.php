@@ -178,7 +178,7 @@ unset(
 								<label for="showLoginPasswordCheck" class="form-check-label">Show Passwords</label>
 							</div>
 						</div>
-						<button type="submit" class="btn btn-success w-100 fw-semibold">Login</button>
+						<button type="submit" class="btn btn-primary w-100 fw-semibold">Login</button>
 					</form>
 
 					<div class="login-links">
@@ -283,7 +283,7 @@ unset(
 						</div>
 
 						<!-- Submit Button -->
-						<button type="submit" class="btn btn-success w-100 fw-semibold">Register</button>
+						<button type="submit" class="btn btn-primary w-100 fw-semibold">Register</button>
 					</form>
 
 					<div class="login-links mt-3 text-center small">
