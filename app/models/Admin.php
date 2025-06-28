@@ -65,4 +65,9 @@ class Admin
         $stmt->bind_param("sss", $name, $email, $hashedPassword);
         return $stmt->execute();
     }
+
+    public function getAllAdoptionCenterUsers(){
+      
+    
+    }
 }
