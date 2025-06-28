@@ -5,8 +5,16 @@ require_once __DIR__ . '/../models/Admin.php';
 
 class AdminController
 {
-    private function loadAdminView($filename)
+    private $adminModel;
+
+    public function __construct()
     {
+        $this->adminModel = new Admin(); // inject once
+    }
+
+    private function loadAdminView($filename, $data=[])
+    {
+        extract($data);
         include __DIR__ . '/../views/admin/' . $filename; //to use this function again and again instead writing each time the path
     }
 
@@ -17,7 +25,7 @@ class AdminController
 
     public function verify_adminLogin()
     {
-         $email = $_POST['email'] ?? '';
+        $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         $errors = [];
 
@@ -30,10 +38,10 @@ class AdminController
         }
 
         if (empty($errors)) {
-            $user = Admin::findByEmail($email);
-            if (!$user || $user['user_type']!=='admin' || !password_Verify($password, $user['password'])) {
+            $user = $this->adminModel->findByEmail($email);
+            if (!$user || $user['user_type'] !== 'admin' || !password_verify($password, $user['password'])) {
                 $errors['adminlogin'] = "Invalid email or password.";
-            } 
+            }
         }
 
         //if there are errors store them in session and return to the index.php page
@@ -50,7 +58,6 @@ class AdminController
         ];
         header('Location:index.php?page=admin/admin_dashboard');
         exit();
-
     }
 
     public function showdashboard()
@@ -59,32 +66,33 @@ class AdminController
             header("Location: index.php?page=admin/admin_login");
             exit();
         }
-        $this->loadAdminView('admin_dashboard.php');
+        $stats=$this->adminModel->getDashboardStats();
+        $this->loadAdminView('admin_dashboard.php',['stats'=>$stats]);
     }
 
-     public function showaddpetform()
+    public function showaddpetform()
     {
         if (!isset($_SESSION['admin'])) {
             header("Location: index.php?page=admin/admin_login");
-           exit();
+            exit();
         }
         $this->loadAdminView('addpet.php');
     }
 
-     public function ManageAdoption()
+    public function ManageAdoption()
     {
         if (!isset($_SESSION['admin'])) {
             header("Location: index.php?page=admin/admin_login");
-           exit();
+            exit();
         }
         $this->loadAdminView('adoptionManagement.php');
     }
 
-     public function ManagePets()
+    public function ManagePets()
     {
         if (!isset($_SESSION['admin'])) {
             header("Location: index.php?page=admin/admin_login");
-           exit();
+            exit();
         }
         $this->loadAdminView('PetManagement.php');
     }

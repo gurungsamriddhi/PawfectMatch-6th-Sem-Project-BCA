@@ -5,28 +5,32 @@ require_once __DIR__ . '/../../mail/sendMail.php';
 
 class User
 {
-    public static function findByEmail($email)
+    protected $conn;
+
+    public function __construct()
     {
         $db = new Database();
-        $conn = $db->connect(); //php syntax to call the function using object of a class
+        $this->conn = $db->connect();
+    }
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    public function findByEmail($email)
+    {
+        
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param('s', $email);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_assoc();  // return user data or null
     }
 
-    public static function create($name, $email, $password, $user_type)
+    public function create($name, $email, $password, $user_type)
     {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $verify_token = bin2hex(random_bytes(16));
+       
+     $verify_token = bin2hex(random_bytes(16));
         $is_verified = 0;
         $status = 'pending';
 
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password,verify_token,is_verified, user_type,status) VALUES (?, ?, ?,?,?, ?,?)");
+        $stmt = $this->conn->prepare("INSERT INTO users (name, email, password,verify_token,is_verified, user_type,status) VALUES (?, ?, ?,?,?, ?,?)");
         $stmt->bind_param('ssssiss', $name, $email, $password, $verify_token, $is_verified, $user_type, $status);
 
         if ($stmt->execute()) {
@@ -37,18 +41,17 @@ class User
         return false;
     }
 
-    public static function verifyUser($email, $token)
+    public function verifyUser($email, $token)
     {
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND verify_token = ? AND is_verified = 0");
+   
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ? AND verify_token = ? AND is_verified = 0");
         $stmt->bind_param('ss', $email, $token);
         $stmt->execute();
         $user = $stmt->get_result()->fetch_assoc();
 
         if ($user) {
             if ($user['is_verified'] == 0) {
-                $update = $conn->prepare("UPDATE users SET is_verified = 1, status = 'active', verify_token = NULL WHERE email = ?");
+                $update = $this->conn->prepare("UPDATE users SET is_verified = 1, status = 'active', verify_token = NULL WHERE email = ?");
                 $update->bind_param('s', $email);
                 $update->execute();
                 return 1; // Successfully verified
