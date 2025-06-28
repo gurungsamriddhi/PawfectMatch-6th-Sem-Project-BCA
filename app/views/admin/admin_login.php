@@ -21,8 +21,10 @@ unset($_SESSION['adminlogin_errors']);
     <div class="container d-flex justify-content-center align-items-center vh-100">
 
         <div class="login-form shadow p-4 rounded bg-white w-100" style="max-width: 400px;">
-            <div class="text-center">
-                <a class="navbar-brand " href="">PawfectMatch</a>
+            <div class="text-center ">
+                <div class="logobox">
+                    <a class="navbar-brand " href="">PawfectMatch</a>
+                </div>
             </div>
             <h2 class="text-center mb-4">Admin Login</h2>
 
@@ -33,7 +35,7 @@ unset($_SESSION['adminlogin_errors']);
                 </div>
             <?php endif; ?>
 
-            <form id= "adminLoginForm" method="POST" action="index.php?page=admin/verify_admin" autocomplete="off">
+            <form id="adminLoginForm" method="POST" action="index.php?page=admin/verify_admin" autocomplete="off">
 
                 <div class="mb-3">
                     <label for="email" class="form-label fw-semibold">Email</label>
@@ -76,7 +78,7 @@ unset($_SESSION['adminlogin_errors']);
     </div>
 
     <script src="public/assets/js/bootstrap.bundle.min.js"></script>
-   
+
     <script src="public/assets/js/authentication.js"></script>
 
 </body>

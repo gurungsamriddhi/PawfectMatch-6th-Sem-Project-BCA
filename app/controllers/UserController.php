@@ -4,6 +4,13 @@
 require_once __DIR__ . '/../models/User.php';
 class UserController
 {
+    private $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new User(); // inject once
+    }
+
     public function Login()
     {
 
@@ -20,11 +27,15 @@ class UserController
         }
 
         if (empty($errors)) {
-            $user = user::findByEmail($email);
+            
+            $user = $this->userModel->findByEmail($email);
             if (!$user || !password_Verify($password, $user['password'])) {
                 $errors['login'] = "Invalid email or password.";
             } else if ($user['is_verified'] == 0) {
                 $errors['login'] = "Please verify your email first.";
+            }
+            else if ($user['status'] !== 'active') {
+                $errors['login'] = "Your account is not active. Please check your email or contact support.";
             }
         }
 
@@ -69,7 +80,8 @@ class UserController
             $errors['password'] = "Password must be minimum 8 characters, include uppercase, lowercase, number and special character.";
         }
         // ✅ Check if email already exists
-        if (empty($errors) && User::findByEmail($email)) { //calling the method findByEmail on the class User itself, not on an instance/object.
+         $user = $this->userModel->findByEmail($email);
+        if (empty($errors) && $user) { //calling the method findByEmail on the class User itself, not on an instance/object.
             $errors['email'] = 'This email is already registered.';
         }
 
@@ -85,7 +97,7 @@ class UserController
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $user_type = 'user';
 
-        $created = User::create($name, $email, $hashedPassword, $user_type);
+        $created = $this->userModel->create($name,$email,$hashedPassword,$user_type);
 
 
         if ($created) {

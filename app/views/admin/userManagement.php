@@ -1,219 +1,320 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>User Management </title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-    }
 
-    body {
-      background-color: #f4f6f9;
-      padding: 30px;
-    }
-
-    h2 {
-      color: #2e8b57;
-      margin-bottom: 20px;
-    }
-
-    .actions {
-      margin-bottom: 20px;
-    }
-
-    .actions button {
-         background-color:rgb(78, 203, 124);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 5px;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .actions button:hover {
-         background-color:rgb(78, 203, 124);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 14px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-
-    th {
-      background-color: #2e8b57;
-      color: white;
-      text-transform: uppercase;
-      font-size: 13px;
-    }
-
-    td {
-      font-size: 14px;
-    }
-
-    tr:hover {
-      background-color: #f0f9f0;
-    }
-
-    .button-small {
-      background-color: #3b82f6;
-      color: white;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 4px;
-      margin-right: 5px;
-      cursor: pointer;
-    }
-
-    .button-small.delete {
-      background-color: #dc2626;
-    }
-
-    .form-container {
-      margin-top: 30px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      max-width: 600px;
-      display: none;
-    }
-
-    .form-container h3 {
-      margin-bottom: 15px;
-      color: #2e8b57;
-    }
-
-    .form-container input,
-    .form-container select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .form-container button {
-      background-color: #2e8b57;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .form-container button:hover {
-      background-color: #256f46;
-    }
-  </style>
-</head>
-<body>
-
-  <h2>👤 User Management</h2>
-
-  <div class="actions">
-    <button onclick="toggleAddForm()">➕ Add New User</button>
+  <?php include 'app/views/partials/sidebar.php'; ?>
+    <!-- Main Content -->
+    <div class="body-wrapper w-100">
+      <!-- Header -->
+      <header class="app-header bg-dark text-white py-3 px-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">All Users</h5>
+          <div class="d-flex align-items-center gap-3">
+            <i class="fas fa-bell"></i>
+            <i class="fas fa-user-circle"></i>
+          </div>
+        </div>
+      </header>
+      <!-- Content -->
+      <div class="container-fluid py-4">
+        <div class="top-actions">
+          <a href="index.php?page=admin/addpet" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Pet</a>
+          <div class="filter-group">
+            <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by Type:</label>
+            <select class="filter" id="typeFilter" onchange="filterByType(this)">
+              <option value="All">All</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Rabbit">Rabbit</option>
+              <option value="Bird">Bird</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-responsive mt-5">
+          <table class="table pet-table" id="animalTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Breed</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Status</th>
+                <th>Posted By</th>
+                <th>Adoption Center</th>
+                <th>Description</th>
+                <th>Health</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-type="Dog">
+                <td>Charlie</td>
+                <td>Dog</td>
+                <td>Labrador</td>
+                <td>2</td>
+                <td>Male</td>
+                <td><span class="status-badge status-available">Available</span></td>
+                <td>Admin</td>
+                <td>Happy Paws Center</td>
+                <td>Very friendly, playful and house-trained.</td>
+                <td>Vaccinated</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-type="Dog">
+                <td>Coco</td>
+                <td>Dog</td>
+                <td>Labrador</td>
+                <td>3</td>
+                <td>Female</td>
+                <td><span class="status-badge status-available">Available</span></td>
+                <td>Admin</td>
+                <td>Happy Paws Center</td>
+                <td>Very friendly</td>
+                <td>Not Vaccinated</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-type="Cat">
+                <td>Luna</td>
+                <td>Cat</td>
+                <td>Siamese</td>
+                <td>1</td>
+                <td>Female</td>
+                <td><span class="status-badge status-adopted">Adopted</span></td>
+                <td>Rejina</td>
+                <td>Feline Friends Shelter</td>
+                <td>Sweet and cuddly.</td>
+                <td>Vaccinated</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>SN</th>
-        <th>Name</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Created Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>Asmita Chhetri</td>
-        <td>asmita11</td>
-        <td>asmita11@gmail.com</td>
-        <td>Staff</td>
-        <td>2020-03-15</td>
-        <td>
-          <button class="button-small" onclick="toggleEditForm(this)"> Edit</button>
-          <button class="button-small delete"> Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Mamata Paudel</td>
-        <td>mamata22</td>
-        <td>mamata22@gmail.com</td>
-        <td>User</td>
-        <td>2020-03-15</td>
-        <td>
-          <button class="button-small" onclick="toggleEditForm(this)"> Edit</button>
-          <button class="button-small delete"> Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Add User Form -->
-  <div class="form-container" id="addUserForm">
-    <h3>➕ Add New User</h3>
-    <input type="text" placeholder="Full Name">
-    <input type="text" placeholder="Username">
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <select>
-      <option value="">Select Role</option>
-      <option value="Admin">Admin</option>
-      <option value="Staff">Staff</option>
-      <option value="User">User</option>
-    </select>
-    <input type="date" placeholder="Created Date">
-    <button>💾 Save User</button>
+  <!-- Edit Pet Modal -->
+  <div class="modal fade" id="editPetModal" tabindex="-1" aria-labelledby="editPetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <form id="editPetForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editPetModalLabel"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Pet Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Pet Name *</label>
+                <input type="text" class="form-control" id="editPetName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Type *</label>
+                <select class="form-select" id="editPetType" required>
+                  <option value="Dog">Dog</option>
+                  <option value="Cat">Cat</option>
+                  <option value="Bird">Bird</option>
+                  <option value="Rabbit">Rabbit</option>
+                  <option value="Hamster">Hamster</option>
+                  <option value="Fish">Fish</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Breed *</label>
+                <input type="text" class="form-control" id="editBreed" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Gender *</label>
+                <select class="form-select" id="editGender" required>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Age (in years) *</label>
+                <input type="number" class="form-control" id="editAge" min="0" step="0.1" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Date of Arrival *</label>
+                <input type="date" class="form-control" id="editDateArrival" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Size *</label>
+                <select class="form-select" id="editSize" required>
+                  <option value="Small">Small</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Large">Large</option>
+                  <option value="Extra Large">Extra Large</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Weight (kg) *</label>
+                <input type="number" class="form-control" id="editWeight" min="0" step="0.1" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Color *</label>
+                <input type="text" class="form-control" id="editColor" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Health Status *</label>
+                <select class="form-select" id="editHealthStatus" required>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Fair">Fair</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Description *</label>
+                <textarea class="form-control" id="editDescription" rows="2" required></textarea>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Adoption Center Name *</label>
+                <input type="text" class="form-control" id="editAdoptionCenter" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Contact Person Name *</label>
+                <input type="text" class="form-control" id="editContactName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Contact Phone *</label>
+                <input type="tel" class="form-control" id="editContactPhone" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Contact Email *</label>
+                <input type="email" class="form-control" id="editContactEmail" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Center Address *</label>
+                <input type="text" class="form-control" id="editCenterAddress" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Center Website (Optional)</label>
+                <input type="url" class="form-control" id="editCenterWebsite">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Adoption Process Notes</label>
+                <textarea class="form-control" id="editAdoptionNotes" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-
-  <!-- Edit User Form -->
-  <div class="form-container" id="editUserForm">
-    <h3> Edit User</h3>
-    <input type="text" placeholder="Full Name">
-    <input type="text" placeholder="Username">
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="New Password (optional)">
-    <select>
-      <option value="">Select Role</option>
-      <option value="Admin">Admin</option>
-      <option value="Staff">Staff</option>
-      <option value="User">User</option>
-    </select>
-    <input type="date" placeholder="Created Date">
-    <button>💾 Update User</button>
+  <!-- Logout Confirmation Modal -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to log out?
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <a href="http://localhost/PawfectMatch/index.php?page=home" class="btn btn-danger">Logout</a>
+        </div>
+      </div>
+    </div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    function toggleAddForm() {
-      document.getElementById('addUserForm').style.display = 'block';
-      document.getElementById('editUserForm').style.display = 'none';
+    // Sidebar submenu toggle logic
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.sidebar-link.has-arrow').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          // Only toggle if the arrow itself is clicked
+          e.preventDefault();
+          var parent = link.closest('.sidebar-item');
+          parent.classList.toggle('open');
+        });
+      });
+      // Prevent closing submenus when clicking submenu items
+      document.querySelectorAll('.first-level .sidebar-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          // Do nothing: keep submenu open
+          var parent = link.closest('.sidebar-item');
+          parent.classList.add('open');
+        });
+      });
+    });
+    // Filter by type
+    function filterByType(select) {
+      var type = select.value;
+      var rows = document.querySelectorAll('#animalTable tbody tr');
+      rows.forEach(function(row) {
+        if (type === 'All' || row.getAttribute('data-type') === type) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
     }
-
-    function toggleEditForm(button) {
-      document.getElementById('editUserForm').style.display = 'block';
-      document.getElementById('addUserForm').style.display = 'none';
-    }
+    // Edit Pet Modal Logic (UI only)
+    const editBtns = document.querySelectorAll('.edit-btn');
+    const editPetForm = document.getElementById('editPetForm');
+    let currentEditRow = null;
+    editBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const row = btn.closest('tr');
+        currentEditRow = row;
+        document.getElementById('editPetName').value = row.children[0].textContent;
+        document.getElementById('editPetType').value = row.children[1].textContent;
+        document.getElementById('editBreed').value = row.children[2].textContent;
+        document.getElementById('editAge').value = row.children[3].textContent;
+        document.getElementById('editGender').value = row.children[4].textContent;
+        document.getElementById('editDescription').value = row.children[8].textContent;
+        document.getElementById('editAdoptionCenter').value = row.children[7].textContent;
+        // The rest can be filled similarly if you store them in the table or as data-attributes
+        document.getElementById('editDateArrival').value = '';
+        document.getElementById('editSize').value = '';
+        document.getElementById('editWeight').value = '';
+        document.getElementById('editColor').value = '';
+        document.getElementById('editHealthStatus').value = '';
+        document.getElementById('editContactName').value = '';
+        document.getElementById('editContactPhone').value = '';
+        document.getElementById('editContactEmail').value = '';
+        document.getElementById('editCenterAddress').value = '';
+        document.getElementById('editCenterWebsite').value = '';
+        document.getElementById('editAdoptionNotes').value = '';
+      });
+    });
+    editPetForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (currentEditRow) {
+        currentEditRow.children[0].textContent = document.getElementById('editPetName').value;
+        currentEditRow.children[1].textContent = document.getElementById('editPetType').value;
+        currentEditRow.children[2].textContent = document.getElementById('editBreed').value;
+        currentEditRow.children[3].textContent = document.getElementById('editAge').value;
+        currentEditRow.children[4].textContent = document.getElementById('editGender').value;
+        currentEditRow.children[8].textContent = document.getElementById('editDescription').value;
+        currentEditRow.children[7].textContent = document.getElementById('editAdoptionCenter').value;
+        // The rest can be updated similarly if you store them in the table
+      }
+      var modal = bootstrap.Modal.getInstance(document.getElementById('editPetModal'));
+      modal.hide();
+    });
   </script>
-
 </body>
 </html>

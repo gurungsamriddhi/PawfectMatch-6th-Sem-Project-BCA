@@ -74,10 +74,21 @@
         case 'admin/PetManagement':
             (new AdminController)->ManagePets();
             break;
-        case 'admin/adoptionManagement':
-            (new AdminController)-> ManageAdoption();
+        case 'admin/CenterManagement':
+            (new AdminController)->ManageCenters(); 
             break;
 
+        case 'admin/add_centerform':
+            (new AdminController)->showaddcenterform();
+            break;
+
+        case'admin/add_Center':
+            (new AdminController)->addAdoptionCenter();
+            break;
+
+        case 'admin/UserManagement':
+            (new AdminController)->ManageUsers();
+            break;
 
 
         // ✅ Adoption Center Pages (example controller)
@@ -97,11 +108,11 @@
             (new CenterController)->showaddpetform();
             break;
 
-      case 'adoptioncenter/managepets':
+        case 'adoptioncenter/managepets':
             (new CenterController)->managepetsform();
             break;
 
-        case 'logout':
+        case 'logout': //user
             session_unset();
             session_destroy();
             header('Location: index.php?page=home');

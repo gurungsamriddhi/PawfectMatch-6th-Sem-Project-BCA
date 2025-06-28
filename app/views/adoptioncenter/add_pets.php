@@ -1,6 +1,4 @@
 
-
-
 <?php include 'app/views/partials/sidebarcenter.php'; ?>
 <!-- Main Content Area -->
 <div class="body-wrapper">

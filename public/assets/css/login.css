@@ -16,6 +16,17 @@ body {
     background-color: #eff2f1;
 
 }
+.logobox {
+    width: 100%;
+    background-color: #ffffff !important;
+    padding: 8px 20px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 8px rgba(59, 93, 80, 0.15) !important;
+    display: inline-block !important;
+    position: relative !important;
+    z-index: 10 !important;
+    margin-bottom: 20px !important;
+}
 .navbar-brand {
   font-family: "Caveat Brush", cursive;
   font-size: 40px;
