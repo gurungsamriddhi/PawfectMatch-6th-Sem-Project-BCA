@@ -44,8 +44,8 @@
         </div>
         <div class="table-responsive mt-5">
           <table class="table pet-table" id="animalTable">
-            <thead>
-              <tr>
+    <thead>
+      <tr>
                 <th>user_id</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -53,10 +53,10 @@
                 <th>is_verified</th>
                 <th>user_type</th>
                 <th>Registered_at</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
               <tr data-type="Pokhara">
                 <td>1</td>
                 <td>Himalayan Trust</td>
@@ -85,8 +85,8 @@
                     <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
                     <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
                   </div>
-                </td>
-              </tr>
+        </td>
+      </tr>
               <tr data-type="Tanahun">
                 <td>1</td>
                 <td>Himalayan Trust</td>
@@ -100,11 +100,11 @@
                     <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
                     <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
                   </div>
-                </td>
-              </tr>
+        </td>
+      </tr>
               <!-- Add more rows as needed -->
-            </tbody>
-          </table>
+    </tbody>
+  </table>
         </div>
       </div>
     </div>
