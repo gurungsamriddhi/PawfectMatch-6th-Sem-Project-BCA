@@ -66,8 +66,12 @@ class Admin
         return $stmt->execute();
     }
 
-    public function getAllAdoptionCenterUsers(){
-      
-    
+    public function getAllAdoptionCenterUsers()
+    {
+        $stmt = $this->conn->prepare("SELECT user_id, name, user_type, email, status FROM users WHERE user_type = 'adoption_center'");
+        $stmt->execute();
+
+        $result = $stmt->get_result();  // works only if mysqlnd is installed
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }

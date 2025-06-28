@@ -113,7 +113,7 @@ unset($_SESSION['register_errors'], $_SESSION['register_old'],$_SESSION['success
 
         
   </div>
-
+<script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
   <script src="public/assets/js/sidebartoggle.js"></script>
  <script src="public/assets/js/authentication.js"></script>
 </body>

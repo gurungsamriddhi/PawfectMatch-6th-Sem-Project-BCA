@@ -85,7 +85,9 @@ class AdminController
             header("Location: index.php?page=admin/admin_login");
             exit();
         }
-        $this->loadAdminView('CenterManagement.php');
+        $centers =$this ->adminModel->getAllAdoptionCenterUsers();
+
+        $this->loadAdminView('CenterManagement.php',['centers'=>$centers]);
     }
 
     public function ManagePets()

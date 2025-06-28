@@ -97,74 +97,76 @@
       color: #f9bf29;
       border: 1px solid #f7e6b6;
     }
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: flex-start;
-      padding-right: 10px;
-    }
-    .edit-btn {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 18px;
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
-      margin-bottom: 4px;
-      width: 100%;
-    }
-    .edit-btn:last-child {
-      margin-bottom: 0;
-    }
-    .edit-btn:hover {
-      background: #1746a2;
-      color: #fff;
-    }
-    .delete-btn {
-      background: #e53935;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 18px;
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(229,57,53,0.08);
-      width: 100%;
-    }
-    .delete-btn:hover {
-      background: #b71c1c;
-      color: #fff;
-    }
-    .table-responsive {
-      overflow-x: unset !important;
-    }
-    @media (max-width: 768px) {
-      .top-actions {
-        flex-direction: column;
-        gap: 16px;
-        align-items: stretch;
-      }
-      .pet-table th, .pet-table td {
-        font-size: 13px;
-        padding: 10px 6px;
-      }
-      .action-buttons {
-        width: 100%;
-        padding-right: 0;
-      }
-      .edit-btn, .delete-btn {
-        width: 100%;
-      }
-    }
-  
+    /* Wrapper for the buttons */
+.action-buttons {
+ display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 10px;
+  padding-right: 10px;
+}
+
+/* Common style for all buttons */
+.action-buttons button {
+  width: 70%;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: #fff;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Individual button colors */
+.view-btn {
+  background: #f5b71b;
+}
+
+.view-btn:hover {
+  background: #f8b810;
+}
+
+.edit-btn {
+  background: #2563eb;
+}
+
+.edit-btn:hover {
+  background: #1746a2;
+}
+
+.reset-btn {
+  background: #3b5d50;
+}
+
+.reset-btn:hover {
+  background: #314d43;
+}
+
+.delete-btn {
+  background: #e53935;
+}
+
+.delete-btn:hover {
+  background: #b71c1c;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .action-buttons {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .action-buttons button {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}
