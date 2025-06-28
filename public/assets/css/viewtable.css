@@ -42,20 +42,20 @@
       border: 1px solid #ccc;
       font-size: 15px;
     }
-    .pet-table {
+    .view-table {
       background: #fff;
       border-radius: 8px;
       box-shadow: var(--shadow);
       overflow: hidden;
       margin-bottom: 0;
     }
-    .pet-table th, .pet-table td {
+    .view-table th, .view-table td {
       vertical-align: middle;
       font-size: 15px;
       padding: 18px 14px;
       border: none;
     }
-    .pet-table th {
+    .view-table th {
       background: var(--primary-color);
       color: #fff;
       text-transform: uppercase;
@@ -64,13 +64,13 @@
       border: none;
       font-weight: 700;
     }
-    .pet-table tr {
+    .view-table tr {
       transition: background 0.15s;
     }
-    .pet-table tbody tr:hover {
+    .view-table tbody tr:hover {
       background: #ececec;
     }
-    .pet-table td {
+    .view-table td {
       background: #fff;
       font-weight: 500;
     }
@@ -99,7 +99,6 @@
     }
     /* Wrapper for the buttons */
 .action-buttons {
- display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 columns */
   gap: 10px;
   padding-right: 10px;

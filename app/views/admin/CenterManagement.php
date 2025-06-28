@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="table-responsive mt-5">
-      <table class="table pet-table" id="animalTable">
+      <table class="table view-table" id="centerTable">
         <thead>
           <tr>
             <th>Name</th>
