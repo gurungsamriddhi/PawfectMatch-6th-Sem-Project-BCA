@@ -26,6 +26,9 @@ class UserController
             } else if ($user['is_verified'] == 0) {
                 $errors['login'] = "Please verify your email first.";
             }
+            else if ($user['status'] !== 'active') {
+                $errors['login'] = "Your account is not active. Please check your email or contact support.";
+            }
         }
 
         //if there are errors store them in session and return to the index.php page

@@ -101,7 +101,7 @@
             (new CenterController)->managepetsform();
             break;
 
-        case 'logout':
+        case 'logout'://user
             session_unset();
             session_destroy();
             header('Location: index.php?page=home');
