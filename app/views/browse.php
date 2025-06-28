@@ -45,8 +45,8 @@
 						<select class="form-select" id="locationFilter">
 							<option value="">All Locations</option>
 							<option value="Kathmandu">Kathmandu</option>
-							<option value="Lalitpur">Pokhara</option>
-							<option value="Bhaktapur">Hetauda</option>
+							<option value="Pokhara">Pokhara</option>
+							<option value="Hetauda">Hetauda</option>
 						</select>
 					</div>
 					<div class="col-6 col-md-2">
@@ -192,64 +192,103 @@ function handleProtectedAction(action, petId) {
 // Render pets
 function renderPets() {
   const grid = document.getElementById('petGrid');
-  const favs = getFavorites();
-  let filtered = [...pets];
-  // Search
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  if (search) {
-    filtered = filtered.filter(p =>
-      p.name.toLowerCase().includes(search) ||
-      p.breed.toLowerCase().includes(search) ||
-      p.description.toLowerCase().includes(search)
-    );
-  }
-  // Filters
-  const species = document.getElementById('speciesFilter').value;
-  if (species) filtered = filtered.filter(p => p.species === species);
-  const gender = document.getElementById('genderFilter').value;
-  if (gender) filtered = filtered.filter(p => p.gender === gender);
-  const location = document.getElementById('locationFilter').value;
-  if (location) filtered = filtered.filter(p => p.location === location);
-  // Sort
-  const sort = document.getElementById('sortFilter').value;
-  if (sort === 'recent') filtered.sort((a,b) => new Date(b.added)-new Date(a.added));
-  if (sort === 'youngest') filtered.sort((a,b) => +a.age - +b.age);
-  if (sort === 'oldest') filtered.sort((a,b) => +b.age - +a.age);
-  if (sort === 'alpha') filtered.sort((a,b) => a.name.localeCompare(b.name));
-  // Render
-  grid.innerHTML = '';
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div class="col-12 text-center text-muted py-5">No pets found matching your criteria.</div>';
+  if (!grid) {
+    console.error('Pet grid element not found');
     return;
   }
-  filtered.forEach(pet => {
-    const isFav = favs.includes(pet.id);
-    grid.innerHTML += `
-      <div class="col-12 col-md-6 col-lg-4 d-flex">
-        <div class="pet-card flex-fill">
-          <div class="pet-fav ${isFav ? 'favorited' : ''}" onclick="handleProtectedAction('favorite', ${pet.id})">
-            <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
-          </div>
-          <img src="${pet.image}" class="pet-card-img" alt="${pet.name}">
-          <div class="pet-card-title">${pet.name}</div>
-          <div class="pet-card-meta">${pet.breed} • ${pet.gender} • ${pet.age} yr${pet.age>1?'s':''}</div>
-          <div class="pet-card-location"><i class="fa-solid fa-location-dot me-1"></i> ${pet.location}</div>
-          <div class="pet-card-desc">${pet.description}</div>
-          <div class="pet-card-btns">
-            <a href="#" class="pet-card-btn adopt" onclick="return handleProtectedAction('adopt', ${pet.id})">Adopt Me</a>
-            <a href="#" class="pet-card-btn details">View Details</a>
+  
+  // Show loading state
+  grid.innerHTML = '<div class="col-12 pet-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading pets...</p></div>';
+  
+  // Simulate loading delay for better UX
+  setTimeout(() => {
+    const favs = getFavorites();
+    let filtered = [...pets];
+    
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      const search = searchInput.value.toLowerCase();
+      if (search) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(search) ||
+          p.breed.toLowerCase().includes(search) ||
+          p.description.toLowerCase().includes(search)
+        );
+      }
+    }
+    
+    // Filters
+    const speciesFilter = document.getElementById('speciesFilter');
+    if (speciesFilter && speciesFilter.value) {
+      filtered = filtered.filter(p => p.species === speciesFilter.value);
+    }
+    
+    const genderFilter = document.getElementById('genderFilter');
+    if (genderFilter && genderFilter.value) {
+      filtered = filtered.filter(p => p.gender === genderFilter.value);
+    }
+    
+    const locationFilter = document.getElementById('locationFilter');
+    if (locationFilter && locationFilter.value) {
+      filtered = filtered.filter(p => p.location === locationFilter.value);
+    }
+    
+    // Sort
+    const sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) {
+      const sort = sortFilter.value;
+      if (sort === 'recent') filtered.sort((a,b) => new Date(b.added)-new Date(a.added));
+      if (sort === 'youngest') filtered.sort((a,b) => +a.age - +b.age);
+      if (sort === 'oldest') filtered.sort((a,b) => +b.age - +a.age);
+      if (sort === 'alpha') filtered.sort((a,b) => a.name.localeCompare(b.name));
+    }
+    
+    // Render
+    grid.innerHTML = '';
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="col-12 text-center text-muted py-5"><i class="fas fa-search fa-2x mb-3"></i><p>No pets found matching your criteria.</p></div>';
+      return;
+    }
+    
+    filtered.forEach(pet => {
+      const isFav = favs.includes(pet.id);
+      grid.innerHTML += `
+        <div class="col-12 col-md-6 col-lg-4 d-flex">
+          <div class="pet-card flex-fill">
+            <div class="pet-fav ${isFav ? 'favorited' : ''}" onclick="handleProtectedAction('favorite', ${pet.id})">
+              <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
+            </div>
+            <img src="${pet.image}" class="pet-card-img" alt="${pet.name}" onerror="this.src='public/assets/images/pets.png'">
+            <div class="pet-card-title">${pet.name}</div>
+            <div class="pet-card-meta">${pet.breed} • ${pet.gender} • ${pet.age} yr${pet.age>1?'s':''}</div>
+            <div class="pet-card-location"><i class="fa-solid fa-location-dot me-1"></i> ${pet.location}</div>
+            <div class="pet-card-desc">${pet.description}</div>
+            <div class="pet-card-btns">
+              <a href="#" class="pet-card-btn adopt" onclick="return handleProtectedAction('adopt', ${pet.id})">Adopt Me</a>
+              <a href="#" class="pet-card-btn details">View Details</a>
+            </div>
           </div>
         </div>
-      </div>
-    `;
-  });
+      `;
+    });
+  }, 300); // Small delay for better UX
 }
+
 // Event listeners
 ['searchInput','speciesFilter','genderFilter','locationFilter','sortFilter'].forEach(id => {
-  document.getElementById(id).addEventListener('input', renderPets);
-  document.getElementById(id).addEventListener('change', renderPets);
+  const element = document.getElementById(id);
+  if (element) {
+    element.addEventListener('input', renderPets);
+    element.addEventListener('change', renderPets);
+  }
 });
-document.addEventListener('DOMContentLoaded', renderPets);
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Browse page loaded, rendering pets...');
+  renderPets();
+});
 
 // Enhance event delegation for quick view modal 'Adopt Me' button
 document.addEventListener('click', function(e) {

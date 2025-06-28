@@ -824,11 +824,24 @@ textarea {
   flex-direction: column;
   justify-content: space-between;
   border: 1.5px solid #e2e9e8;
+  overflow: hidden;
 }
+
+/* Ensure proper display on all screen sizes */
+@media (max-width: 576px) {
+  .pet-card {
+    margin-top: 1rem;
+    margin-bottom: 20px;
+    min-height: 380px;
+    padding: 15px 12px 12px 12px;
+  }
+}
+
 .pet-card:hover {
   box-shadow: 0 8px 32px rgba(67,108,93,0.18);
   transform: translateY(-3px) scale(1.01);
 }
+
 .pet-card .pet-fav {
   position: absolute;
   top: 25px;
@@ -1026,4 +1039,31 @@ textarea {
 #loginRequiredModal .btn-warning:hover {
   background: #f8b810;
   color: #2f2f2f;
+}
+
+/* Ensure proper grid layout */
+#petGrid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+#petGrid .col-12,
+#petGrid .col-md-6,
+#petGrid .col-lg-4 {
+  padding: 0 15px;
+  margin-bottom: 20px;
+}
+
+/* Loading state */
+.pet-loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.pet-loading i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #3b5d50;
 }
