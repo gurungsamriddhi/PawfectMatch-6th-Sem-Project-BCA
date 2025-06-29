@@ -35,9 +35,7 @@
         case 'contactus':
             (new HomeController)->contactus();
             break;
-        case 'register':
-            (new UserController)->Register();
-            break;
+
 
         case 'volunteer':
             (new HomeController)->volunteer();
@@ -48,6 +46,13 @@
             break;
         case 'donate':
             (new DonateController)->donate();
+            break;
+        case 'contactsubmit':
+            (new UserController)->contactSubmit();
+            break;
+
+        case 'register':
+            (new UserController)->Register();
             break;
         case 'login':
             (new UserController)->Login(); // call Login() method in UserController
@@ -97,7 +102,7 @@
         case 'admin/delete_center_user':
             (new AdminController)->delete_center_user();
             break;
-            
+
         case 'admin/add_Center':
             (new AdminController)->addAdoptionCenter();
             break;
