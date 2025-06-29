@@ -191,4 +191,73 @@ class AdminController
             }
         }
     }
+
+    public function fetch_edit_form()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id = $_POST['user_id'] ?? null;
+            if ($user_id) {
+                $user = $this->adminModel->getAdoptionCenterUserById($user_id);
+                if ($user) {
+                    include 'app/views/partials/edit_center_modal.php';
+                    return;
+                }
+            }
+            echo "<p class='text-danger'>No details found.</p>";
+        }
+    }
+
+    public function update_center_user()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id = $_POST['user_id'];
+            $name = trim($_POST['name']);
+            $email = trim($_POST['email']);
+            $status = $_POST['status'];
+
+            $errors = [];
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Invalid email format.";
+            }
+
+            if (empty($name) || !preg_match("/^[a-zA-Z\s]{2,}$/", $name)) {
+                $errors[] = "Name must be at least 2 letters and contain only letters and spaces.";
+            }
+
+            if (!in_array($status, ['active', 'inactive'])) {
+                $errors[] = "Invalid status.";
+            }
+
+            if (empty($errors)) {
+                $this->adminModel->updateCenterUser($user_id, $name, $email, $status);
+                
+                  echo '<div class="alert alert-success">Update successful!</div>';
+            } else {
+                echo '<div class="alert alert-danger"><ul class="mb-0">';
+                foreach ($errors as $error) {
+                    echo '<li>' . htmlspecialchars($error) . '</li>';
+                }
+                echo '</ul></div>';
+            }
+        }
+    }
+
+    public function delete_center_user()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id = $_POST['user_id'] ?? null;
+
+            if ($user_id) {
+                $deleted = $this->adminModel->deleteCenterUser($user_id);
+                if ($deleted) {
+                    echo '<div class="alert alert-success">Center user deleted successfully.</div>';
+                } else {
+                    echo '<div class="alert alert-danger">Failed to delete center user.</div>';
+                }
+            } else {
+                echo '<div class="alert alert-danger">Invalid request.</div>';
+            }
+        }
+    }
 }

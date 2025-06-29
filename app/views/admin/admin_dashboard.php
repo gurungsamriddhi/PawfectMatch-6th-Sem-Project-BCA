@@ -82,7 +82,7 @@
                 <a href="index.php?page=admin/addpet" class="action-btn">
                   <i class="fas fa-plus"></i>Add New Pet
                 </a>
-                <a href="index.php?page=admin/viewAdoptionCenters" class="action-btn">
+                <a href="index.php?page=admin/add_centerform" class="action-btn">
                   <i class="fas fa-building"></i>Add Adoption Center
                 </a>
                 <a href="#" class="action-btn">
