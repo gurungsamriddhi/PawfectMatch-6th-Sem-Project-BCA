@@ -15,7 +15,7 @@
       <!-- Content -->
       <div class="container-fluid py-4">
         <div class="top-actions">
-          <a href="index.php?page=admin/addpet" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Pet</a>
+          <a href="index.php?page=admin/addpet" class="add-btn"><i class="fa-solid fa-plus"></i> Add Pet</a>
           <div class="filter-group">
             <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by Type:</label>
             <select class="filter" id="typeFilter" onchange="filterByType(this)">

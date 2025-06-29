@@ -14,7 +14,7 @@
   <!-- Content -->
   <div class="container-fluid py-4">
     <div class="top-actions">
-      <a href="index.php?page=admin/add_centerform" class="add-pet-btn"><i class="fa-solid fa-plus"></i> Add Adoption Center</a>
+      <a href="index.php?page=admin/add_centerform" class="add-btn"><i class="fa-solid fa-plus"></i> Add Adoption Center</a>
       <div class="filter-group">
         <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by Location:</label>
         <select class="filter" id="typeFilter" onchange="filterByType(this)">
@@ -89,6 +89,8 @@
           <?php endforeach; ?>
         </tbody>
     </div>
+
+
     <!-- Edit Pet Modal -->
     <div class="modal fade" id="editPetModal" tabindex="-1" aria-labelledby="editPetModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -203,10 +205,12 @@
         </div>
       </div>
     </div>
-                </div>
-    <script src="public/assets/js/sidebartoggle.js"></script>
-    <script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
+  </div>
 
-    </body>
 
-    </html>
+  <script src="public/assets/js/sidebartoggle.js"></script>
+  <script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
+
+  </body>
+
+  </html>

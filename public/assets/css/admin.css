@@ -547,7 +547,7 @@ body {
     margin-bottom: 24px;
 }
 
-.add-pet-btn {
+.add-btn {
     background: var(--primary-color);
     color: #fff;
     border: none;
@@ -563,7 +563,7 @@ body {
     text-decoration: none;
 }
 
-.add-pet-btn:hover {
+.add-btn:hover {
     background: #3b5d50;
     color: #fff;
     transform: translateY(-2px);
