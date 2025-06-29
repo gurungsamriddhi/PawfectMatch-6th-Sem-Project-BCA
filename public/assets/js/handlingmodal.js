@@ -1,8 +1,9 @@
 $(document).ready(function() {
   // Handle view button click
-  $('.view-btn').on('click', function() {
+  $('.action-buttons').on('click', 'button', function() {
+    const actionType = $(this).data('action');
     const userId = $(this).data('userid');
-
+if (actionType==='view'){
     $.ajax({
       url: 'index.php?page=admin/fetch_center_details',
       type: 'POST',
@@ -14,5 +15,6 @@ $(document).ready(function() {
         $('#viewCenterModal .modal-body').html('<p class="text-danger">Failed to load details.</p>');
       }
     });
+  }
   });
 });
