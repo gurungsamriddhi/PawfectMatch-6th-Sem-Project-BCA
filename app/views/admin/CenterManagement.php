@@ -26,7 +26,7 @@
         </select>
       </div>
     </div>
-    <div class="table-responsive mt-5">
+    <div class="table-responsive">
       <table class="table view-table" id="centerTable">
         <thead>
           <tr>
@@ -44,9 +44,9 @@
               <td><?= htmlspecialchars($center['email']) ?></td>
               <td>
                 <?php if ($center['status'] === 'active'): ?>
-                  <span style="border: 2px solid green; background-color: white; color: green; border-radius: 8px; padding: 0.25em 0.75em; font-weight: 500;">Active</span>
+                  <span class="status-badge status-active">Active</span>
                 <?php else: ?>
-                  <span style="border: 2px solid grey; background-color: white; color: grey; border-radius: 8px; padding: 0.25em 0.75em; font-weight: 500;"><?= htmlspecialchars(ucfirst($center['status'])) ?></span>
+                  <span class="status-badge status-inactive"><?= htmlspecialchars(ucfirst($center['status'])) ?></span>
                 <?php endif; ?>
               </td>
               <td><?= htmlspecialchars($center['user_type']) ?></td>
@@ -203,7 +203,7 @@
         </div>
       </div>
     </div>
-
+                </div>
     <script src="public/assets/js/sidebartoggle.js"></script>
     <script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
 

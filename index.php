@@ -86,7 +86,7 @@
             (new AdminController)->addAdoptionCenter();
             break;
 
-        case 'admin/UserManagement':
+        case 'admin/userManagement':
             (new AdminController)->ManageUsers();
             break;
 

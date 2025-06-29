@@ -233,7 +233,7 @@
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <a href="http://localhost/PawfectMatch/index.php?page=home" class="btn btn-danger">Logout</a>
+          <a href="http://localhost/PawfectMatch/index.php?page=" class="btn btn-danger">Logout</a>
         </div>
       </div>
     </div>
