@@ -51,10 +51,11 @@
               </td>
               <td><?= htmlspecialchars($center['user_type']) ?></td>
               <td>
-                <div class="action-buttons">
 
+                <div class="action-buttons">
                   <button type="button"
-                    class="view-btn"
+                    class=" view-btn "
+                    data-action="view"
                     data-bs-toggle="modal"
                     data-bs-target="#viewCenterModal"
                     data-userid="<?= $center['user_id'] ?>">
@@ -63,7 +64,8 @@
 
                   <!-- Edit Button -->
                   <button type="button"
-                    class="edit-btn"
+                    class="edit-btn  "
+                    data-action="edit"
                     data-bs-toggle="modal"
                     data-bs-target="#editCenterModal"
                     data-userid="<?= $center['user_id'] ?>">
@@ -72,14 +74,16 @@
 
                   <!-- Reset Password Button -->
                   <button type="button"
-                    class="reset-btn"
+                    class=" reset-btn "
+                    data-action="reset"
                     data-userid="<?= $center['user_id'] ?>">
                     <i class="fa-solid fa-key"></i> Reset Password
                   </button>
 
                   <!-- Delete Button -->
                   <button type="button"
-                    class="delete-btn"
+                    class=" delete-btn "
+                    data-action="delete"
                     data-userid="<?= $center['user_id'] ?>">
                     <i class="fa-solid fa-trash"></i> Delete
                   </button>
@@ -90,20 +94,21 @@
         </tbody>
     </div>
 
-<!--view modal-->
-<div class="modal fade" id="viewCenterModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title">Adoption Center Details</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-    </div>
-      <div class="modal-body">
-        <!-- Content filled via AJAX -->
-        
+    <!--view modal-->
+    <div class="modal fade" id="viewCenterModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Adoption Center Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Content filled via AJAX -->
+
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
 
     <!-- Edit Pet Modal -->
@@ -222,5 +227,4 @@
       </div>
     </div>
   </div>
-<?php include 'app/views/partials/admin_footer.php'; ?>
-
+  <?php include 'app/views/partials/admin_footer.php'; ?>
