@@ -77,16 +77,27 @@
         case 'admin/CenterManagement':
             (new AdminController)->ManageCenters();
             break;
-            
+
         case 'admin/fetch_center_details':
             (new AdminController)->fetch_center_details();
             break;
 
+        case 'admin/fetch_edit_form':
+            (new AdminController)->fetch_edit_form();
+            break;
 
         case 'admin/add_centerform':
             (new AdminController)->showaddcenterform();
             break;
 
+        case 'admin/update_center_user':
+            (new AdminController)->update_center_user();
+            break;
+
+        case 'admin/delete_center_user':
+            (new AdminController)->delete_center_user();
+            break;
+            
         case 'admin/add_Center':
             (new AdminController)->addAdoptionCenter();
             break;
