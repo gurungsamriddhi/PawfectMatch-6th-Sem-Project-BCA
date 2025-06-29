@@ -11,7 +11,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     user_type ENUM('admin', 'user', 'adoption_center') NOT NULL DEFAULT 'user',
-    status ENUM('active', 'inactive', 'pending', 'suspended') NOT NULL DEFAULT 'active',
+    status ENUM('active', 'inactive', 'pending', 'suspended','deleted') NOT NULL DEFAULT 'active',
     is_verified TINYINT(1) NOT NULL DEFAULT 0,
     verify_token VARCHAR(255) DEFAULT NULL,
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

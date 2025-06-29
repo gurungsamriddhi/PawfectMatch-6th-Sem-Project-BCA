@@ -75,6 +75,18 @@ class Admin
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+
+     public function getAllUsers()
+    {
+        $stmt = $this->conn->prepare("SELECT user_id, name, user_type, email, status,is_verified,registered_at FROM users WHERE user_type = 'user'");
+        $stmt->execute();
+
+        $result = $stmt->get_result();  // works only if mysqlnd is installed
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+
+
     public function getAdoptionCenterUserById($user_id)
     {
         $stmt = $this->conn->prepare("SELECT user_id,name,user_type,email,status FROM users WHERE user_id=? AND user_type='adoption_center'");
