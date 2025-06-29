@@ -74,4 +74,19 @@ class Admin
         $result = $stmt->get_result();  // works only if mysqlnd is installed
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
+    
+    public function getAdoptionCenterDetailsByUserId($user_id)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT  u.name, u.email, u.status, ac.established_date, ac.location, ac.phone, ac.number_of_employees, ac.description, ac.operating_hours
+        FROM users u 
+        LEFT JOIN adoption_centers ac ON u.user_id = ac.user_id
+        WHERE u.user_id = ?
+    ");
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
 }

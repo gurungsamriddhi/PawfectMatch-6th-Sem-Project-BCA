@@ -75,14 +75,19 @@
             (new AdminController)->ManagePets();
             break;
         case 'admin/CenterManagement':
-            (new AdminController)->ManageCenters(); 
+            (new AdminController)->ManageCenters();
             break;
+            
+        case 'admin/fetch_center_details':
+            (new AdminController)->fetch_center_details();
+            break;
+
 
         case 'admin/add_centerform':
             (new AdminController)->showaddcenterform();
             break;
 
-        case'admin/add_Center':
+        case 'admin/add_Center':
             (new AdminController)->addAdoptionCenter();
             break;
 

@@ -219,14 +219,7 @@
     </div>
   </div>
 </div>
-<script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
-<script src="public/assets/js/sidebartoggle.js"></script>
-
-
-
-
-
-
+<?php include 'app/views/partials/admin_footer.php'; ?>
 
 <script>
   // Filter by type

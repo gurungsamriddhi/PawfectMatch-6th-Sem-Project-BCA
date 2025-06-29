@@ -104,11 +104,5 @@
       </div>
     </div>
   </div>
+<?php include 'app/views/partials/admin_footer.php'; ?>
 
-  
-  <script src="public/assets/js/sidebartoggle.js"></script>
-  <!-- Bootstrap Bundle with Popper.js (required for modals) -->
-<script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
-
-</body>
-</html>

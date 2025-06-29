@@ -90,11 +90,27 @@
         </tbody>
     </div>
 
+<!--view modal-->
+<div class="modal fade" id="viewCenterModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Adoption Center Details</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+      <div class="modal-body">
+        <!-- Content filled via AJAX -->
+        
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- Edit Pet Modal -->
     <div class="modal fade" id="editPetModal" tabindex="-1" aria-labelledby="editPetModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
+
           <form id="editPetForm">
             <div class="modal-header">
               <h5 class="modal-title" id="editPetModalLabel"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Pet Details</h5>
@@ -206,11 +222,5 @@
       </div>
     </div>
   </div>
+<?php include 'app/views/partials/admin_footer.php'; ?>
 
-
-  <script src="public/assets/js/sidebartoggle.js"></script>
-  <script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
-
-  </body>
-
-  </html>
