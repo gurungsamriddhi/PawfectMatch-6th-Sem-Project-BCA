@@ -7,7 +7,7 @@
       <i class="fas fa-plus-circle me-2"></i>Add New Pet
     </h3>
 
-    <form method="POST" action="savepets.php" enctype="multipart/form-data">
+    <form method="POST" action="index.php?page=adoptioncenter/savepet" enctype="multipart/form-data">
       <div class="row g-4">
         <div class="col-md-6">
           <label class="form-label fw-semibold">Pet Name</label>

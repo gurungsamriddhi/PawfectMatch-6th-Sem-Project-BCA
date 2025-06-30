@@ -1,15 +1,13 @@
-<?php include 'app/views/partials/sidebarcenter.php'; ?>
 <?php
-include '../../../core/databaseconn.php'; // make sure this file exists and defines $conn
+include 'app/views/partials/sidebarcenter.php';
+require_once 'core/databaseconn.php'; 
 
 if (!isset($_GET['pet_id'])) {
-    header('Location: managepets.php');
+    header('Location: index.php?page=adoptioncenter/managepets');
     exit;
 }
 
 $pet_id = intval($_GET['pet_id']);
-
-// Fetch pet data
 $sql = "SELECT * FROM pets WHERE pet_id = $pet_id";
 $result = mysqli_query($conn, $sql);
 $pet = mysqli_fetch_assoc($result);
@@ -19,124 +17,104 @@ if (!$pet) {
     exit;
 }
 
-// Handle form submission to update pet
+// Form submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
     $type = $_POST['type'] ?? '';
     $breed = $_POST['breed'] ?? '';
-    $age = intval($_POST['age'] ?? 0);
+    $age = $_POST['age'] ?? '';
     $gender = $_POST['gender'] ?? '';
     $status = $_POST['status'] ?? '';
     $description = $_POST['description'] ?? '';
-
-    // Handle image upload if new image selected
     $image_path = $pet['image_path'];
+
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $image = $_FILES['image']['name'];
-        $tmp = $_FILES['image']['tmp_name'];
-        $target = "uploads/" . basename($image);
-        if (move_uploaded_file($tmp, $target)) {
-            $image_path = $image;
+        $fileName = basename($_FILES['image']['name']);
+        $uniqueName = uniqid() . '_' . $fileName;
+        $target = "public/assets/images/" . $uniqueName;
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
+            $image_path = $target;
         }
     }
 
-    // Update query
-    $update_sql = "UPDATE pets SET 
-                    name = '$name', 
-                    type = '$type', 
-                    breed = '$breed', 
-                    age = $age, 
-                    gender = '$gender', 
-                    status = '$status', 
-                    description = '$description', 
-                    image_path = '$image_path' 
-                    WHERE pet_id = $pet_id";
+    $update = "UPDATE pets SET 
+                name = ?, type = ?, breed = ?, age = ?, gender = ?, status = ?, description = ?, image_path = ?
+               WHERE pet_id = ?";
+    $stmt = $conn->prepare($update);
+    $stmt->bind_param("ssssssssi", $name, $type, $breed, $age, $gender, $status, $description, $image_path, $pet_id);
 
-    if (mysqli_query($conn, $update_sql)) {
-        header('Location: managepets.php');
+    if ($stmt->execute()) {
+        $_SESSION['success'] = "Pet updated successfully.";
+        header('Location: index.php?page=adoptioncenter/managepets');
         exit;
     } else {
-        echo "Error updating pet: " . mysqli_error($conn);
+        echo "Error updating pet: " . $stmt->error;
     }
 }
 ?>
 
-<!-- HTML form to edit pet -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <div class="container my-5" style="max-width:700px;">
-  <h3 class="mb-4">Edit Pet</h3>
+  <h3 class="mb-4 text-success fw-bold"><i class="fas fa-edit me-2"></i>Edit Pet</h3>
   <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
-      <label class="form-label">Pet Name</label>
+      <label class="form-label fw-semibold">Pet Name</label>
       <input type="text" name="name" class="form-control" required value="<?= htmlspecialchars($pet['name']) ?>">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Type</label>
+      <label class="form-label fw-semibold">Type</label>
       <select name="type" class="form-select" required>
-        <?php 
-          $types = ['dog', 'cat', 'rabbit', 'other'];
-          foreach ($types as $t) {
-              $selected = ($pet['type'] === $t) ? 'selected' : '';
-              echo "<option value='$t' $selected>" . ucfirst($t) . "</option>";
-          }
-        ?>
+        <?php foreach (['dog', 'cat', 'rabbit', 'other'] as $type): ?>
+          <option value="<?= $type ?>" <?= $pet['type'] === $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
+        <?php endforeach; ?>
       </select>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Breed</label>
+      <label class="form-label fw-semibold">Breed</label>
       <input type="text" name="breed" class="form-control" value="<?= htmlspecialchars($pet['breed']) ?>">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Age (years)</label>
-      <input type="number" name="age" class="form-control" value="<?= htmlspecialchars($pet['age']) ?>">
+      <label class="form-label fw-semibold">Age</label>
+      <input type="text" name="age" class="form-control" value="<?= htmlspecialchars($pet['age']) ?>">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Gender</label>
+      <label class="form-label fw-semibold">Gender</label>
       <select name="gender" class="form-select" required>
-        <?php
-          $genders = ['male', 'female'];
-          foreach ($genders as $g) {
-              $selected = ($pet['gender'] === $g) ? 'selected' : '';
-              echo "<option value='$g' $selected>" . ucfirst($g) . "</option>";
-          }
-        ?>
+        <?php foreach (['male', 'female'] as $gender): ?>
+          <option value="<?= $gender ?>" <?= $pet['gender'] === $gender ? 'selected' : '' ?>><?= ucfirst($gender) ?></option>
+        <?php endforeach; ?>
       </select>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Status</label>
+      <label class="form-label fw-semibold">Status</label>
       <select name="status" class="form-select" required>
-        <?php
-          $statuses = ['available', 'adopted'];
-          foreach ($statuses as $s) {
-              $selected = ($pet['status'] === $s) ? 'selected' : '';
-              echo "<option value='$s' $selected>" . ucfirst($s) . "</option>";
-          }
-        ?>
+        <?php foreach (['available', 'adopted'] as $status): ?>
+          <option value="<?= $status ?>" <?= $pet['status'] === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option>
+        <?php endforeach; ?>
       </select>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Current Image</label><br>
-      <img src="uploads/<?= htmlspecialchars($pet['image_path']) ?>" alt="Pet Image" style="width:100px; height:100px; object-fit:cover;">
+      <label class="form-label fw-semibold">Current Image</label><br>
+      <img src="<?= htmlspecialchars($pet['image_path']) ?>" style="width:100px;height:100px;object-fit:cover;" alt="Pet Image">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Upload New Image (optional)</label>
+      <label class="form-label fw-semibold">Upload New Image (optional)</label>
       <input type="file" name="image" class="form-control" accept="image/*">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Description</label>
+      <label class="form-label fw-semibold">Description</label>
       <textarea name="description" class="form-control" rows="3"><?= htmlspecialchars($pet['description']) ?></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Update Pet</button>
-    <a href="managepets.php" class="btn btn-secondary ms-2">Cancel</a>
+    <a href="index.php?page=adoptioncenter/managepets" class="btn btn-secondary ms-2">Cancel</a>
   </form>
 </div>

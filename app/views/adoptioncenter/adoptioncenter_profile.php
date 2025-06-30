@@ -27,7 +27,7 @@
         <input id="logoUpload" type="file" name="logo" accept="image/*" class="d-none" onchange="previewLogo(event)">
       </div>
 
-      <form method="POST" action="update_profile.php" enctype="multipart/form-data">
+<form method="POST" action="index.php?page=adoptioncenter/update_profile" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="centerName" class="form-label fw-semibold"><i class="fas fa-building me-2 text-success"></i>Center Name</label>
           <input type="text" id="centerName" name="name" class="form-control rounded-pill" value="Happy Paws Shelter" required>

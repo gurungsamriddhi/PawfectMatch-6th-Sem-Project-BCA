@@ -21,4 +21,5 @@ class Adoption {
         }
         return $requests;
     }
+    
 }
