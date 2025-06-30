@@ -1,5 +1,4 @@
-
-  <?php include 'app/views/partials/sidebar.php'; ?>
+<?php include 'app/views/partials/sidebar.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->
@@ -14,8 +13,26 @@
       </header>
       <!-- Content -->
       <div class="container-fluid py-4">
+        <?php if (isset($_SESSION['success_message'])): ?>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['success_message']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error_message'])): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['error_message']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <?php unset($_SESSION['error_message']); ?>
+        <?php endif; ?>
+
         <div class="top-actions">
-          <a href="index.php?page=admin/addpet" class="add-btn"><i class="fa-solid fa-plus"></i> Add Pet</a>
+          <a href="index.php?page=admin/addpet" class="add-btn btn btn-success d-flex align-items-center gap-2" style="font-weight:600; font-size:1.1rem;">
+            <i class="fa fa-plus"></i> Add Pet
+          </a>
           <div class="filter-group">
             <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by Type:</label>
             <select class="filter" id="typeFilter" onchange="filterByType(this)">
@@ -24,6 +41,9 @@
               <option value="Cat">Cat</option>
               <option value="Rabbit">Rabbit</option>
               <option value="Bird">Bird</option>
+              <option value="Hamster">Hamster</option>
+              <option value="Fish">Fish</option>
+              <option value="Other">Other</option>
             </select>
           </div>
         </div>
@@ -45,61 +65,40 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-type="Dog">
-                <td>Charlie</td>
-                <td>Dog</td>
-                <td>Labrador</td>
-                <td>2</td>
-                <td>Male</td>
-                <td><span class="status-badge status-available">Available</span></td>
-                <td>Admin</td>
-                <td>Happy Paws Center</td>
-                <td>Very friendly, playful and house-trained.</td>
-                <td>Vaccinated</td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
-                    <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <tr data-type="Dog">
-                <td>Coco</td>
-                <td>Dog</td>
-                <td>Labrador</td>
-                <td>3</td>
-                <td>Female</td>
-                <td><span class="status-badge status-available">Available</span></td>
-                <td>Admin</td>
-                <td>Happy Paws Center</td>
-                <td>Very friendly</td>
-                <td>Not Vaccinated</td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
-                    <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <tr data-type="Cat">
-                <td>Luna</td>
-                <td>Cat</td>
-                <td>Siamese</td>
-                <td>1</td>
-                <td>Female</td>
-                <td><span class="status-badge status-adopted">Adopted</span></td>
-                <td>Rejina</td>
-                <td>Feline Friends Shelter</td>
-                <td>Sweet and cuddly.</td>
-                <td>Vaccinated</td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editPetModal"><i class="fa-solid fa-pen"></i> Edit</button>
-                    <button class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <!-- Add more rows as needed -->
+              <?php if (!empty($pets)): ?>
+                <?php foreach ($pets as $pet): ?>
+                  <tr data-type="<?php echo htmlspecialchars($pet['type']); ?>">
+                    <td><?php echo htmlspecialchars($pet['name']); ?></td>
+                    <td><?php echo htmlspecialchars($pet['type']); ?></td>
+                    <td><?php echo htmlspecialchars($pet['breed']); ?></td>
+                    <td><?php echo htmlspecialchars($pet['age']); ?></td>
+                    <td><?php echo htmlspecialchars($pet['gender']); ?></td>
+                    <td>
+                      <span class="status-badge status-<?php echo strtolower($pet['status']); ?>">
+                        <?php echo htmlspecialchars(ucfirst($pet['status'])); ?>
+                      </span>
+                    </td>
+                    <td><?php echo htmlspecialchars($pet['posted_by_name'] ?? 'Unknown'); ?></td>
+                    <td><?php echo htmlspecialchars($pet['adoption_center']); ?></td>
+                    <td><?php echo htmlspecialchars(substr($pet['description'], 0, 50)) . (strlen($pet['description']) > 50 ? '...' : ''); ?></td>
+                    <td><?php echo htmlspecialchars($pet['health_status']); ?></td>
+                    <td>
+                      <div class="action-buttons d-flex gap-2">
+                        <button class="icon-btn edit" title="Edit" onclick="editPet(<?php echo $pet['pet_id']; ?>)" data-bs-toggle="modal" data-bs-target="#editPetModal">
+                          <i class="fa fa-pen"></i>
+                        </button>
+                        <button class="icon-btn delete" title="Delete" onclick="deletePet(<?php echo $pet['pet_id']; ?>)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="11" class="text-center">No pets found.</td>
+                </tr>
+              <?php endif; ?>
             </tbody>
           </table>
         </div>
@@ -244,21 +243,13 @@
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.sidebar-link.has-arrow').forEach(function(link) {
         link.addEventListener('click', function(e) {
-          // Only toggle if the arrow itself is clicked
           e.preventDefault();
           var parent = link.closest('.sidebar-item');
           parent.classList.toggle('open');
         });
       });
-      // Prevent closing submenus when clicking submenu items
-      document.querySelectorAll('.first-level .sidebar-link').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-          // Do nothing: keep submenu open
-          var parent = link.closest('.sidebar-item');
-          parent.classList.add('open');
-        });
-      });
     });
+
     // Filter by type
     function filterByType(select) {
       var type = select.value;
@@ -271,50 +262,123 @@
         }
       });
     }
-    // Edit Pet Modal Logic (UI only)
-    const editBtns = document.querySelectorAll('.edit-btn');
-    const editPetForm = document.getElementById('editPetForm');
-    let currentEditRow = null;
-    editBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        const row = btn.closest('tr');
-        currentEditRow = row;
-        document.getElementById('editPetName').value = row.children[0].textContent;
-        document.getElementById('editPetType').value = row.children[1].textContent;
-        document.getElementById('editBreed').value = row.children[2].textContent;
-        document.getElementById('editAge').value = row.children[3].textContent;
-        document.getElementById('editGender').value = row.children[4].textContent;
-        document.getElementById('editDescription').value = row.children[8].textContent;
-        document.getElementById('editAdoptionCenter').value = row.children[7].textContent;
-        // The rest can be filled similarly if you store them in the table or as data-attributes
-        document.getElementById('editDateArrival').value = '';
-        document.getElementById('editSize').value = '';
-        document.getElementById('editWeight').value = '';
-        document.getElementById('editColor').value = '';
-        document.getElementById('editHealthStatus').value = '';
-        document.getElementById('editContactName').value = '';
-        document.getElementById('editContactPhone').value = '';
-        document.getElementById('editContactEmail').value = '';
-        document.getElementById('editCenterAddress').value = '';
-        document.getElementById('editCenterWebsite').value = '';
-        document.getElementById('editAdoptionNotes').value = '';
-      });
-    });
-    editPetForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (currentEditRow) {
-        currentEditRow.children[0].textContent = document.getElementById('editPetName').value;
-        currentEditRow.children[1].textContent = document.getElementById('editPetType').value;
-        currentEditRow.children[2].textContent = document.getElementById('editBreed').value;
-        currentEditRow.children[3].textContent = document.getElementById('editAge').value;
-        currentEditRow.children[4].textContent = document.getElementById('editGender').value;
-        currentEditRow.children[8].textContent = document.getElementById('editDescription').value;
-        currentEditRow.children[7].textContent = document.getElementById('editAdoptionCenter').value;
-        // The rest can be updated similarly if you store them in the table
+
+    // Edit Pet Function
+    function editPet(petId) {
+      fetch(`index.php?page=admin/getPetById&id=${petId}`)
+        .then(response => response.json())
+        .then(pet => {
+          if (pet.error) {
+            alert('Error loading pet data: ' + pet.error);
+            return;
+          }
+          
+          // Populate the edit form
+          document.getElementById('editPetName').value = pet.name;
+          document.getElementById('editPetType').value = pet.type;
+          document.getElementById('editBreed').value = pet.breed;
+          document.getElementById('editAge').value = pet.age;
+          document.getElementById('editGender').value = pet.gender;
+          document.getElementById('editDateArrival').value = pet.date_arrival;
+          document.getElementById('editSize').value = pet.size;
+          document.getElementById('editWeight').value = pet.weight;
+          document.getElementById('editColor').value = pet.color;
+          document.getElementById('editHealthStatus').value = pet.health_status;
+          document.getElementById('editDescription').value = pet.description;
+          document.getElementById('editAdoptionCenter').value = pet.adoption_center;
+          document.getElementById('editContactPhone').value = pet.contact_phone;
+          document.getElementById('editContactEmail').value = pet.contact_email;
+          document.getElementById('editCenterAddress').value = pet.center_address;
+          document.getElementById('editCenterWebsite').value = pet.center_website || '';
+          
+          // Add hidden input for pet ID
+          let hiddenInput = document.getElementById('editPetId');
+          if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.id = 'editPetId';
+            hiddenInput.name = 'pet_id';
+            document.getElementById('editPetForm').appendChild(hiddenInput);
+          }
+          hiddenInput.value = petId;
+          
+          // Add hidden input for current image
+          let imageInput = document.getElementById('editCurrentImage');
+          if (!imageInput) {
+            imageInput = document.createElement('input');
+            imageInput.type = 'hidden';
+            imageInput.id = 'editCurrentImage';
+            imageInput.name = 'current_image';
+            document.getElementById('editPetForm').appendChild(imageInput);
+          }
+          imageInput.value = pet.image_path || 'public/assets/images/pets.png';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error loading pet data. Please try again.');
+        });
+    }
+
+    // Delete Pet Function
+    function deletePet(petId) {
+      if (confirm('Are you sure you want to delete this pet? This action cannot be undone.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'index.php?page=admin/deletePet';
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'pet_id';
+        input.value = petId;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
       }
-      var modal = bootstrap.Modal.getInstance(document.getElementById('editPetModal'));
-      modal.hide();
-    });
+    }
+
+    // Update edit form action
+    document.getElementById('editPetForm').action = 'index.php?page=admin/updatePet';
+    document.getElementById('editPetForm').method = 'POST';
+    document.getElementById('editPetForm').enctype = 'multipart/form-data';
   </script>
+  <style>
+    .action-buttons .icon-btn {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid #e0e0e0;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      font-size: 1rem;
+      margin-right: 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+      outline: none;
+      margin-top: -45px;
+    }
+    .action-buttons .icon-btn:last-child { margin-right: 0; }
+    .action-buttons .icon-btn.edit {
+      color: #1976d2;
+      border-color: #1976d2;
+    }
+    .action-buttons .icon-btn.delete {
+      color: #d32f2f;
+      border-color: #d32f2f;
+    }
+    .action-buttons .icon-btn.edit:hover, .action-buttons .icon-btn.edit:focus {
+      background: #1976d2;
+      color: #fff;
+      border-color: #1976d2;
+    }
+    .action-buttons .icon-btn.delete:hover, .action-buttons .icon-btn.delete:focus {
+      background: #d32f2f;
+      color: #fff;
+      border-color: #d32f2f;
+    }
+  </style>
 </body>
 </html>

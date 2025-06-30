@@ -1,4 +1,4 @@
- <?php
+<?php
     // index.php — Main Router
 
     require_once 'core/databaseconn.php';
@@ -76,6 +76,18 @@
         case 'admin/addpet':
             (new AdminController)->showaddpetform();
             break;
+        case 'admin/addPet':
+            (new AdminController)->addPet();
+            break;
+        case 'admin/getPetById':
+            (new AdminController)->getPetById();
+            break;
+        case 'admin/updatePet':
+            (new AdminController)->updatePet();
+            break;
+        case 'admin/deletePet':
+            (new AdminController)->deletePet();
+            break;
         case 'admin/PetManagement':
             (new AdminController)->ManagePets();
             break;
@@ -127,6 +139,22 @@
 
         case 'adoptioncenter/add_pets':
             (new CenterController)->showaddpetform();
+            break;
+
+        case 'adoptioncenter/addPet':
+            (new CenterController)->addPet();
+            break;
+
+        case 'adoptioncenter/getPetById':
+            (new CenterController)->getPetById();
+            break;
+
+        case 'adoptioncenter/updatePet':
+            (new CenterController)->updatePet();
+            break;
+
+        case 'adoptioncenter/deletePet':
+            (new CenterController)->deletePet();
             break;
 
         case 'adoptioncenter/managepets':

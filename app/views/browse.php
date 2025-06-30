@@ -22,16 +22,19 @@
 		<div class="bg-white py-3 border-bottom mb-4">
 			<div class="container">
 				<form id="petFilterForm" class="row g-2 align-items-center">
-					<div class="col-12 col-md-4 mb-2 mb-md-0">
-						<input type="text" class="form-control" id="searchInput" placeholder="Search by name or keyword...">
+					<div class="col-12 col-md-3 mb-2 mb-md-0">
+						<input type="text" class="form-control" id="searchInput" placeholder="Search by name, breed, or description...">
 					</div>
 					<div class="col-6 col-md-2">
-						<select class="form-select" id="speciesFilter">
-							<option value="">All Species</option>
+						<select class="form-select" id="typeFilter">
+							<option value="">All Types</option>
 							<option value="Dog">Dog</option>
 							<option value="Cat">Cat</option>
-							<option value="Rabbit">Rabbit</option>
 							<option value="Bird">Bird</option>
+							<option value="Rabbit">Rabbit</option>
+							<option value="Hamster">Hamster</option>
+							<option value="Fish">Fish</option>
+							<option value="Other">Other</option>
 						</select>
 					</div>
 					<div class="col-6 col-md-2">
@@ -42,16 +45,26 @@
 						</select>
 					</div>
 					<div class="col-6 col-md-2">
-						<select class="form-select" id="locationFilter">
-							<option value="">All Locations</option>
-							<option value="Kathmandu">Kathmandu</option>
-							<option value="Pokhara">Pokhara</option>
-							<option value="Hetauda">Hetauda</option>
+						<select class="form-select" id="sizeFilter">
+							<option value="">Any Size</option>
+							<option value="Small">Small</option>
+							<option value="Medium">Medium</option>
+							<option value="Large">Large</option>
+							<option value="Extra Large">Extra Large</option>
 						</select>
 					</div>
 					<div class="col-6 col-md-2">
+						<select class="form-select" id="healthFilter">
+							<option value="">Any Health</option>
+							<option value="Excellent">Excellent</option>
+							<option value="Good">Good</option>
+							<option value="Fair">Fair</option>
+							<option value="Poor">Poor</option>
+						</select>
+					</div>
+					<div class="col-6 col-md-1">
 						<select class="form-select" id="sortFilter">
-							<option value="recent">Recently Added</option>
+							<option value="recent">Recent</option>
 							<option value="youngest">Youngest</option>
 							<option value="oldest">Oldest</option>
 							<option value="alpha">A-Z</option>
@@ -70,75 +83,10 @@
 		    </div>
 		</div>
 </main>
+
 <script>
-// Sample pet data for demo
-const pets = [
-  {
-    id: 1,
-    name: 'Milo',
-    age: '2',
-    breed: 'Labrador',
-    species: 'Dog',
-    gender: 'Male',
-    location: 'Kathmandu',
-    description: 'Very friendly, playful and house-trained.',
-    image: 'public/assets/images/pet-1.jpg',
-    added: '2024-06-01',
-    availability: 'Available'
-  },
-  {
-    id: 2,
-    name: 'Luna',
-    age: '1',
-    breed: 'Siamese',
-    species: 'Cat',
-    gender: 'Female',
-    location: 'Hetauda',
-    description: 'Sweet and cuddly.',
-    image: 'public/assets/images/pet-2.png',
-    added: '2024-06-03',
-    availability: 'Available'
-  },
-  {
-    id: 3,
-    name: 'Coco',
-    age: '3',
-    breed: 'Labrador',
-    species: 'Dog',
-    gender: 'Female',
-    location: 'Kathmandu',
-    description: 'Loves to play fetch and is great with kids.',
-    image: 'public/assets/images/pet-3.jpg',
-    added: '2024-06-02',
-    availability: 'Pending'
-  },
-  {
-    id: 4,
-    name: 'Bunny',
-    age: '1',
-    breed: 'Angora',
-    species: 'Rabbit',
-    gender: 'Male',
-    location: 'Pokhara',
-    description: 'Fluffy and gentle rabbit.',
-    image: 'public/assets/images/pets.png',
-    added: '2024-05-30',
-    availability: 'Available'
-  },
-  {
-    id: 5,
-    name: 'Polly',
-    age: '4',
-    breed: 'Parrot',
-    species: 'Bird',
-    gender: 'Female',
-    location: 'Kathmandu',
-    description: 'Talkative and colorful parrot.',
-    image: 'public/assets/images/pet-3.jpg',
-    added: '2024-05-28',
-    availability: 'Adopted'
-  }
-];
+// Get pets data from PHP
+const pets = <?php echo $petsJson ?? '[]'; ?>;
 
 // Favorites (localStorage)
 function getFavorites() {
@@ -219,9 +167,9 @@ function renderPets() {
     }
     
     // Filters
-    const speciesFilter = document.getElementById('speciesFilter');
-    if (speciesFilter && speciesFilter.value) {
-      filtered = filtered.filter(p => p.species === speciesFilter.value);
+    const typeFilter = document.getElementById('typeFilter');
+    if (typeFilter && typeFilter.value) {
+      filtered = filtered.filter(p => p.type === typeFilter.value);
     }
     
     const genderFilter = document.getElementById('genderFilter');
@@ -229,16 +177,21 @@ function renderPets() {
       filtered = filtered.filter(p => p.gender === genderFilter.value);
     }
     
-    const locationFilter = document.getElementById('locationFilter');
-    if (locationFilter && locationFilter.value) {
-      filtered = filtered.filter(p => p.location === locationFilter.value);
+    const sizeFilter = document.getElementById('sizeFilter');
+    if (sizeFilter && sizeFilter.value) {
+      filtered = filtered.filter(p => p.size === sizeFilter.value);
+    }
+    
+    const healthFilter = document.getElementById('healthFilter');
+    if (healthFilter && healthFilter.value) {
+      filtered = filtered.filter(p => p.health_status === healthFilter.value);
     }
     
     // Sort
     const sortFilter = document.getElementById('sortFilter');
     if (sortFilter) {
       const sort = sortFilter.value;
-      if (sort === 'recent') filtered.sort((a,b) => new Date(b.added)-new Date(a.added));
+      if (sort === 'recent') filtered.sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
       if (sort === 'youngest') filtered.sort((a,b) => +a.age - +b.age);
       if (sort === 'oldest') filtered.sort((a,b) => +b.age - +a.age);
       if (sort === 'alpha') filtered.sort((a,b) => a.name.localeCompare(b.name));
@@ -252,21 +205,31 @@ function renderPets() {
     }
     
     filtered.forEach(pet => {
-      const isFav = favs.includes(pet.id);
+      const isFav = favs.includes(pet.pet_id);
+      const healthColor = getHealthStatusColor(pet.health_status);
+      const availabilityBadge = getAvailabilityBadge(pet.status);
+      
       grid.innerHTML += `
         <div class="col-12 col-md-6 col-lg-4 d-flex">
           <div class="pet-card flex-fill">
-            <div class="pet-fav ${isFav ? 'favorited' : ''}" onclick="handleProtectedAction('favorite', ${pet.id})">
+            <div class="pet-fav ${isFav ? 'favorited' : ''}" onclick="handleProtectedAction('favorite', ${pet.pet_id})">
               <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
             </div>
-            <img src="${pet.image}" class="pet-card-img" alt="${pet.name}" onerror="this.src='public/assets/images/pets.png'">
+            <div class="position-relative">
+              <img src="${pet.image_path || 'public/assets/images/pets.png'}" class="pet-card-img" alt="${pet.name}" onerror="this.src='public/assets/images/pets.png'">
+              <span class="${availabilityBadge} position-absolute top-0 end-0 m-2">${pet.status}</span>
+            </div>
             <div class="pet-card-title">${pet.name}</div>
             <div class="pet-card-meta">${pet.breed} • ${pet.gender} • ${pet.age} yr${pet.age>1?'s':''}</div>
-            <div class="pet-card-location"><i class="fa-solid fa-location-dot me-1"></i> ${pet.location}</div>
-            <div class="pet-card-desc">${pet.description}</div>
+            <div class="pet-card-location"><i class="fa-solid fa-location-dot me-1"></i> ${pet.adoption_center}</div>
+            <div class="pet-card-details">
+              <span class="badge bg-${healthColor} me-1">${pet.health_status}</span>
+              <span class="badge bg-info">${pet.size}</span>
+            </div>
+            <div class="pet-card-desc">${pet.description.substring(0, 100)}${pet.description.length > 100 ? '...' : ''}</div>
             <div class="pet-card-btns">
-              <a href="#" class="pet-card-btn adopt" onclick="return handleProtectedAction('adopt', ${pet.id})">Adopt Me</a>
-              <a href="#" class="pet-card-btn details">View Details</a>
+              <a href="#" class="pet-card-btn adopt" onclick="return handleProtectedAction('adopt', ${pet.pet_id})">Adopt Me</a>
+              <a href="#" class="pet-card-btn details" data-pet-id="${pet.pet_id}">View Details</a>
             </div>
           </div>
         </div>
@@ -275,8 +238,45 @@ function renderPets() {
   }, 300); // Small delay for better UX
 }
 
+function getHealthStatusColor(status) {
+  switch (status) {
+    case 'Excellent': return 'success';
+    case 'Good': return 'info';
+    case 'Fair': return 'warning';
+    case 'Poor': return 'danger';
+    default: return 'secondary';
+  }
+}
+
+function getAvailabilityBadge(status) {
+  switch (status) {
+    case 'available': return 'badge bg-success';
+    case 'pending': return 'badge bg-warning text-dark';
+    case 'adopted': return 'badge bg-secondary';
+    default: return 'badge bg-info';
+  }
+}
+
+function formatCharacteristics(characteristics) {
+  if (!characteristics) return '';
+  
+  const chars = characteristics.split(',');
+  const labels = {
+    'vaccinated': 'Vaccinated',
+    'neutered': 'Neutered/Spayed',
+    'houseTrained': 'House Trained',
+    'goodWithKids': 'Good with Kids',
+    'goodWithDogs': 'Good with Dogs',
+    'goodWithCats': 'Good with Cats',
+    'specialNeeds': 'Special Needs',
+    'microchipped': 'Microchipped'
+  };
+  
+  return chars.map(char => labels[char] || char).join(', ');
+}
+
 // Event listeners
-['searchInput','speciesFilter','genderFilter','locationFilter','sortFilter'].forEach(id => {
+['searchInput','typeFilter','genderFilter','sizeFilter','healthFilter','sortFilter'].forEach(id => {
   const element = document.getElementById(id);
   if (element) {
     element.addEventListener('input', renderPets);
@@ -290,56 +290,32 @@ document.addEventListener('DOMContentLoaded', function() {
   renderPets();
 });
 
-// Enhance event delegation for quick view modal 'Adopt Me' button
-document.addEventListener('click', function(e) {
-  // Quick view modal Adopt Me button
-  if (e.target.closest && e.target.closest('#petQuickViewBody .btn-success')) {
-    e.preventDefault();
-    // Get pet id from modal (find by name)
-    const petName = document.querySelector('#petQuickViewBody h3.fw-bold')?.textContent;
-    const pet = pets.find(p => p.name === petName);
-    if (!pet) return;
-    handleProtectedAction('adopt', pet.id);
-  }
-});
-
 // Add event delegation for View Details buttons
-
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('details')) {
     e.preventDefault();
-    // Find the pet card
-    let card = e.target.closest('.pet-card');
-    if (!card) return;
-    // Find the pet name in the card
-    let name = card.querySelector('.pet-card-title').textContent;
-    // Find the pet in the data
-    let pet = pets.find(p => p.name === name);
+    const petId = e.target.getAttribute('data-pet-id');
+    const pet = pets.find(p => p.pet_id == petId);
     if (!pet) return;
     
     // Get availability badge class
-    let availabilityClass = '';
-    switch(pet.availability) {
-      case 'Available': availabilityClass = 'badge bg-success'; break;
-      case 'Pending': availabilityClass = 'badge bg-warning text-dark'; break;
-      case 'Adopted': availabilityClass = 'badge bg-secondary'; break;
-      default: availabilityClass = 'badge bg-info';
-    }
+    let availabilityClass = getAvailabilityBadge(pet.status);
+    let healthColor = getHealthStatusColor(pet.health_status);
     
-    // Build modal content
+    // Build modal content with all pet information
     let html = `
       <div class="text-center mb-3">
         <div class="position-relative d-inline-block">
-          <img src="${pet.image}" alt="${pet.name}" style="width: 100%; max-width: 500px; height: 280px; object-fit: cover; border-radius: 12px; border: 2px solid #e2e9e8; box-shadow: 0 6px 20px rgba(0,0,0,0.08);">
+          <img src="${pet.image_path || 'public/assets/images/pets.png'}" alt="${pet.name}" style="width: 100%; max-width: 500px; height: 280px; object-fit: cover; border-radius: 12px; border: 2px solid #e2e9e8; box-shadow: 0 6px 20px rgba(0,0,0,0.08);">
           <div class="position-absolute top-0 end-0 m-2">
-            <span class="${availabilityClass} fs-6 px-2 py-1">${pet.availability}</span>
+            <span class="${availabilityClass} fs-6 px-2 py-1">${pet.status}</span>
           </div>
         </div>
       </div>
       
       <div class="text-center mb-3">
         <h3 class="fw-bold mb-1" style="color: #3b5d50; font-size: 1.5rem;">${pet.name}</h3>
-        <p class="text-muted mb-0" style="font-size: 1rem;">${pet.breed} ${pet.species}</p>
+        <p class="text-muted mb-0" style="font-size: 1rem;">${pet.breed} ${pet.type || 'Pet'}</p>
       </div>
       
       <div class="row g-2 mb-3">
@@ -355,13 +331,42 @@ document.addEventListener('click', function(e) {
             <div class="fw-semibold" style="font-size: 0.9rem;">${pet.gender}</div>
           </div>
         </div>
+        <div class="col-6">
+          <div class="bg-light rounded-2 p-2 text-center h-100" style="border: 1px solid #e9ecef;">
+            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-ruler-combined"></i></div>
+            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.size}</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="bg-light rounded-2 p-2 text-center h-100" style="border: 1px solid #e9ecef;">
+            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-weight-hanging"></i></div>
+            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.weight || 'Unknown'} kg</div>
+          </div>
+        </div>
         <div class="col-12">
           <div class="bg-light rounded-2 p-2" style="border: 1px solid #e9ecef;">
-            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-map-marker-alt me-1"></i><strong>Location</strong></div>
-            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.location}</div>
+            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-palette me-1"></i><strong>Color</strong></div>
+            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.color || 'Unknown'}</div>
           </div>
         </div>
       </div>
+      
+      <div class="mb-3">
+        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-heartbeat me-1"></i>Health Status</h6>
+        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
+          <span class="badge bg-${healthColor} me-2">${pet.health_status}</span>
+          ${pet.health_notes ? `<p class="mb-0 mt-2" style="line-height: 1.5; font-size: 0.9rem;">${pet.health_notes}</p>` : ''}
+        </div>
+      </div>
+      
+      ${pet.characteristics ? `
+      <div class="mb-3">
+        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-check-circle me-1"></i>Characteristics</h6>
+        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
+          <p class="mb-0" style="line-height: 1.5; font-size: 0.9rem;">${formatCharacteristics(pet.characteristics)}</p>
+        </div>
+      </div>
+      ` : ''}
       
       <div class="mb-3">
         <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-info-circle me-1"></i>About ${pet.name}</h6>
@@ -370,8 +375,19 @@ document.addEventListener('click', function(e) {
         </div>
       </div>
       
+      <div class="mb-3">
+        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-building me-1"></i>Adoption Center</h6>
+        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
+          <p class="mb-1 fw-semibold">${pet.adoption_center}</p>
+          <p class="mb-1"><i class="fas fa-map-marker-alt me-1"></i>${pet.center_address}</p>
+          <p class="mb-1"><i class="fas fa-phone me-1"></i>${pet.contact_phone}</p>
+          <p class="mb-0"><i class="fas fa-envelope me-1"></i>${pet.contact_email}</p>
+          ${pet.center_website ? `<p class="mb-0 mt-2"><i class="fas fa-globe me-1"></i><a href="${pet.center_website}" target="_blank">${pet.center_website}</a></p>` : ''}
+        </div>
+      </div>
+      
       <div class="d-flex gap-2">
-        <button type="button" class="btn btn-success flex-fill py-2 fw-semibold" style="border-radius: 8px; font-size: 0.9rem;">
+        <button type="button" class="btn btn-success flex-fill py-2 fw-semibold" onclick="handleProtectedAction('adopt', ${pet.pet_id})" style="border-radius: 8px; font-size: 0.9rem;">
           <i class="fas fa-heart me-1"></i>Adopt Me
         </button>
         <button type="button" class="btn btn-outline-secondary flex-fill py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px; font-size: 0.9rem;">
@@ -390,7 +406,7 @@ document.addEventListener('click', function(e) {
 
 <!-- Pet Quick View Modal -->
 <div class="modal fade" id="petQuickViewModal" tabindex="-1" aria-labelledby="petQuickViewLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header border-0 d-flex justify-content-between align-items-center">
         <h5 class="modal-title mb-0" id="petQuickViewLabel">Pet Details</h5>
@@ -423,4 +439,5 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
+	
 	

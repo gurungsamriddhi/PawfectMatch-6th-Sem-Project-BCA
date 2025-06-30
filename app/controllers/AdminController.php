@@ -2,14 +2,17 @@
 
 
 require_once __DIR__ . '/../models/Admin.php';
+require_once __DIR__ . '/../models/Pet.php';
 
 class AdminController
 {
     private $adminModel;
+    private $petModel;
 
     public function __construct()
     {
         $this->adminModel = new Admin(); // inject once
+        $this->petModel = new Pet(); // inject pet model
     }
 
     private function loadAdminView($filename, $data = [])
@@ -79,6 +82,90 @@ class AdminController
         $this->loadAdminView('addpet.php');
     }
 
+    public function addPet()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: index.php?page=admin/addpet");
+            exit();
+        }
+
+        // Validate required fields
+        $required_fields = ['petName', 'petType', 'breed', 'gender', 'age', 'dateArrival', 'size', 'weight', 'color', 'healthStatus', 'description', 'adoptionCenter', 'contactPhone', 'contactEmail', 'centerAddress'];
+        $errors = [];
+        $data = [];
+
+        foreach ($required_fields as $field) {
+            if (empty($_POST[$field])) {
+                $errors[$field] = ucfirst(str_replace(['pet', 'Name', 'Type'], ['', ' Name', ' Type'], $field)) . " is required.";
+            } else {
+                $data[$field] = trim($_POST[$field]);
+            }
+        }
+
+        // Handle characteristics
+        $characteristics = $_POST['characteristics'] ?? [];
+        $data['characteristics'] = !empty($characteristics) ? implode(',', $characteristics) : '';
+
+        // Handle optional fields
+        $data['healthNotes'] = $_POST['healthNotes'] ?? '';
+        $data['centerWebsite'] = $_POST['centerWebsite'] ?? '';
+        $data['imagePath'] = 'public/assets/images/pets.png'; // Default image path
+        $data['postedBy'] = $_SESSION['admin']['id'] ?? 0;
+        
+        // Debug: Check session data
+        if (!isset($_SESSION['admin']['id'])) {
+            error_log("Admin session ID not set. Session data: " . print_r($_SESSION, true));
+        }
+
+        // Handle file upload
+        if (isset($_FILES['photos']) && !empty($_FILES['photos']['name'][0])) {
+            $uploadDir = 'public/assets/images/pets/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $uploadedFiles = [];
+            foreach ($_FILES['photos']['tmp_name'] as $key => $tmp_name) {
+                if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
+                    $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
+                    $filePath = $uploadDir . $fileName;
+                    
+                    if (move_uploaded_file($tmp_name, $filePath)) {
+                        $uploadedFiles[] = $filePath;
+                    }
+                }
+            }
+            
+            if (!empty($uploadedFiles)) {
+                $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
+            }
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['addpet_errors'] = $errors;
+            $_SESSION['addpet_old'] = $data;
+            header('Location: index.php?page=admin/addpet');
+            exit();
+        }
+
+        // Add pet to database
+        $success = $this->petModel->addPet($data);
+
+        if ($success) {
+            $_SESSION['success_message'] = 'Pet added successfully!';
+            header('Location: index.php?page=admin/PetManagement');
+        } else {
+            $_SESSION['addpet_errors'] = ['general' => 'Failed to add pet. Please try again.'];
+            $_SESSION['addpet_old'] = $data;
+            header('Location: index.php?page=admin/addpet');
+        }
+        exit();
+    }
 
     public function ManagePets()
     {
@@ -86,9 +173,147 @@ class AdminController
             header("Location: index.php?page=admin/admin_login");
             exit();
         }
-        $this->loadAdminView('PetManagement.php');
+        
+        // Get all pets for admin management
+        $pets = $this->petModel->getAllPetsForAdmin();
+        $this->loadAdminView('PetManagement.php', ['pets' => $pets]);
     }
 
+    public function getPetById()
+    {
+        if (!isset($_SESSION['admin'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            exit();
+        }
+
+        $petId = $_GET['id'] ?? null;
+        if (!$petId) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Pet ID is required']);
+            exit();
+        }
+
+        $pet = $this->petModel->getPetById($petId);
+        if (!$pet) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Pet not found']);
+            exit();
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($pet);
+    }
+
+    public function updatePet()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: index.php?page=admin/PetManagement");
+            exit();
+        }
+
+        $petId = $_POST['pet_id'] ?? null;
+        if (!$petId) {
+            $_SESSION['error_message'] = 'Pet ID is required.';
+            header('Location: index.php?page=admin/PetManagement');
+            exit();
+        }
+
+        // Validate required fields
+        $required_fields = ['petName', 'petType', 'breed', 'gender', 'age', 'dateArrival', 'size', 'weight', 'color', 'healthStatus', 'description', 'adoptionCenter', 'contactPhone', 'contactEmail', 'centerAddress'];
+        $errors = [];
+        $data = [];
+
+        foreach ($required_fields as $field) {
+            if (empty($_POST[$field])) {
+                $errors[$field] = ucfirst(str_replace(['pet', 'Name', 'Type'], ['', ' Name', ' Type'], $field)) . " is required.";
+            } else {
+                $data[$field] = trim($_POST[$field]);
+            }
+        }
+
+        // Handle characteristics
+        $characteristics = $_POST['characteristics'] ?? [];
+        $data['characteristics'] = !empty($characteristics) ? implode(',', $characteristics) : '';
+
+        // Handle optional fields
+        $data['healthNotes'] = $_POST['healthNotes'] ?? '';
+        $data['centerWebsite'] = $_POST['centerWebsite'] ?? '';
+        $data['imagePath'] = $_POST['current_image'] ?? 'public/assets/images/pets.png';
+
+        // Handle file upload
+        if (isset($_FILES['photos']) && !empty($_FILES['photos']['name'][0])) {
+            $uploadDir = 'public/assets/images/pets/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $uploadedFiles = [];
+            foreach ($_FILES['photos']['tmp_name'] as $key => $tmp_name) {
+                if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
+                    $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
+                    $filePath = $uploadDir . $fileName;
+                    
+                    if (move_uploaded_file($tmp_name, $filePath)) {
+                        $uploadedFiles[] = $filePath;
+                    }
+                }
+            }
+            
+            if (!empty($uploadedFiles)) {
+                $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
+            }
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['editpet_errors'] = $errors;
+            header('Location: index.php?page=admin/PetManagement');
+            exit();
+        }
+
+        // Update pet in database
+        $success = $this->petModel->updatePet($petId, $data);
+
+        if ($success) {
+            $_SESSION['success_message'] = 'Pet updated successfully!';
+        } else {
+            $_SESSION['error_message'] = 'Failed to update pet. Please try again.';
+        }
+        
+        header('Location: index.php?page=admin/PetManagement');
+        exit();
+    }
+
+    public function deletePet()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+            exit();
+        }
+
+        $petId = $_POST['pet_id'] ?? null;
+        if (!$petId) {
+            $_SESSION['error_message'] = 'Pet ID is required.';
+            header('Location: index.php?page=admin/PetManagement');
+            exit();
+        }
+
+        $success = $this->petModel->deletePet($petId);
+
+        if ($success) {
+            $_SESSION['success_message'] = 'Pet deleted successfully!';
+        } else {
+            $_SESSION['error_message'] = 'Failed to delete pet. Please try again.';
+        }
+        
+        header('Location: index.php?page=admin/PetManagement');
+        exit();
+    }
 
     public function showaddcenterform()
     {
