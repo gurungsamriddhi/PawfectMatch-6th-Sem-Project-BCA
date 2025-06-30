@@ -8,9 +8,9 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="public/assets/css/adoptioncenter.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="public/assets/css/adoptioncenter.css" />
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </head>
@@ -30,7 +30,7 @@
           <ul class="list-unstyled px-2">
             <li class="nav-small-cap">Home</li>
             <li class="sidebar-item selected">
-              <a href="index.php?page=adoptioncenter/center_dashboard" class="sidebar-link active">
+              <a href="index.php?page=adoptioncenter/center_dashboard" class="sidebar-link">
                 <i class="fas fa-home me-2"></i> Dashboard
               </a>
             </li>
@@ -54,18 +54,18 @@
             </li>
 
 
-            
-  <li class="sidebar-item">
-    <a href="index.php?page=adoptioncenter/adoption_request" class="sidebar-link">
-      <i class="fas fa-inbox me-2"></i> Adoption Requests
-    </a>
-  </li>
 
-  <li class="sidebar-item">
-    <a href="index.php?page=adoptioncenter/feedback" class="sidebar-link">
-      <i class="fas fa-comments me-2"></i> Feedback
-    </a>
-  </li>
+            <li class="sidebar-item">
+              <a href="index.php?page=adoptioncenter/adoption_request" class="sidebar-link">
+                <i class="fas fa-inbox me-2"></i> Adoption Requests
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a href="index.php?page=adoptioncenter/feedback" class="sidebar-link">
+                <i class="fas fa-comments me-2"></i> Feedback
+              </a>
+            </li>
 
           </ul>
           </li>
@@ -76,23 +76,21 @@
           </ul>
         </nav>
       </aside>
-       <!-- Logout Confirmation Modal -->
-  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header border-0">
-          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to log out?
-        </div>
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <a href="index.php?page=home" class="btn btn-danger">Logout</a>
+      <!-- Logout Confirmation Modal -->
+      <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header border-0">
+              <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to log out?
+            </div>
+            <div class="modal-footer border-0">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <a href="index.php?page=adoptioncenter/center_login" class="btn btn-danger">Logout</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</body>
-</html>

@@ -116,6 +116,10 @@
         case 'adoptioncenter/center_login':
             (new CenterController)->showLoginForm();
             break;
+            
+        case 'adoptioncenter/verify_center':
+            (new CenterController)->verify_CenterLogin();
+            break;
 
         case 'adoptioncenter/center_dashboard':
             (new CenterController)->showDashboard();
@@ -124,10 +128,10 @@
         case 'adoptioncenter/adoptioncenter_profile':
             (new CenterController)->showprofile();
             break;
-            
+
         case 'adoptioncenter/update_profile':
-        (new CenterController)->update_profile();
-        break;
+            (new CenterController)->update_profile();
+            break;
 
         case 'adoptioncenter/add_pets':
             (new CenterController)->showaddpetform();
@@ -138,28 +142,28 @@
             break;
 
         case 'adoptioncenter/savepet':
-           (new CenterController)->savePet();
-           break;
+            (new CenterController)->savePet();
+            break;
 
         case 'adoptioncenter/editpets':
-           (new CenterController)->editpets();
+            (new CenterController)->editpets();
             break;
 
         case 'adoptioncenter/deletepet':
-    (new CenterController)->deletepet();
-    break;
+            (new CenterController)->deletepet();
+            break;
 
         case 'adoptioncenter/adoption_request':
-    (new CenterController)->adoption_request();
-        break;
+            (new CenterController)->adoption_request();
+            break;
 
-    case 'adoptioncenter/feedback':
-        (new CenterController)->feedback();
-        break;
+        case 'adoptioncenter/feedback':
+            (new CenterController)->feedback();
+            break;
 
-    case 'adoptioncenter/adoption_summary':
-        (new CenterController)->adoption_summary();
-        break;
+        // case 'adoptioncenter/adoption_summary':
+        //     (new CenterController)->adoption_summary();
+        //     break;
 
         case 'logout': //user
             session_unset();

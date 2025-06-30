@@ -1,23 +1,27 @@
-public function updateProfile($user_id, $name, $email, $phone, $address, $description, $logoPath = null)
+<?php
+require_once __DIR__ . '/../../core/databaseconn.php';
+require_once __DIR__ . '/../../mail/sendMail.php';
+
+class Center
 {
-    global $conn;
+    protected $conn;
 
-    // Update users table email
-    $sql1 = "UPDATE users SET email = ? WHERE user_id = ?";
-    $stmt1 = $conn->prepare($sql1);
-    $stmt1->bind_param("si", $email, $user_id);
-    $stmt1->execute();
+    public function __construct()
+    {
+        $db = new Database();
+        $this->conn = $db->connect();
+    }
+    //static function used to be able to call the function without using object used for select,fetching all data sql queries
+    public function findByEmail($email)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ? AND user_type = 'adoption_center'");
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
 
-    // Update adoption center details
-    if ($logoPath) {
-        $sql2 = "UPDATE adoption_centers SET name = ?, phone = ?, location = ?, description = ?, logo = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?";
-        $stmt2 = $conn->prepare($sql2);
-        $stmt2->bind_param("sssssi", $name, $phone, $address, $description, $logoPath, $user_id);
-    } else {
-        $sql2 = "UPDATE adoption_centers SET name = ?, phone = ?, location = ?, description = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?";
-        $stmt2 = $conn->prepare($sql2);
-        $stmt2->bind_param("ssssi", $name, $phone, $address, $description, $user_id);
+        return $stmt->get_result()->fetch_assoc();
     }
 
-    $stmt2->execute();
+    public function updateProfile($center_id, $name, $email, $phone, $address, $description, $logo_path){
+        
+    }
 }

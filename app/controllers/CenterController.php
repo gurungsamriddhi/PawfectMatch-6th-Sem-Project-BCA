@@ -1,8 +1,16 @@
 <?php
 require_once __DIR__ . '/../models/Pet.php';
+require_once __DIR__ . '/../models/Center.php';
 
 class CenterController
 {
+     private $centerModel;
+
+    public function __construct()
+    {
+        $this->centerModel = new Center(); // inject once
+    }
+
     private function loadCenterView($filename)
     {
         include __DIR__ . '/../views/adoptioncenter/' . $filename;
@@ -11,6 +19,43 @@ class CenterController
     public function showLoginForm()
     {
         $this->loadCenterView('center_login.php');
+    }
+
+      public function verify_CenterLogin()
+    {
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $errors = [];
+
+        //email formal validation
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = "Invalid email format.";
+        }
+        if (empty($password)) {
+            $errors['password'] = "Password is required.";
+        }
+
+        if (empty($errors)) {
+            $user = $this->centerModel->findByEmail($email);
+            if (!$user || $user['user_type'] !== 'adoption_center' || !password_verify($password, $user['password'])) {
+                $errors['centerlogin'] = "Invalid email or password.";
+            }
+        }
+
+        //if there are errors store them in session and return to the index.php page
+        if (!empty($errors)) {
+            $_SESSION['centerlogin_errors'] = $errors;
+            header('Location: index.php?page=adoptioncenter/center_login');
+            exit();
+        }
+        $_SESSION['center'] = [
+            'id' => $user['user_id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'type' => $user['user_type']
+        ];
+        header('Location:index.php?page=center/center_dashboard');
+        exit();
     }
 
     public function showDashboard()
@@ -23,50 +68,50 @@ class CenterController
         $this->loadCenterView('adoptioncenter_profile.php');
     }
     public function update_profile()
-{
-    $center_id = $_SESSION['adoptioncenter']['center_id'] ?? null;
+    {
+        $center_id = $_SESSION['adoptioncenter']['center_id'] ?? null;
 
-    if (!$center_id) {
-        $_SESSION['error'] = "Unauthorized access.";
-        header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
-        exit;
-    }
-
-    // Extract POST data
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone = $_POST['phone'] ?? '';
-    $address = $_POST['address'] ?? '';
-    $description = $_POST['description'] ?? '';
-    $logo_path = null;
-
-    // Handle file upload
-    if (!empty($_FILES['logo']['name'])) {
-        $upload_dir = 'public/uploads/logos/';
-        $filename = uniqid() . '_' . basename($_FILES['logo']['name']);
-        $target_path = $upload_dir . $filename;
-
-        if (move_uploaded_file($_FILES['logo']['tmp_name'], $target_path)) {
-            $logo_path = $target_path;
-        } else {
-            $_SESSION['error'] = "Failed to upload logo.";
+        if (!$center_id) {
+            $_SESSION['error'] = "Unauthorized access.";
             header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
             exit;
         }
+
+        // Extract POST data
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $phone = $_POST['phone'] ?? '';
+        $address = $_POST['address'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $logo_path = null;
+
+        // Handle file upload
+        if (!empty($_FILES['logo']['name'])) {
+            $upload_dir = 'public/uploads/logos/';
+            $filename = uniqid() . '_' . basename($_FILES['logo']['name']);
+            $target_path = $upload_dir . $filename;
+
+            if (move_uploaded_file($_FILES['logo']['tmp_name'], $target_path)) {
+                $logo_path = $target_path;
+            } else {
+                $_SESSION['error'] = "Failed to upload logo.";
+                header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+                exit;
+            }
+        }
+
+        // Call model to update
+        $success = $this->centerModel->updateProfile($center_id, $name, $email, $phone, $address, $description, $logo_path);
+
+        if ($success) {
+            $_SESSION['success'] = "Profile updated successfully.";
+        } else {
+            $_SESSION['error'] = "Failed to update profile.";
+        }
+
+        header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+        exit;
     }
-
-    // Call model to update
-    $success = $centerModel->updateProfile($center_id, $name, $email, $phone, $address, $description, $logo_path);
-
-    if ($success) {
-        $_SESSION['success'] = "Profile updated successfully.";
-    } else {
-        $_SESSION['error'] = "Failed to update profile.";
-    }
-
-    header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
-    exit;
-}
 
 
     public function showaddpetform()
@@ -193,16 +238,16 @@ class CenterController
 
             if (empty($errors)) {
                 $updated = $petModel->updatePet(
-    $pet_id,
-    $name,
-    $type,
-    $breed,
-    $age,
-    $gender,
-    $status,
-    $description,
-    $image_path
-);
+                    $pet_id,
+                    $name,
+                    $type,
+                    $breed,
+                    $age,
+                    $gender,
+                    $status,
+                    $description,
+                    $image_path
+                );
 
 
                 if ($updated) {

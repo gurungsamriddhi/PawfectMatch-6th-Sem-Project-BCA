@@ -18,6 +18,7 @@ unset($_SESSION['centerlogin_errors']);
 <body>
 
     <div class="container d-flex justify-content-center align-items-center vh-100">
+
         <div class="login-form shadow p-4 rounded bg-white w-100" style="max-width: 400px;">
             <div class="text-center">
                 <div class="logobox">
@@ -52,7 +53,7 @@ unset($_SESSION['centerlogin_errors']);
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label fw-semibold">Password</label>
+                    <label for="centerPassword" class="form-label fw-semibold">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         <input type="password"
