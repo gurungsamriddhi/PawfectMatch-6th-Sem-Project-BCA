@@ -1048,3 +1048,53 @@ textarea {
   margin-bottom: 1rem;
   color: #3b5d50;
 }
+
+/* Fix modal stacking issue - ensure login/register modals appear above pet details modal */
+#loginModal,
+#registerModal {
+  z-index: 1065 !important;
+}
+
+#loginModal .modal-backdrop,
+#registerModal .modal-backdrop {
+  z-index: 1060 !important;
+}
+
+/* Ensure pet details modal has lower z-index */
+#petQuickViewModal {
+  z-index: 1055 !important;
+}
+
+#petQuickViewModal .modal-backdrop {
+  z-index: 1050 !important;
+}
+
+/* Ensure login required modal appears above pet details modal */
+#loginRequiredModal {
+  z-index: 1065 !important;
+}
+
+#loginRequiredModal .modal-backdrop {
+  z-index: 1060 !important;
+}
+
+/* Prevent multiple modal backdrops from stacking */
+.modal-backdrop + .modal-backdrop {
+  z-index: 1059 !important;
+}
+
+/* Ensure proper modal stacking order */
+.modal {
+  z-index: 1055 !important;
+}
+
+.modal.show {
+  z-index: 1055 !important;
+}
+
+/* Specific z-index for authentication modals */
+#loginModal.show,
+#registerModal.show,
+#loginRequiredModal.show {
+  z-index: 1065 !important;
+}

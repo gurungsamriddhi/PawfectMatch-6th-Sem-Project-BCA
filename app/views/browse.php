@@ -112,18 +112,29 @@ window.isLoggedIn = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
 // Intercept Favorite/Wishlist and Adopt Me actions
 function handleProtectedAction(action, petId) {
   if (!window.isLoggedIn) {
-    // Show login/register modal
-    let modal = new bootstrap.Modal(document.getElementById('loginRequiredModal'));
-    modal.show();
-    // Set up buttons
-    document.getElementById('goToLoginBtn').onclick = function() {
-      modal.hide();
-      new bootstrap.Modal(document.getElementById('loginModal')).show();
-    };
-    document.getElementById('goToRegisterBtn').onclick = function() {
-      modal.hide();
-      new bootstrap.Modal(document.getElementById('registerModal')).show();
-    };
+    // Hide any existing modals first
+    const existingModals = document.querySelectorAll('.modal.show');
+    existingModals.forEach(modal => {
+      const modalInstance = bootstrap.Modal.getInstance(modal);
+      if (modalInstance) {
+        modalInstance.hide();
+      }
+    });
+    
+    // Show login/register modal after a short delay to ensure proper stacking
+    setTimeout(() => {
+      let modal = new bootstrap.Modal(document.getElementById('loginRequiredModal'));
+      modal.show();
+      // Set up buttons
+      document.getElementById('goToLoginBtn').onclick = function() {
+        modal.hide();
+        new bootstrap.Modal(document.getElementById('loginModal')).show();
+      };
+      document.getElementById('goToRegisterBtn').onclick = function() {
+        modal.hide();
+        new bootstrap.Modal(document.getElementById('registerModal')).show();
+      };
+    }, 150);
     return false;
   } else {
     // User is logged in, proceed
