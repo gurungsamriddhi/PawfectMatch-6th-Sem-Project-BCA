@@ -72,6 +72,7 @@ CREATE TABLE wishlist (
     FOREIGN KEY (pet_id) REFERENCES pets(pet_id),
     UNIQUE (user_id, pet_id) -- prevent duplicates
 );
+
 -- 6. VOLUNTEERS TABLE
 CREATE TABLE volunteers (
     volunteer_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,6 +86,7 @@ CREATE TABLE volunteers (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (assigned_center_id) REFERENCES adoption_centers(center_id) ON DELETE SET NULL
 );
+
 -- 7. FEEDBACK TABLE
 CREATE TABLE feedback (
     feedback_id INT AUTO_INCREMENT PRIMARY KEY,
