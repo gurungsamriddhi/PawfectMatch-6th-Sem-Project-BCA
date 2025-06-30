@@ -7,7 +7,7 @@
       <h5 class="mb-0">All Adoption Centers</h5>
       <div class="d-flex align-items-center gap-3">
         <i class="fas fa-bell"></i>
-        <i class="fas fa-user-circle"></i>
+        <i class="fas fa-center-circle"></i>
       </div>
     </div>
   </header>
@@ -16,7 +16,7 @@
     <div class="top-actions">
       <a href="index.php?page=admin/add_centerform" class="add-btn"><i class="fa-solid fa-plus"></i> Add Adoption Center</a>
       <div class="filter-group">
-        <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by username:</label>
+        <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by centername:</label>
         <select class="filter" id="typeFilter" onchange="filterByType(this)">
           <option value="All">All</option>
           <option value="Pokhara">Pokhara</option>
@@ -33,7 +33,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
-            <th>user_type</th>
+            <th>center Type</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -45,8 +45,12 @@
               <td>
                 <?php if ($center['status'] === 'active'): ?>
                   <span class="status-badge status-active">Active</span>
-                <?php else: ?>
-                  <span class="status-badge status-inactive"><?= htmlspecialchars(ucfirst($center['status'])) ?></span>
+                <?php elseif ($center['status']==='inactive'): ?>
+                  <span class="status-badge status-inactive">Inactive</span>
+                    <?php elseif ($center['status']==='suspended'):?>
+                    <span class ="status-badge status-suspended">Suspended</span>
+                  <?php elseif ($center['status']==='deleted'):?>
+                    <span class ="status-badge status-deleted">Deleted</span>
                 <?php endif; ?>
               </td>
               <td><?= htmlspecialchars($center['user_type']) ?></td>
@@ -114,7 +118,7 @@
 <div class="modal fade" id="editCenterModal" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title">Edit Center User</h5>
+      <div class="modal-header"><h5 class="modal-title">Edit Center center</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" id="editCenterContent">
@@ -134,7 +138,7 @@
         <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure you want to delete this user? This action cannot be undone.
+        Are you sure you want to delete this center? This action cannot be undone.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>

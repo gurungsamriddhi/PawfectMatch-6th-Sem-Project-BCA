@@ -88,14 +88,7 @@ class AdminController
         }
         $this->loadAdminView('PetManagement.php');
     }
-    public function ManageUsers()
-    {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
-        $this->loadAdminView('UserManagement.php');
-    }
+
 
     public function showaddcenterform()
     {
@@ -173,6 +166,16 @@ class AdminController
         $this->loadAdminView('CenterManagement.php', ['centers' => $centers]);
     }
 
+    public function ManageUsers()
+    {
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?page=admin/admin_login");
+            exit();
+        }
+        $users = $this->adminModel->getAllUsers();
+        $this->loadAdminView('userManagement.php', ['users' => $users]);
+    }
+
 
     public function fetch_center_details()
     {
@@ -231,8 +234,8 @@ class AdminController
 
             if (empty($errors)) {
                 $this->adminModel->updateCenterUser($user_id, $name, $email, $status);
-                
-                  echo '<div class="alert alert-success">Update successful!</div>';
+
+                echo '<div class="alert alert-success">Update successful!</div>';
             } else {
                 echo '<div class="alert alert-danger"><ul class="mb-0">';
                 foreach ($errors as $error) {

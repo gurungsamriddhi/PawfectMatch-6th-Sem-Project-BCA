@@ -643,9 +643,28 @@ body {
 }
 .status-inactive{
     background: #ffeaea;
-    color: #e53935;
+    color: #373636;
     border: 1px solid #f7bdbd;
 
+}
+.status-suspended{
+     background: #fffbe6;
+    color: #040303;
+    border: 1px solid #e8e3d3;
+
+}
+
+.status-pending{
+     background: #fffbe6;
+    color: #2983f9;
+    border: 1px solid #f7e6b6;
+
+}
+
+.status-deleted {
+    background: #ffeaea;
+    color: #e53935;
+    border: 1px solid #f7bdbd;
 }
 
 .status-available {
@@ -703,6 +722,14 @@ body {
 
 .view-btn:hover {
     background: #e2a201;
+}
+
+.suspend-btn{
+     background: #858483;
+}
+
+.suspend-btn:hover {
+    background: #605f5c;
 }
 
 .edit-btn {
