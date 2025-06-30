@@ -1,11 +1,18 @@
 
 <?php
+
 require_once __DIR__ . '/../models/User.php';
 class UserController
 {
+    private $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new User(); // inject once
+    }
+
     public function Login()
     {
-        session_start();
 
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -15,30 +22,35 @@ class UserController
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = "Invalid email format.";
         }
-        if(empty($password)){
-            $errors['password']= "Password is required.";
+        if (empty($password)) {
+            $errors['password'] = "Password is required.";
         }
-        
-        if(empty($errors)){
-            $user=user::findByEmail($email);
-            if(!$user || !password_Verify($password,$user['password'])){
-                $errors['login']="Invalid email or password.";
+
+        if (empty($errors)) {
+            
+            $user = $this->userModel->findByEmail($email);
+            if (!$user || !password_Verify($password, $user['password'])) {
+                $errors['login'] = "Invalid email or password.";
+            } else if ($user['is_verified'] == 0) {
+                $errors['login'] = "Please verify your email first.";
+            }
+            else if ($user['status'] !== 'active') {
+                $errors['login'] = "Your account is not active. Please check your email or contact support.";
             }
         }
 
         //if there are errors store them in session and return to the index.php page
-        if(!empty($errors)){
-            $_SESSION['login_errors']=$errors;
-            $_SESSION['old_login']=['email'=>$email];
-            $_SESSION['keep_login_modal_open']=true;
+        if (!empty($errors)) {
+            $_SESSION['login_errors'] = $errors;
+            $_SESSION['keep_login_modal_open'] = true;
             header('Location: index.php');
             exit();
         }
-        $_SESSION['user']=[
-                  'id'=>$user['user_id'],
-                  'name'=>$user['name'],
-                  'email'=>$user['email'],
-                  'type'=>$user['user_type']
+        $_SESSION['user'] = [
+            'id' => $user['user_id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'type' => $user['user_type']
         ];
         header('Location:index.php');
         exit();
@@ -47,7 +59,7 @@ class UserController
 
     public function Register()
     {
-        session_start();
+
 
         $name = $_POST['name'] ?? ''; //if $_Post ['name'] exists then assign that value otherwise assign empty string.
         $email = $_POST['email'] ?? '';
@@ -68,7 +80,8 @@ class UserController
             $errors['password'] = "Password must be minimum 8 characters, include uppercase, lowercase, number and special character.";
         }
         // ✅ Check if email already exists
-        if (empty($errors) && User::findByEmail($email)) { //calling the method findByEmail on the class User itself, not on an instance/object.
+         $user = $this->userModel->findByEmail($email);
+        if (empty($errors) && $user) { //calling the method findByEmail on the class User itself, not on an instance/object.
             $errors['email'] = 'This email is already registered.';
         }
 
@@ -84,11 +97,11 @@ class UserController
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $user_type = 'user';
 
-        $created = User::create($name, $email, $hashedPassword, $user_type);
+        $created = $this->userModel->create($name,$email,$hashedPassword,$user_type);
 
 
         if ($created) {
-            $_SESSION['success_message'] = 'Registration successful! Please Log in.';
+            $_SESSION['success_message'] = 'Registration successful! Check your email.';
             $_SESSION['keep_register_modal_open'] = true;
         } else {
             $_SESSION['register_errors'] = ['email' => 'Email already exists or registration failed.'];
@@ -97,6 +110,10 @@ class UserController
         }
         header('Location:index.php');
         exit();
+    }
+
+    public function contactSubmit(){
+        
     }
 }
 ?>

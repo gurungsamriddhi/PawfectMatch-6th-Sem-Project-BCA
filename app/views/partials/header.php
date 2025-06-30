@@ -20,6 +20,14 @@ $login_old = [];
 if (!empty($login_errors)) {
 	$login_old = $_SESSION['old_login'] ?? [];
 }
+
+$verification_success = $_SESSION['verification_success'] ?? null;
+$verification_error = $_SESSION['verification_error'] ?? null;
+
+unset(
+	$_SESSION['verification_success'],
+	$_SESSION['verification_error']
+);
 // Clear for next request
 unset(
 	$_SESSION['register_errors'],
@@ -42,17 +50,16 @@ unset(
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="shortcut icon" href="favicon.png">
-
-	<meta name="description" content="" />
-	<meta name="keywords" content="bootstrap, bootstrap4" />
+	<!--<link rel="shortcut icon" href="favicon.png">
+    <meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap4" />-->
 
 	<!-- Bootstrap CSS -->
 	<link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"><!-- to use icons--of envelope user..-->
 	<link href="public/assets/css/tiny-slider.css" rel="stylesheet">
 	<link href="public/assets/css/style.css" rel="stylesheet">
-	<link href="public/assets/css/authentication.css" rel="stylesheet">
+	<link href="public/assets/css/user_modal.css" rel="stylesheet">
 	<title>Pets For Adoption </title>
 </head>
 
@@ -116,7 +123,7 @@ unset(
 	</nav>
 	<!-- End Header/Navigation -->
 
-	
+
 
 	<!-- Login Modal -->
 	<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -171,13 +178,13 @@ unset(
 								<label for="showLoginPasswordCheck" class="form-check-label">Show Passwords</label>
 							</div>
 						</div>
-						<button type="submit" class="btn btn-success w-100 fw-semibold">Login</button>
+						<button type="submit" class="btn btn-primary w-100 fw-semibold">Login</button>
 					</form>
 
 					<div class="login-links">
 						<a href="forgot_password.php">Forgot Password?</a><br>
 						Don’t have an account?
-						<a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Register</a>
+						<a href="#"  data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Register</a>
 
 					</div>
 				</div>
@@ -276,7 +283,7 @@ unset(
 						</div>
 
 						<!-- Submit Button -->
-						<button type="submit" class="btn btn-success w-100 fw-semibold">Register</button>
+						<button type="submit" class="btn btn-primary w-100 fw-semibold">Register</button>
 					</form>
 
 					<div class="login-links mt-3 text-center small">
@@ -292,14 +299,14 @@ unset(
 	<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
-				<div class="modal-header border-0">
-					<h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+				<div class="modal-header border-0 d-flex justify-content-between align-items-center">
+					<h5 class="modal-title mb-0" id="logoutModalLabel">Confirm Logout</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body d-flex justify-content-center align-items-center" style="height: 100px;">
 					Are you sure you want to log out?
 				</div>
-				<div class="modal-footer border-0">
+				<div class="modal-footer border-0 d-flex justify-content-center align-items-center">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 					<a href="index.php?page=logout" class="btn btn-danger">Logout</a>
 				</div>
@@ -307,15 +314,27 @@ unset(
 		</div>
 	</div>
 
-	<?php if (!empty($register_errors) || $register_success || $keep_login_modal_open): ?>
+	<?php if (
+		!empty($register_errors) ||
+		$register_success ||
+		$keep_login_modal_open ||
+		$verification_success ||
+		$verification_error
+	): ?>
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
 				<?php if (!empty($register_errors) || $register_success): ?>
 					new bootstrap.Modal(document.getElementById('registerModal')).show();
 				<?php endif; ?>
 
-				<?php if ($keep_login_modal_open): ?>
+				<?php if ($keep_login_modal_open || $verification_success): ?>
 					new bootstrap.Modal(document.getElementById('loginModal')).show();
+				<?php endif; ?>
+
+				<?php if ($verification_success): ?>
+					alert("<?= addslashes($verification_success) ?>");
+				<?php elseif ($verification_error): ?>
+					alert("<?= addslashes($verification_error) ?>");
 				<?php endif; ?>
 			});
 		</script>

@@ -1,16 +1,19 @@
 <?php
 class Database {
-    private $conn;
+    private $host = 'localhost';
+    private $user = 'root';
+    private $pass = '';
+    private $dbname = 'pawfect_matchdb';
+    private $conn = null;
 
     public function connect() {
-        $this->conn = new mysqli('localhost', 'root', '', 'pawfect_matchdb');
-        
+        if ($this->conn === null) {
+            $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
 
-        if ($this->conn->connect_error) {
-            die('Database connection failed: ' . $this->conn->connect_error);
+            if ($this->conn->connect_error) {
+                die("Database connection failed: " . $this->conn->connect_error);
+            }
         }
-
-        // echo "✅ Database connection successful.<br>";
         return $this->conn;
     }
 }

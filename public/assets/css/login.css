@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Edu+NSW+ACT+Cursive:wght@500&display=swap');
+
+body {
+    overflow-x: hidden;
+    position: relative;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    line-height: 28px;
+    color: #6a6a6a;
+
+    font-size: 16px;
+    background-color: #eff2f1;
+
+}
+.logobox {
+    width: 100%;
+    background-color: #ffffff !important;
+    padding: 8px 20px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 8px rgba(59, 93, 80, 0.15) !important;
+    display: inline-block !important;
+    position: relative !important;
+    z-index: 10 !important;
+    margin-bottom: 20px !important;
+}
+.navbar-brand {
+  font-family: "Caveat Brush", cursive;
+  font-size: 40px;
+  padding-top: 10px;
+  color: #3b5d50;
+  text-align: center;
+  display: inline-block; /* important for centering */
+}
+a.navbar-brand {
+  text-decoration: none;
+}
+
+a.navbar-brand:hover,
+a.navbar-brand:focus,
+a.navbar-brand:active {
+  color: #3b5d50;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+}
+
+
+.form-control {
+    height: 60px;
+    border-radius: 12px;
+}
+
+.form-control:active,
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #3b5d50;
+
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.login-form {
+    background-color: #ffffff;
+    border-radius: 6rem;
+}
+
+.login-form h2 {
+     padding-top: 16px;
+     font-size: 24px;
+     font-weight: bold;
+    color: #3b5d50;
+}
+
+.btn {
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: 30px;
+    color: #ffffff;
+    background: #3b5d50;
+    border-color: #3b5d50;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover,
+.btn-active {
+    opacity: 0.9;
+    color: #ffffff;
+    background: #223a31;
+    border-color: #3b5d50;
+    ;
+}

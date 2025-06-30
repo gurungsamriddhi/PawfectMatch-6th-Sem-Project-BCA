@@ -1,6 +1,7 @@
 
 -- Create the database
-CREATE DATABASE IF NOT EXISTS pawfect_matchdb;
+DROP DATABASE IF EXISTS pawfect_matchdb;
+CREATE DATABASE pawfect_matchdb;
 USE pawfect_matchdb;
 
 -- 1. USERS TABLE
@@ -10,6 +11,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     user_type ENUM('admin', 'user', 'adoption_center') NOT NULL DEFAULT 'user',
+    status ENUM('active', 'inactive', 'pending', 'suspended','deleted') NOT NULL DEFAULT 'active',
     is_verified TINYINT(1) NOT NULL DEFAULT 0,
     verify_token VARCHAR(255) DEFAULT NULL,
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -39,20 +41,25 @@ CREATE TABLE adoption_requests (
     request_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id),
+    UNIQUE (user_id, pet_id) -- each user can request each pet only once
 );
 
 -- 4. ADOPTION FORM TABLE
 CREATE TABLE adoption_form (
     form_id INT AUTO_INCREMENT PRIMARY KEY,
     request_id INT NOT NULL,
+    user_id INT NOT NULL,
+    pet_id INT NOT NULL,
     address TEXT NOT NULL,
     phone VARCHAR(20) NOT NULL,
     reason TEXT NOT NULL,
     preferred_date DATE,
     home_type ENUM('house', 'apartment', 'other'),
     has_other_pets BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (request_id) REFERENCES adoption_requests(request_id) ON DELETE CASCADE
+    FOREIGN KEY (request_id) REFERENCES adoption_requests(request_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
 );
 
 -- 5. WISHLIST TABLE
@@ -62,7 +69,8 @@ CREATE TABLE wishlist (
     pet_id INT NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id),
+    UNIQUE (user_id, pet_id) -- prevent duplicates
 );
 
 -- 6. VOLUNTEERS TABLE
@@ -72,12 +80,14 @@ CREATE TABLE volunteers (
     area ENUM('pet care', 'training', 'fundraising', 'other'),
     availability_days VARCHAR(100),
     status ENUM('pending', 'assigned', 'rejected') DEFAULT 'pending',
+    remarks TEXT,
+    assigned_center_id INT DEFAULT NULL,
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-  
+    FOREIGN KEY (assigned_center_id) REFERENCES adoption_centers(center_id) ON DELETE SET NULL
 );
 
---7. FEEDBACK TABLE
+-- 7. FEEDBACK TABLE
 CREATE TABLE feedback (
     feedback_id INT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT NOT NULL,
@@ -95,9 +105,9 @@ CREATE TABLE training_tips (
     title VARCHAR(100),
     video_link TEXT,
     description TEXT,
-    created_by INT,  -- FK to users.user_id
+    created_by INT,  
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL --Use SET NULL if you want the video to remain but no longer have an owner.
+    FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL 
 );
 
 -- 9. DONATIONS TABLE
@@ -121,10 +131,10 @@ CREATE TABLE contact_messages (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
---11. adoption_centers Table
+-- 11. adoption_centers Table
 CREATE TABLE adoption_centers (
     center_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNIQUE NOT NULL,         -- FK to users.user_id, one-to-one
+    user_id INT UNIQUE NOT NULL,      
     name VARCHAR(150) NOT NULL,
     established_date DATE,
     location TEXT,
