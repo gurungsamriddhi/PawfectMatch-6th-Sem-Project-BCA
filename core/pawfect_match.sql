@@ -41,20 +41,25 @@ CREATE TABLE adoption_requests (
     request_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id),
+    UNIQUE (user_id, pet_id) -- each user can request each pet only once
 );
 
 -- 4. ADOPTION FORM TABLE
 CREATE TABLE adoption_form (
     form_id INT AUTO_INCREMENT PRIMARY KEY,
     request_id INT NOT NULL,
+    user_id INT NOT NULL,
+    pet_id INT NOT NULL,
     address TEXT NOT NULL,
     phone VARCHAR(20) NOT NULL,
     reason TEXT NOT NULL,
     preferred_date DATE,
     home_type ENUM('house', 'apartment', 'other'),
     has_other_pets BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (request_id) REFERENCES adoption_requests(request_id) ON DELETE CASCADE
+    FOREIGN KEY (request_id) REFERENCES adoption_requests(request_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
 );
 
 -- 5. WISHLIST TABLE
@@ -64,9 +69,9 @@ CREATE TABLE wishlist (
     pet_id INT NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id),
+    UNIQUE (user_id, pet_id) -- prevent duplicates
 );
-
 -- 6. VOLUNTEERS TABLE
 CREATE TABLE volunteers (
     volunteer_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,10 +79,12 @@ CREATE TABLE volunteers (
     area ENUM('pet care', 'training', 'fundraising', 'other'),
     availability_days VARCHAR(100),
     status ENUM('pending', 'assigned', 'rejected') DEFAULT 'pending',
+    remarks TEXT,
+    assigned_center_id INT DEFAULT NULL,
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (assigned_center_id) REFERENCES adoption_centers(center_id) ON DELETE SET NULL
 );
-
 -- 7. FEEDBACK TABLE
 CREATE TABLE feedback (
     feedback_id INT AUTO_INCREMENT PRIMARY KEY,
