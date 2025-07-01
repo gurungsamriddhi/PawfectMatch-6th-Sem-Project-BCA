@@ -35,8 +35,8 @@ a {
 
 /*------------------------------------Navbar-header------------------------------*/
 .custom-navbar {
-  background:#436c5d!important;
-  padding-top: 12px;
+  background:#3f6356 !important;
+  padding-top: 13px;
   padding-bottom: 12px; 
   
 }
@@ -136,7 +136,7 @@ a {
 
 /* Dropdown items */
 .custom-navbar .dropdown-menu .dropdown-item {
-  color: #436C5D !important;
+  color: #3f6356!important;
   padding: 5px 10px;
   font-weight: 500;
   font-size: 14px;
@@ -147,7 +147,7 @@ a {
 /* Hover & active states */
 .custom-navbar .dropdown-menu .dropdown-item:hover,
 .custom-navbar .dropdown-menu .dropdown-item.active {
-  color: #436C5D !important;
+  color: #3f6356 !important;
   border-radius: 0 !important;
 }
 
@@ -794,7 +794,7 @@ textarea {
 .pet-card {
   background: #fff;
   border-radius: 18px;
-  box-shadow: 0 2px 16px rgba(67,108,93,0.10);
+  box-shadow: 0 2px 16px rgb(255, 255, 255);
   padding: 20px 20px 16px 20px;
   margin-bottom: 32px;
   margin-top: 3rem;
@@ -895,7 +895,7 @@ textarea {
   margin-top: 10px;
 }
 .pet-card-btn {
-  background: #436c5d;
+  background: #2f4f43;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -909,15 +909,15 @@ textarea {
   text-align: center;
 }
 .pet-card-btn.adopt {
-  background: #f9bf29;
+  background: #f5b71b;
   color: #333;
 }
 .pet-card-btn.adopt:hover {
-  background: #ffe082;
+  background: #d9a70f;
   color: #222;
 }
 .pet-card-btn.details:hover {
-  background: #2e8b57;
+  background: #2f594a;
   color: #fff;
 }
 @media (max-width: 992px) {
@@ -1006,19 +1006,19 @@ textarea {
   display: inline-block;
 }
 #loginRequiredModal .btn-success {
-  background: #3b5d50;
+  background: #304f43 !important;
   border: none;
 }
 #loginRequiredModal .btn-success:hover {
-  background: #2e8b57;
+  background: #19452c !important;
 }
 #loginRequiredModal .btn-warning {
-  background: #f5b71b;
+  background: #f5b71b !important;
   color: #2f2f2f;
   border: none;
 }
 #loginRequiredModal .btn-warning:hover {
-  background: #f8b810;
+  background: #f8b810 !important;
   color: #2f2f2f;
 }
 

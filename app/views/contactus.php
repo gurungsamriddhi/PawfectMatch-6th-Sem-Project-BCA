@@ -97,30 +97,8 @@
                       <label class="text-black" for="message">Message</label>
                       <textarea class="form-control" id="message" cols="30" rows="5" name="message" required></textarea>
                     </div>
-               <!-- Recipient selection: Admin or Adoption Center -->
-                    <div class="form-group mb-4">
-                      <label for="recipient_type">Send to:</label>
-                      <select id="recipient_type" name="recipient_type" class="form-control" required onchange="toggleCenterSelect()">
-                        <option value="" disabled selected>Select recipient</option>
-                        <option value="admin">Admin</option>
-                        <option value="adoption_center">Adoption Center</option>
-                      </select>
-                    </div>
-
-                    <!-- Adoption centers dropdown, hidden by default -->
-                    <div class="form-group mb-4" id="centerSelect" style="display:none;">
-                      <label for="recipient_id">Choose Adoption Center</label>
-                      <select id="recipient_id" name="recipient_id" class="form-control">
-                        <option value="" disabled selected>Select center</option>
-                        <!-- Options will be filled dynamically by PHP -->
-                        <?php
-                        // Example PHP to fill options from $centers array
-                        foreach ($centers as $center) {
-                          echo "<option value=\"{$center['user_id']}\">" . htmlspecialchars($center['name']) . "</option>";
-                        }
-                        ?>
-                      </select>
-                    </div>
+               
+            
                     <button type="submit" class="btn btn-primary-hover-outline">Send Message</button>
                   </form>
                 </div>

@@ -1,11 +1,11 @@
-<?php global $current_page; ?><!-- to apply css for active pages  -->
-
+<?php global $current_page; ?>
+<!-- to apply css for active pages  -->
 <?php
 
 $register_errors = $_SESSION['register_errors'] ?? [];
 $register_old = [];
-
-if (!empty($register_errors)) {  //only assign old input if there are errors
+//only assign old input if there are errors
+if (!empty($register_errors)) {  
 	$register_old = $_SESSION['old'] ?? [];
 }
 
@@ -130,7 +130,7 @@ unset(
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header border-0 d-flex justify-content-between align-items-center">
-					<h5 class="modal-title mb-0" id="loginModalLabel">Login to Pawfect Match</h5>
+					<h5 class="modal-title mb-0" id="loginModalLabel">Login to PawfectMatch</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body pt-0">
@@ -160,7 +160,7 @@ unset(
 							</div>
 						</div>
 						<div class="mb-3">
-							<label for="password" class="form-label fw-semibold">Password</label>
+							<label for="loginPassword" class="form-label fw-semibold">Password</label>
 							<div class="input-group">
 								<span class="input-group-text"><i class="fas fa-lock"></i></span>
 								<input type="password"
@@ -198,7 +198,7 @@ unset(
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header border-0 d-flex justify-content-between align-items-center">
-					<h5 class="modal-title mb-0" id="registerModalLabel">Register for Pawfect Match</h5>
+					<h5 class="modal-title mb-0" id="registerModalLabel">Register for PawfectMatch</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body pt-0">
