@@ -67,7 +67,7 @@ unset(
 
 	<!-- Start Header/Navigation -->
 
-	<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark  sticky-top">
+	<nav class="custom-navbar navbar navbar-expand-md navbar-dark  sticky-top">
 
 
 		<div class="container">
@@ -175,7 +175,7 @@ unset(
 							</div>
 							<div class="form-check mb-3 mt-3">
 								<input type="checkbox" class="form-check-input" id="ShowLoginPasswordCheck" />
-								<label for="showLoginPasswordCheck" class="form-check-label">Show Passwords</label>
+								<label for="ShowLoginPasswordCheck" class="form-check-label">Show Passwords</label>
 							</div>
 						</div>
 						<button type="submit" class="btn btn-primary w-100 fw-semibold">Login</button>

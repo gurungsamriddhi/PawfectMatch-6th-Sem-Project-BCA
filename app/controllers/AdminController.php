@@ -1,6 +1,5 @@
 <?php
-
-
+require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../models/Pet.php';
 
@@ -11,19 +10,26 @@ class AdminController
 
     public function __construct()
     {
-        $this->adminModel = new Admin(); // inject once
-        $this->petModel = new Pet(); // inject pet model
+        //create connection once
+        $db = new Database();
+        $conn = $db->connect();
+        
+        //inject the same connection to both models
+        $this->adminModel = new Admin($conn);
+        $this->petModel = new Pet($conn);
     }
 
     private function loadAdminView($filename, $data = [])
     {
         extract($data);
-        include __DIR__ . '/../views/admin/' . $filename; //to use this function again and again instead writing each time the path
+        //to use this function again and again instead writing each time the path
+        include __DIR__ . '/../views/admin/' . $filename;
     }
 
     public function showadminloginform()
     {
-        $this->loadAdminView('admin_login.php'); //open admin's login form
+        //open admin's login form
+        $this->loadAdminView('admin_login.php');
     }
 
     public function verify_adminLogin()
@@ -116,7 +122,7 @@ class AdminController
         $data['centerWebsite'] = $_POST['centerWebsite'] ?? '';
         $data['imagePath'] = 'public/assets/images/pets.png'; // Default image path
         $data['postedBy'] = $_SESSION['admin']['id'] ?? 0;
-        
+
         // Debug: Check session data
         if (!isset($_SESSION['admin']['id'])) {
             error_log("Admin session ID not set. Session data: " . print_r($_SESSION, true));
@@ -134,13 +140,13 @@ class AdminController
                 if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
                     $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
                     $filePath = $uploadDir . $fileName;
-                    
+
                     if (move_uploaded_file($tmp_name, $filePath)) {
                         $uploadedFiles[] = $filePath;
                     }
                 }
             }
-            
+
             if (!empty($uploadedFiles)) {
                 $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
             }
@@ -173,7 +179,7 @@ class AdminController
             header("Location: index.php?page=admin/admin_login");
             exit();
         }
-        
+
         // Get all pets for admin management
         $pets = $this->petModel->getAllPetsForAdmin();
         $this->loadAdminView('PetManagement.php', ['pets' => $pets]);
@@ -258,13 +264,13 @@ class AdminController
                 if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
                     $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
                     $filePath = $uploadDir . $fileName;
-                    
+
                     if (move_uploaded_file($tmp_name, $filePath)) {
                         $uploadedFiles[] = $filePath;
                     }
                 }
             }
-            
+
             if (!empty($uploadedFiles)) {
                 $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
             }
@@ -284,7 +290,7 @@ class AdminController
         } else {
             $_SESSION['error_message'] = 'Failed to update pet. Please try again.';
         }
-        
+
         header('Location: index.php?page=admin/PetManagement');
         exit();
     }
@@ -310,7 +316,7 @@ class AdminController
         } else {
             $_SESSION['error_message'] = 'Failed to delete pet. Please try again.';
         }
-        
+
         header('Location: index.php?page=admin/PetManagement');
         exit();
     }

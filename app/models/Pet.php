@@ -1,47 +1,49 @@
 <?php
-require_once 'core/databaseconn.php';
+class Pet
+{
+    private $conn;
 
-class Pet {
-    private $db;
-
-    public function __construct() {
-        $this->db = new Database();
+    public function __construct($conn)
+    {
+        $this->conn = $conn;
     }
 
-    public function getAllPets() {
-        $conn = $this->db->connect();
+    public function getAllPets()
+    {
         $query = "SELECT * FROM pets WHERE status = 'available' ORDER BY created_at DESC";
-        $result = $conn->query($query);
+        $result = $this->conn->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getAllPetsForAdmin() {
-        $conn = $this->db->connect();
+    public function getAllPetsForAdmin()
+    {
         $query = "SELECT p.*, u.name as posted_by_name FROM pets p 
                   LEFT JOIN users u ON p.posted_by = u.user_id 
                   ORDER BY p.created_at DESC";
-        $result = $conn->query($query);
+        $result = $this->conn->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getPetById($id) {
-        $conn = $this->db->connect();
+    public function getPetById($id)
+    {
+
         $query = "SELECT * FROM pets WHERE pet_id = ?";
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function addPet($data) {
-        $conn = $this->db->connect();
+    public function addPet($data)
+    {
+
         $query = "INSERT INTO pets (
             name, type, breed, gender, age, date_arrival, weight, size, color,
             health_status, characteristics, description, health_notes, adoption_center,
             contact_phone, contact_email, center_address, center_website, image_path, status, posted_by
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         if (!$stmt) {
             return false;
         }
@@ -72,28 +74,47 @@ class Pet {
         // Bind parameters: 21 total, types: ssssdsdsssssssssssssi
         $stmt->bind_param(
             "ssssdsdsssssssssssssi",
-            $petName, $petType, $breed, $gender, $age, $dateArrival, $weight, $size, $color,
-            $healthStatus, $characteristics, $description, $healthNotes, $adoptionCenter,
-            $contactPhone, $contactEmail, $centerAddress, $centerWebsite, $imagePath, $status, $postedBy
+            $petName,
+            $petType,
+            $breed,
+            $gender,
+            $age,
+            $dateArrival,
+            $weight,
+            $size,
+            $color,
+            $healthStatus,
+            $characteristics,
+            $description,
+            $healthNotes,
+            $adoptionCenter,
+            $contactPhone,
+            $contactEmail,
+            $centerAddress,
+            $centerWebsite,
+            $imagePath,
+            $status,
+            $postedBy
         );
 
         return $stmt->execute();
     }
 
-    public function updatePet($id, $data) {
-        $conn = $this->db->connect();
+    public function updatePet($id, $data)
+    {
+
         $query = "UPDATE pets SET name=?, type=?, breed=?, gender=?, age=?, date_arrival=?, 
                                    size=?, weight=?, color=?, health_status=?, characteristics=?, 
                                    description=?, health_notes=?, adoption_center=?, contact_phone=?, 
                                    contact_email=?, center_address=?, center_website=?, image_path=?, status=? 
                   WHERE pet_id=?";
-        
-        $stmt = $conn->prepare($query);
-        
+
+        $stmt = $this->conn->prepare($query);
+
         if (!$stmt) {
             return false;
         }
-        
+
         // Ensure all required data is present with default values
         $petName = $data['petName'] ?? '';
         $petType = $data['petType'] ?? '';
@@ -115,27 +136,47 @@ class Pet {
         $centerWebsite = $data['centerWebsite'] ?? '';
         $imagePath = $data['imagePath'] ?? 'public/assets/images/pets.png';
         $status = $data['status'] ?? 'available';
-        
-        $stmt->bind_param("ssssdssssssssssssssi", 
-            $petName, $petType, $breed, $gender, $age, $dateArrival, $size, $weight, 
-            $color, $healthStatus, $characteristics, $description, $healthNotes, 
-            $adoptionCenter, $contactPhone, $contactEmail, $centerAddress, 
-            $centerWebsite, $imagePath, $status, $id
+
+        $stmt->bind_param(
+            "ssssdssssssssssssssi",
+            $petName,
+            $petType,
+            $breed,
+            $gender,
+            $age,
+            $dateArrival,
+            $size,
+            $weight,
+            $color,
+            $healthStatus,
+            $characteristics,
+            $description,
+            $healthNotes,
+            $adoptionCenter,
+            $contactPhone,
+            $contactEmail,
+            $centerAddress,
+            $centerWebsite,
+            $imagePath,
+            $status,
+            $id
         );
-        
+
         return $stmt->execute();
     }
 
-    public function deletePet($id) {
-        $conn = $this->db->connect();
+    public function deletePet($id)
+    {
+
         $query = "DELETE FROM pets WHERE pet_id = ?";
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
 
-    public function searchPets($search, $filters = []) {
-        $conn = $this->db->connect();
+    public function searchPets($search, $filters = [])
+    {
+
         $query = "SELECT * FROM pets WHERE status = 'available'";
         $params = [];
         $types = "";
@@ -178,7 +219,7 @@ class Pet {
         // Sorting
         $query .= " ORDER BY created_at DESC";
 
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         if (!empty($params)) {
             $stmt->bind_param($types, ...$params);
         }
@@ -186,17 +227,19 @@ class Pet {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getCharacteristicsArray($characteristics) {
+    public function getCharacteristicsArray($characteristics)
+    {
         if (empty($characteristics)) return [];
         return explode(',', $characteristics);
     }
 
-    public function formatCharacteristics($characteristics) {
+    public function formatCharacteristics($characteristics)
+    {
         if (empty($characteristics)) return '';
-        
+
         $chars = $this->getCharacteristicsArray($characteristics);
         $formatted = [];
-        
+
         $labels = [
             'vaccinated' => 'Vaccinated',
             'neutered' => 'Neutered/Spayed',
@@ -207,42 +250,53 @@ class Pet {
             'specialNeeds' => 'Special Needs',
             'microchipped' => 'Microchipped'
         ];
-        
+
         foreach ($chars as $char) {
             if (isset($labels[$char])) {
                 $formatted[] = $labels[$char];
             }
         }
-        
+
         return implode(', ', $formatted);
     }
 
-    public function getHealthStatusColor($status) {
+    public function getHealthStatusColor($status)
+    {
         switch ($status) {
-            case 'Excellent': return 'success';
-            case 'Good': return 'info';
-            case 'Fair': return 'warning';
-            case 'Poor': return 'danger';
-            default: return 'secondary';
+            case 'Excellent':
+                return 'success';
+            case 'Good':
+                return 'info';
+            case 'Fair':
+                return 'warning';
+            case 'Poor':
+                return 'danger';
+            default:
+                return 'secondary';
         }
     }
 
-    public function getAvailabilityBadge($status) {
+    public function getAvailabilityBadge($status)
+    {
         switch ($status) {
-            case 'available': return 'badge bg-success';
-            case 'pending': return 'badge bg-warning text-dark';
-            case 'adopted': return 'badge bg-secondary';
-            default: return 'badge bg-info';
+            case 'available':
+                return 'badge bg-success';
+            case 'pending':
+                return 'badge bg-warning text-dark';
+            case 'adopted':
+                return 'badge bg-secondary';
+            default:
+                return 'badge bg-info';
         }
     }
 
-    public function getPetsByCenter($centerId) {
-        $conn = $this->db->connect();
+    public function getPetsByCenter($centerId)
+    {
+
         $query = "SELECT * FROM pets WHERE posted_by = ? ORDER BY created_at DESC";
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $centerId);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 }
-?>

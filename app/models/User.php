@@ -1,16 +1,16 @@
 
 <?php
-require_once __DIR__ . '/../../core/databaseconn.php';
+
 require_once __DIR__ . '/../../mail/sendMail.php';
 
 class User
 {
     protected $conn;
 
-    public function __construct()
+    public function __construct($conn)
     {
-        $db = new Database();
-        $this->conn = $db->connect();
+        
+        $this->conn = $conn;
     }
 
     public function findByEmail($email)
@@ -34,8 +34,13 @@ class User
         $stmt->bind_param('ssssiss', $name, $email, $password, $verify_token, $is_verified, $user_type, $status);
 
         if ($stmt->execute()) {
-            sendVerificationEmail($email, $name, $verify_token);
-            return true;
+            $mailer =new Mailer();
+            $result=$mailer->sendVerificationEmail($email, $name, $verify_token);
+            if($result===true){
+                return true;
+            }else{
+                return false;
+            }
         }
 
         return false;

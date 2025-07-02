@@ -1,11 +1,14 @@
 <?php
+require_once __DIR__ . '/../../core/databaseconn.php';
 require_once 'app/models/Pet.php';
 
 class PetController {
     private $petModel;
 
     public function __construct() {
-        $this->petModel = new Pet();
+        $db= new Database();
+        $conn=$db->connect();
+        $this->petModel = new Pet($conn);
     }
 
     public function browse() {

@@ -34,7 +34,7 @@ a {
 /*------------------------------------link--------------------------------------*/
 
 /*------------------------------------Navbar-header------------------------------*/
-.custom-navbar {
+ nav.custom-navbar {
   background:#3f6356 !important;
   padding-top: 13px;
   padding-bottom: 12px; 

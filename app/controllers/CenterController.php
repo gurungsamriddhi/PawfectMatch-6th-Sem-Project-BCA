@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../models/Pet.php';
 
 class CenterController
@@ -7,7 +8,9 @@ class CenterController
 
     public function __construct()
     {
-        $this->petModel = new Pet();
+        $db = new Database();
+        $conn = $db->connect();
+        $this->petModel = new Pet($conn);
     }
 
     private function loadCenterView($filename, $data = [])
@@ -18,35 +21,35 @@ class CenterController
 
     public function showLoginForm()
     {
-        // If already logged in, redirect to dashboard
-        // if (isset($_SESSION['adoptioncenter'])) {
-        //     header("Location: index.php?page=adoptioncenter/center_dashboard");
-        //     exit();
-        // }
+        //If already logged in, redirect to dashboard
+        if (isset($_SESSION['adoptioncenter'])) {
+            header("Location: index.php?page=adoptioncenter/center_dashboard");
+            exit();
+        }
 
-        // Otherwise, show login form
+        //Otherwise, show login form
         $this->loadCenterView('center_login.php');
     }
 
     public function showDashboard()
     {
         // // Check if logged in
-        // if (!isset($_SESSION['adoptioncenter'])) {
-        //     header("Location: index.php?page=adoptioncenter/center_login");
-        //     exit();
-        // }
+        if (!isset($_SESSION['adoptioncenter'])) {
+            header("Location: index.php?page=adoptioncenter/center_login");
+            exit();
+        }
 
-        // Optional: remove the debug message
-        // echo "Dashboard loaded"; exit;
 
         $this->loadCenterView('center_dashboard.php');
     }
 
-    public function showprofile(){
+    public function showprofile()
+    {
         $this->loadCenterView('adoptioncenter_profile.php');
     }
 
-    public function showaddpetform(){
+    public function showaddpetform()
+    {
         $this->loadCenterView('add_pets.php');
     }
 
@@ -97,13 +100,13 @@ class CenterController
                 if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
                     $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
                     $filePath = $uploadDir . $fileName;
-                    
+
                     if (move_uploaded_file($tmp_name, $filePath)) {
                         $uploadedFiles[] = $filePath;
                     }
                 }
             }
-            
+
             if (!empty($uploadedFiles)) {
                 $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
             }
@@ -130,12 +133,13 @@ class CenterController
         exit();
     }
 
-    public function managepetsform(){
+    public function managepetsform()
+    {
         if (!isset($_SESSION['adoptioncenter'])) {
             header("Location: index.php?page=adoptioncenter/center_login");
             exit();
         }
-        
+
         // Get pets for this specific adoption center
         $centerId = $_SESSION['adoptioncenter']['id'];
         $pets = $this->petModel->getPetsByCenter($centerId);
@@ -236,13 +240,13 @@ class CenterController
                 if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
                     $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
                     $filePath = $uploadDir . $fileName;
-                    
+
                     if (move_uploaded_file($tmp_name, $filePath)) {
                         $uploadedFiles[] = $filePath;
                     }
                 }
             }
-            
+
             if (!empty($uploadedFiles)) {
                 $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
             }
@@ -262,7 +266,7 @@ class CenterController
         } else {
             $_SESSION['error_message'] = 'Failed to update pet. Please try again.';
         }
-        
+
         header('Location: index.php?page=adoptioncenter/managepets');
         exit();
     }
@@ -296,7 +300,7 @@ class CenterController
         } else {
             $_SESSION['error_message'] = 'Failed to delete pet. Please try again.';
         }
-        
+
         header('Location: index.php?page=adoptioncenter/managepets');
         exit();
     }
