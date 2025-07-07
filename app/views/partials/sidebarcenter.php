@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="public/assets/css/adoptioncenter.css" />
+    <link rel="stylesheet" href="public/assets/css/admin.css" />
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </head>
@@ -42,16 +42,23 @@
             </li>
 
             <li class="sidebar-item">
-              <a href="index.php?page=adoptioncenter/managepets" class="sidebar-link">
-                <i class="fas fa-paw me-2"></i> Manage Pets
-              </a>
-            </li>
-
-            <li class="sidebar-item">
-              <a href="index.php?page=adoptioncenter/add_pets" class="sidebar-link">
-                <i class="fa-solid fa-plus me-2"></i> Add New Pet
-              </a>
-            </li>
+            <a class="sidebar-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#petManagementMenu" role="button" aria-expanded="false" aria-controls="petManagementMenu">
+              <span><i class="fas fa-paw me-2"></i> Pet Management</span>
+              <i class="fas fa-chevron-down"></i>
+            </a>
+            <ul class="collapse list-unstyled ps-4" id="petManagementMenu">
+              <li>
+                <a href="index.php?page=adoptioncenter/add_pets" class="sidebar-link">
+                  <i class="fa-solid fa-plus me-2"></i> Add Pet
+                </a>
+              </li>
+              <li>
+                <a href="index.php?page=adoptioncenter/managepets" class="sidebar-link">
+                  <i class="fa-solid fa-list me-2"></i> Manage Pets
+                </a>
+              </li>
+            </ul>
+          </li>
 
 
 

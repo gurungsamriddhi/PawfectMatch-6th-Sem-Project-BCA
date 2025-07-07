@@ -1,47 +1,83 @@
 <?php
-
-
 class Pet {
     private $conn;
+    private $table = "pets";
 
-    public function __construct($conn)
-    {
-        $this->conn = $conn;
+    public function __construct($db) {
+        $this->conn = $db;
     }
 
-    public function getAllPets()
-    {
-        $result = $this->conn->query("SELECT * FROM pets");
+    // Insert a new pet record
+    public function insertPet($data) {
+        $sql = "INSERT INTO {$this->table} 
+            (name, type, breed, age, gender, health_status, image_path, status, posted_by, description) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'available', ?, ?)";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            echo "Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error;
+            return false;
+        }
+
+        $posted_by = $data['posted_by'] ?? null;
+
+        $stmt->bind_param(
+            "sssisssis",
+            $data['name'],
+            $data['type'],
+            $data['breed'],
+            $data['age'],
+            $data['gender'],
+            $data['health_status'],
+            $data['image_path'],
+            $posted_by,
+            $data['description']
+        );
+
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+            return false;
+        }
+
+        $stmt->close();
+        return true;
+    }
+
+    // Get all pets with optional adoption center info
+    public function getAllPets() {
+        $sql = "SELECT pets.*, ac.name AS adoption_center_name
+                FROM {$this->table} pets
+                LEFT JOIN adoption_centers ac ON pets.posted_by = ac.user_id
+                ORDER BY pets.pet_id DESC";
+
+        $result = $this->conn->query($sql);
+        if (!$result) {
+            echo "Query failed: (" . $this->conn->errno . ") " . $this->conn->error;
+            return [];
+        }
+
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getPetById($pet_id)
-    {
-        $stmt = $this->conn->prepare("SELECT * FROM pets WHERE pet_id = ?");
+    // ✅ Delete a pet record by ID
+    public function deletePet($pet_id) {
+        $sql = "DELETE FROM {$this->table} WHERE pet_id = ?";
+        $stmt = $this->conn->prepare($sql);
+
+        if (!$stmt) {
+            echo "Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error;
+            return false;
+        }
+
         $stmt->bind_param("i", $pet_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_assoc();
-    }
 
-    public function addPet($name, $type, $breed, $age, $gender, $status, $description, $imagePath)
-    {
-        $stmt = $this->conn->prepare("INSERT INTO pets (name, type, breed, age, gender, status, description, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssss", $name, $type, $breed, $age, $gender, $status, $description, $imagePath);
-        return $stmt->execute();
-    }
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+            return false;
+        }
 
-    public function updatePet($pet_id, $name, $type, $breed, $age, $gender, $status, $description, $imagePath)
-    {
-        $stmt = $this->conn->prepare("UPDATE pets SET name=?, type=?, breed=?, age=?, gender=?, status=?, description=?, image_path=? WHERE pet_id=?");
-        $stmt->bind_param("ssssssssi", $name, $type, $breed, $age, $gender, $status, $description, $imagePath, $pet_id);
-        return $stmt->execute();
-    }
-
-    public function deletePetById($pet_id)
-    {
-        $stmt = $this->conn->prepare("DELETE FROM pets WHERE pet_id = ?");
-        $stmt->bind_param("i", $pet_id);
-        return $stmt->execute();
+        $stmt->close();
+        return true;
     }
 }
+?>

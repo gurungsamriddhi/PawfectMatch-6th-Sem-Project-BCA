@@ -1,4 +1,6 @@
  <?php
+ require_once 'app/controllers/CenterController.php';
+
     // index.php — Main Router
 
     require_once 'core/databaseconn.php';
@@ -141,8 +143,8 @@
             (new CenterController)->managepetsform();
             break;
 
-        case 'adoptioncenter/savepet':
-            (new CenterController)->savePet();
+        case 'adoptioncenter/savePets':
+        (new CenterController)->savePets();
             break;
 
         case 'adoptioncenter/editpets':
@@ -161,9 +163,7 @@
             (new CenterController)->feedback();
             break;
 
-        // case 'adoptioncenter/adoption_summary':
-        //     (new CenterController)->adoption_summary();
-        //     break;
+    
 
         case 'logout': //user
             session_unset();
