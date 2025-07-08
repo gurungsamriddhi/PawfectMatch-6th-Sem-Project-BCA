@@ -21,12 +21,7 @@ class CenterController
 
     public function showLoginForm()
     {
-        //If already logged in, redirect to dashboard
-        if (isset($_SESSION['adoptioncenter'])) {
-            header("Location: index.php?page=adoptioncenter/center_dashboard");
-            exit();
-        }
-
+   
         //Otherwise, show login form
         $this->loadCenterView('center_login.php');
     }
