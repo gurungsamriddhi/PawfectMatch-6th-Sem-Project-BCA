@@ -6,7 +6,7 @@ class Center
 {
     protected $conn;
 
-    public function __construct()
+    public function __construct($conn)
     {
         $db = new Database();
         $this->conn = $db->connect();
