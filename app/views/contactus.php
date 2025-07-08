@@ -161,7 +161,7 @@ $success = $data['success'] ?? '';
 </main>
 <?php if (!empty($errors) || !empty($success)): ?>
   <script>
-    window.location.hash = 'container';
+    window.location.hash = 'container';//to focus
   </script>
 <?php endif; ?>
 

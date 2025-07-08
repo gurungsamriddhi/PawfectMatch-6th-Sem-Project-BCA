@@ -35,8 +35,10 @@ switch ($page) {
         (new HomeController)->aboutus();
         break;
     case 'contactus':
-        (new HomeController)->contactus();
+         header('Location: index.php?page=contactcontroller/showcontactform');
+          exit;
         break;
+       
 
 
     case 'volunteer':
