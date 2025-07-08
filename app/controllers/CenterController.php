@@ -54,7 +54,7 @@ class CenterController
             'email' => $user['email'],
             'type' => $user['user_type']
         ];
-        header('Location:index.php?page=center/center_dashboard');
+        header('Location:index.php?page=adoptioncenter/center_dashboard');
         exit();
     }
 
