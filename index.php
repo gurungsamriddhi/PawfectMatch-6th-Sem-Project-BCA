@@ -151,6 +151,10 @@
             (new CenterController)->editpets();
             break;
 
+        case 'adoptioncenter/updatePet':
+            (new CenterController)->updatePet();
+            break;
+
         case 'adoptioncenter/deletepet':
             (new CenterController)->deletepet();
             break;
