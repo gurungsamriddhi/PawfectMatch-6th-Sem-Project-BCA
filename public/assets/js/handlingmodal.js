@@ -51,7 +51,8 @@ $(document).ready(function () {
   //resetpassword buttonhandler
   $("#confirmResetBtn").on("click", function () {
     if (!resetUserId) return;
-
+    const $btn = $(this);
+    $btn.prop("disabled", true).text("Sending...");
     $.ajax({
       url: "index.php?page=admin/reset_password",
       type: "POST",
@@ -79,12 +80,14 @@ $(document).ready(function () {
           $("#resetConfirmModal .modal-footer").html(
             '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
           );
+          $btn.prop("disabled", false).text("Reset Password");
         }
       },
       error: function () {
         $("#resetConfirmModal .modal-body").html(
           "<p>Something went wrong.</p>"
         );
+        $btn.prop("disabled", false).text("Reset Password");
       },
     });
   });
@@ -92,7 +95,6 @@ $(document).ready(function () {
   //confirm delete button handler
   $("#confirmDeleteBtn").on("click", function () {
     if (!deleteUserId) return;
-
     $.ajax({
       url: "index.php?page=admin/delete_center_user",
       type: "POST",
