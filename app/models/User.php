@@ -9,13 +9,13 @@ class User
 
     public function __construct($conn)
     {
-        
+
         $this->conn = $conn;
     }
 
     public function findByEmail($email)
     {
-        
+
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param('s', $email);
         $stmt->execute();
@@ -25,8 +25,8 @@ class User
 
     public function create($name, $email, $password, $user_type)
     {
-       
-     $verify_token = bin2hex(random_bytes(16));
+
+        $verify_token = bin2hex(random_bytes(16));
         $is_verified = 0;
         $status = 'pending';
 
@@ -34,11 +34,11 @@ class User
         $stmt->bind_param('ssssiss', $name, $email, $password, $verify_token, $is_verified, $user_type, $status);
 
         if ($stmt->execute()) {
-            $mailer =new Mailer();
-            $result=$mailer->sendVerificationEmail($email, $name, $verify_token);
-            if($result===true){
+            $mailer = new Mailer();
+            $result = $mailer->sendVerificationEmail($email, $name, $verify_token);
+            if ($result === true) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -48,7 +48,7 @@ class User
 
     public function verifyUser($email, $token)
     {
-   
+
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ? AND verify_token = ? AND is_verified = 0");
         $stmt->bind_param('ss', $email, $token);
         $stmt->execute();
@@ -65,5 +65,12 @@ class User
             }
         }
         return 0; // Invalid token or user not found
+    }
+
+    public function updatePassword($userId, $hashedPassword)
+    {
+        $stmt = $this->conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $hashedPassword, $userId);
+        return $stmt->execute();
     }
 }

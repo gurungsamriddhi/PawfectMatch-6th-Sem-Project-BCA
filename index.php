@@ -35,10 +35,10 @@ switch ($page) {
         (new HomeController)->aboutus();
         break;
     case 'contactus':
-         header('Location: index.php?page=contactcontroller/showcontactform');
-          exit;
+        header('Location: index.php?page=contactcontroller/showcontactform');
+        exit;
         break;
-       
+
 
 
     case 'volunteer':
@@ -126,6 +126,10 @@ switch ($page) {
     case 'admin/userManagement':
         (new AdminController)->ManageUsers();
         break;
+    case 'admin/reset_password':
+        (new AdminController)->resetCenterPassword();
+        break;
+
 
 
     // ✅ Adoption Center Pages (example controller)
@@ -165,6 +169,10 @@ switch ($page) {
         (new CenterController)->managepetsform();
         break;
 
+
+
+
+    //contactus controller
     case 'contactcontroller/showcontactform':
         (new ContactController)->showContactForm();
         break;

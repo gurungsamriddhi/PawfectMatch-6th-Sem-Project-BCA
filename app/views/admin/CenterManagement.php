@@ -129,6 +129,8 @@
   </div>
 </div>
 
+
+
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -148,5 +150,25 @@
   </div>
 </div>
 
+<!-- Reset Password Confirmation Modal -->
+<div class="modal fade" id="resetConfirmModal" tabindex="-1" aria-labelledby="resetConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Confirm Reset Password</h5>
+        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to reset this center's password? A temporary password will be sent via email.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmResetBtn" class="btn btn-secondary">Reset Password</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     
-  <?php include 'app/views/partials/admin_footer.php'; ?>
+<?php include 'app/views/partials/admin_footer.php'; ?>

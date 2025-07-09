@@ -1,4 +1,5 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -58,6 +59,19 @@ class Mailer
                  Please click the link below to verify your email address:<br>
                  <a href='$verifyLink'>$verifyLink</a><br><br>
                  Thank you for registering with PawfectMatch!";
+
+        return $this->sendMail($toEmail, $subject, $body, $name);
+    }
+
+    public function sendResetPasswordEmail($toEmail, $name, $tempPassword)
+    {
+        $subject = 'Your Temporary Password for Pawfect Match';
+        $body = "Hi <strong>" . htmlspecialchars($name) . "</strong>,<br><br>
+             Your password has been reset by the administrator.<br><br>
+             <strong>Temporary Password:</strong> <code>$tempPassword</code><br><br>
+             Please login using this password and change it immediately from your dashboard.<br><br>
+             Regards,<br>
+             <strong>Pawfect Match Team</strong>";
 
         return $this->sendMail($toEmail, $subject, $body, $name);
     }

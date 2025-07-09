@@ -2,21 +2,24 @@
 require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../models/Pet.php';
+require_once __DIR__ . '/../models/User.php';
 
 class AdminController
 {
     private $adminModel;
     private $petModel;
+    private $userModel;
 
     public function __construct()
     {
         //create connection once
         $db = new Database();
         $conn = $db->connect();
-        
+
         //inject the same connection to both models
         $this->adminModel = new Admin($conn);
         $this->petModel = new Pet($conn);
+        $this->userModel = new User($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -494,4 +497,31 @@ class AdminController
             }
         }
     }
+
+    public function resetCenterPassword()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
+        $userId = $_POST['user_id'];
+        $tempPassword = bin2hex(random_bytes(4)); // generate temp password
+        $hashedPassword = password_hash($tempPassword, PASSWORD_DEFAULT);
+        $updated = $this->userModel->updatePassword($userId, $hashedPassword);
+        if (!$updated) {
+            echo '<div class="alert alert-danger">Failed to update password.</div>';
+            return;
+        }
+
+        $adoptioncenter = $this->adminModel->getAdoptionCenterDetailsByUserId($userId);
+        $mailer = new Mailer();
+        $mailResult = $mailer->sendResetPasswordEmail($adoptioncenter['email'], $adoptioncenter['name'], $tempPassword);
+
+        if ($mailResult === true) {
+            echo '<div class="alert alert-success">Password reset and email sent successfully.</div>';
+        } else {
+            echo '<div class="alert alert-danger">Password reset but failed to send email.</div>';
+        }
+    } else {
+        echo '<div class="alert alert-danger">Invalid request.</div>';
+    }
+}
+
 }
