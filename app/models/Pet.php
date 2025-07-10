@@ -7,7 +7,7 @@ class Pet {
         $this->conn = $db;
     }
 
-    // Insert a new pet record (no adoption_center_name column)
+    // Insert a new pet record
     public function insertPet($data) {
         $sql = "INSERT INTO {$this->table} 
             (name, type, breed, age, gender, health_status, image_path, status, posted_by, description) 
@@ -43,40 +43,49 @@ class Pet {
         return true;
     }
 
-    // Get all pets with posted_by user info (alias fixed)
-    public function getAllPets() {
-    $sql = "SELECT pets.*,
-                   poster.name AS posted_by_name,
-                   center.name AS adoption_center_name
-            FROM pets
-            LEFT JOIN users AS poster ON pets.posted_by = poster.user_id
-            LEFT JOIN users AS center ON pets.adoption_center_id = center.user_id";
-    
-    $result = $this->conn->query($sql);
-    $pets = [];
+    // Get all pets posted by a specific user (adoption center)
+    public function getPetsByUserId($user_id) {
+        $sql = "SELECT pets.*,
+                       u.name AS posted_by_name
+                FROM pets
+                LEFT JOIN users u ON pets.posted_by = u.user_id
+                WHERE pets.posted_by = ?";
 
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $pets[] = $row;
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            echo "Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error;
+            return [];
         }
-    }
-    return $pets;
-}
 
-public function updatePet($pet_id, $name, $type, $breed, $age, $gender, $health_status, $date_arrival, $status, $description)
-{
-    $sql = "UPDATE pets 
-            SET name = ?, type = ?, breed = ?, age = ?, gender = ?, health_status = ?, date_arrival = ?, status = ?, description = ? 
-            WHERE pet_id = ?";
-    
-    $stmt = $this->conn->prepare($sql);
-    if ($stmt) {
-        $stmt->bind_param("sssisssssi", $name, $type, $breed, $age, $gender, $health_status, $date_arrival, $status, $description, $pet_id);
-        return $stmt->execute();
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $pets = [];
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $pets[] = $row;
+            }
+        }
+
+        $stmt->close();
+        return $pets;
     }
 
-    return false;
-}
+    // Update a pet record
+    public function updatePet($pet_id, $name, $type, $breed, $age, $gender, $health_status, $date_arrival, $status, $description) {
+        $sql = "UPDATE pets 
+                SET name = ?, type = ?, breed = ?, age = ?, gender = ?, health_status = ?, date_arrival = ?, status = ?, description = ? 
+                WHERE pet_id = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("sssisssssi", $name, $type, $breed, $age, $gender, $health_status, $date_arrival, $status, $description, $pet_id);
+            return $stmt->execute();
+        }
+
+        return false;
+    }
 
     // Delete a pet record by ID
     public function deletePet($pet_id) {

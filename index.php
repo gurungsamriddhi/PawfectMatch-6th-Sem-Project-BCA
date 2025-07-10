@@ -135,6 +135,10 @@
             (new CenterController)->update_profile();
             break;
 
+        case 'adoptioncenter/change_password':
+            (new CenterController)->change_password();
+            break;
+
         case 'adoptioncenter/add_pets':
             (new CenterController)->showaddpetform();
             break;

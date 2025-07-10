@@ -16,7 +16,7 @@ class CenterController
         $db = new Database();
         $this->conn = $db->connect();
         $this->petModel = new Pet($this->conn); 
-        $this->centerModel = new Center(); // uses internal DB connection
+        $this->centerModel = new Center(); 
         $this->userModel = new User();
     }
 
@@ -125,16 +125,110 @@ public function showprofile()
 
     $center_id = $_SESSION['center_id'];
 
-    // Get the latest adoption center info by user_id
     $centerDetails = $this->centerModel->findByUserId($center_id);
 
     if (!$centerDetails) {
-        die("Center not found for user ID $center_id.");
+        // Load DB connection
+        require_once __DIR__ . '/../../core/databaseconn.php';
+        $db = new Database();
+        $conn = $db->connect();
+
+        $name = $_SESSION['center_name'] ?? 'Adoption Center';
+
+        // Attempt to prepare statement
+        $stmt = $conn->prepare("INSERT INTO adoption_centers (user_id, name) VALUES (?, ?)");
+        if (!$stmt) {
+            die("Database error while inserting: " . $conn->error);
+        }
+
+        $stmt->bind_param("is", $center_id, $name);
+        $stmt->execute();
+        $stmt->close();
+
+        // Re-fetch profile
+        $centerDetails = $this->centerModel->findByUserId($center_id);
     }
 
     $center = $centerDetails;
 
     include __DIR__ . '/../views/adoptioncenter/adoptioncenter_profile.php';
+}
+
+
+public function change_password()
+{
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["change_password"])) {
+        require_once __DIR__ . '/../../core/databaseconn.php';
+        $db = new Database();
+        $conn = $db->connect();
+
+        $user_id = $_SESSION['center_id'] ?? null;
+
+        if (!$user_id) {
+            $_SESSION['error'] = "User not logged in.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+
+        $old_password = $_POST['old_password'];
+        $new_password = $_POST['new_password'];
+        $confirm_password = $_POST['confirm_password'];
+
+        if (empty($old_password) || empty($new_password) || empty($confirm_password)) {
+            $_SESSION['error'] = "All fields are required.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+
+        $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/";
+        if (!preg_match($pattern, $new_password)) {
+            $_SESSION['error'] = "New password must be at least 8 characters long and include an uppercase letter, number, and special character.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+
+        if ($new_password !== $confirm_password) {
+            $_SESSION['error'] = "New passwords do not match.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+
+        // Prepare and execute SELECT
+        $stmt = $conn->prepare("SELECT password FROM users WHERE user_id = ?");
+        if (!$stmt) {
+            $_SESSION['error'] = "Database error: failed to prepare statement.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        if (!$user || !password_verify($old_password, $user['password'])) {
+            $_SESSION['error'] = "Old password is incorrect.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+
+        // Prepare and execute UPDATE
+        $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        $updateStmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        if (!$updateStmt) {
+            $_SESSION['error'] = "Database error: failed to prepare update statement.";
+            header("Location: index.php?page=adoptioncenter/adoptioncenter_profile");
+            exit();
+        }
+        $updateStmt->bind_param("si", $new_hashed_password, $user_id);
+        $updateStmt->execute();
+
+        session_unset();
+        session_destroy();
+        $_SESSION['success'] = "Password changed successfully. Please log in again.";
+        header("Location: index.php?page=adoptioncenter/center_login");
+        exit();
+
+    }
 }
 
 
@@ -144,10 +238,20 @@ public function showprofile()
     }
 
     public function managepetsform()
-    {
-        $pets = $this->petModel->getAllPets();
-        include __DIR__ . '/../views/adoptioncenter/managepets.php';
+{
+    if (!isset($_SESSION['center_id'])) {
+        header("Location: index.php?page=adoptioncenter/center_login");
+        exit;
     }
+
+    $center_id = $_SESSION['center_id'];
+
+    // Use new method to get pets posted by this adoption center
+    $pets = $this->petModel->getPetsByUserId($center_id);
+
+    include __DIR__ . '/../views/adoptioncenter/managepets.php';
+}
+
 
 public function verify_CenterLogin()
 {
