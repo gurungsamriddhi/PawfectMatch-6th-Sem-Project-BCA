@@ -639,12 +639,12 @@ body {
 .status-active{
    background: #e6f7ea;
     color: #22a722;
-    border: 1px solid #b6e2c6; 
+    border: 1px solid #22a722; 
 }
 .status-inactive{
-    background: #ffeaea;
-    color: #373636;
-    border: 1px solid #f7bdbd;
+    background: #f7dddd;
+    color: #fe5555;
+    border: 1px solid #fe5555;
 
 }
 .status-suspended{
@@ -655,9 +655,9 @@ body {
 }
 
 .status-pending{
-     background: #fffbe6;
-    color: #2983f9;
-    border: 1px solid #f7e6b6;
+    background: #d7ecf7;
+    color: #387ee1;
+    border: 1px solid #387ee1;
 
 }
 

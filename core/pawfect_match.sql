@@ -168,9 +168,13 @@ CREATE TABLE contact_messages (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     message TEXT NOT NULL,
+    is_verified_email TINYINT(1) DEFAULT 0,  -- 0 = not verified, 1 = verified (for guests, default 0)
+    reply_message TEXT NULL,                -- stores admin's reply
+    replied_at DATETIME NULL,              -- when the admin replied
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
+
 
 -- 11. adoption_centers Table
 CREATE TABLE adoption_centers (

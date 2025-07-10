@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../mail/sendMail.php';
 require_once __DIR__ . '/../models/Contact.php';
-
+//use this contact controller to handle user side logic
 class ContactController
 {
     private $mailer;

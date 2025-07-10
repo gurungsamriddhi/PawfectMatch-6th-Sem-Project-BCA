@@ -24,32 +24,32 @@ $routes = [
     'volunteer' => ['HomeController', 'volunteer'],
     'petdetails' => ['PetController', 'showpetdetails'],
     'donate' => ['DonateController', 'donate'],
-    
+
     'logout' => function () {
-    $redirect = 'index.php?page=home'; // default
+        $redirect = 'index.php?page=home'; // default
 
-    if (!empty($_SESSION['admin'])) {
-        $redirect = 'index.php?page=admin/admin_login';
-    } elseif (!empty($_SESSION['center'])) {
-        $redirect = 'index.php?page=adoptioncenter/center_login';
-    }
+        if (!empty($_SESSION['admin'])) {
+            $redirect = 'index.php?page=admin/admin_login';
+        } elseif (!empty($_SESSION['center'])) {
+            $redirect = 'index.php?page=adoptioncenter/center_login';
+        }
 
-    session_unset();
-    session_destroy();
-    header("Location: $redirect");
-    exit();
-},
+        session_unset();
+        session_destroy();
+        header("Location: $redirect");
+        exit();
+    },
 
-    
+
     // Contact Routes
-    'contactus' => function() {
+    'contactus' => function () {
         header('Location: index.php?page=contactcontroller/showcontactform');
         exit();
     },
     'contactcontroller/showcontactform' => ['ContactController', 'showContactForm'],
     'contactcontroller/contactsubmit' => ['ContactController', 'contactsubmit'],
     'contactsubmit' => ['UserController', 'contactSubmit'],
-    
+
     // Admin Routes
     'admin/admin_login' => ['AdminController', 'showadminloginform'],
     'admin/verify_admin' => ['AdminController', 'verify_adminLogin'],
@@ -69,7 +69,9 @@ $routes = [
     'admin/add_Center' => ['AdminController', 'addAdoptionCenter', 'admin_auth'],
     'admin/userManagement' => ['AdminController', 'ManageUsers', 'admin_auth'],
     'admin/reset_password' => ['AdminController', 'resetCenterPassword', 'admin_auth'],
-    
+    'admin/contact_messages' => ['AdminController', 'showContactMessages', 'admin_auth'],
+    'admin/send_contact_reply' => ['AdminController', 'sendContactReply', 'admin_auth'],
+
     // Center Routes
     'adoptioncenter/center_login' => ['CenterController', 'showLoginForm'],
     'adoptioncenter/center_dashboard' => ['CenterController', 'showDashboard', 'center_auth'],
@@ -89,27 +91,27 @@ $current_page = $page; // For use in header.php
 // 5. Route handling
 if (isset($routes[$page])) {
     $route = $routes[$page];
-    
+
     // Handle closures (like logout)
     if (is_callable($route)) {
         $route();
         exit;
     }
-    
+
     // Handle controller methods
     list($controller, $method, $middleware) = array_pad($route, 3, null);
-    
+
     // Check middleware
     if ($middleware === 'admin_auth' && empty($_SESSION['admin'])) {
         header("Location: index.php?page=admin/admin_login");
         exit;
     }
-    
+
     if ($middleware === 'center_auth' && empty($_SESSION['adoptioncenter'])) {
         header("Location: index.php?page=adoptioncenter/center_login");
         exit;
     }
-    
+
     // Call the controller method
     (new $controller)->$method();
 } else {

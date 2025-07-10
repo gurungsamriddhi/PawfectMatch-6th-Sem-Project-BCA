@@ -3,12 +3,14 @@ require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../models/Pet.php';
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Contact.php';
 
 class AdminController
 {
     private $adminModel;
     private $petModel;
     private $userModel;
+    private $contactModel;
 
     public function __construct()
     {
@@ -20,6 +22,7 @@ class AdminController
         $this->adminModel = new Admin($conn);
         $this->petModel = new Pet($conn);
         $this->userModel = new User($conn);
+        $this->contactModel=new Contact($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -486,4 +489,50 @@ class AdminController
             echo '<div class="alert alert-danger">Invalid request.</div>';
         }
     }
+
+    //show contact messages in admin dashboard
+    public function showContactMessages()
+    {
+        $messages = $this->contactModel->getAllMessages();
+        include __DIR__ . '/../views/admin/contact_messages.php';
+        
+    }
+
+    public function sendContactReply()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $to = trim($_POST['email']);
+        $name = trim($_POST['name']);
+        $reply = trim($_POST['reply']);
+        $verified = $_POST['is_verified'] ?? 0;
+         $messageId = $_POST['message_id'] ?? null;
+
+        if (empty($reply) || strlen($reply) < 5) {
+            echo '<div class="alert alert-danger">Reply must be at least 5 characters long.</div>';
+            return;
+        }
+
+        if ($verified == 0) {
+            echo '<div class="alert alert-warning">This email is not verified. Reply may not be delivered.</div>';
+            return;
+        }
+
+        $subject = "Reply from Pawfect Match";
+        $body = "<p>Dear $name,</p><p>" . nl2br(htmlspecialchars($reply)) . "</p>";
+
+        $mailer = new Mailer();
+        $result = $mailer->sendMail($to, $subject, $body, $name);
+
+        if ($result === true) {
+              if ($messageId && $this->contactModel->markAsReplied($messageId, $reply)) {
+                echo '<div class="alert alert-success">Reply sent and saved successfully.</div>';
+            } else {
+                echo '<div class="alert alert-warning">Email sent, but failed to save reply to database.</div>';
+            }
+        } else {
+            echo '<div class="alert alert-danger">Failed to send email.</div>';
+        }
+    }
+
+}
 }
