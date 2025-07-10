@@ -1,6 +1,6 @@
 
 <?php
-require_once __DIR__ . '/../../core/databaseconn.php';
+
 require_once __DIR__ . '/../../mail/sendMail.php';
 
 
@@ -8,10 +8,10 @@ class User
 {
     protected $conn;
 
-    public function __construct()
+    public function __construct($conn)
     {
-        $db = new Database();
-        $this->conn = $db->connect();
+
+        $this->conn = $conn;
     }
     public function findByUserId($user_id)
 {
@@ -45,7 +45,7 @@ public function updateProfile($user_id, $name, $email, $phone, $address, $descri
 
     public function findByEmail($email)
     {
-        
+
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param('s', $email);
         $stmt->execute();
@@ -55,8 +55,8 @@ public function updateProfile($user_id, $name, $email, $phone, $address, $descri
 
     public function create($name, $email, $password, $user_type)
     {
-       
-     $verify_token = bin2hex(random_bytes(16));
+
+        $verify_token = bin2hex(random_bytes(16));
         $is_verified = 0;
         $status = 'pending';
 
@@ -64,8 +64,13 @@ public function updateProfile($user_id, $name, $email, $phone, $address, $descri
         $stmt->bind_param('ssssiss', $name, $email, $password, $verify_token, $is_verified, $user_type, $status);
 
         if ($stmt->execute()) {
-            sendVerificationEmail($email, $name, $verify_token);
-            return true;
+            $mailer = new Mailer();
+            $result = $mailer->sendVerificationEmail($email, $name, $verify_token);
+            if ($result === true) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         return false;
@@ -73,7 +78,7 @@ public function updateProfile($user_id, $name, $email, $phone, $address, $descri
 
     public function verifyUser($email, $token)
     {
-   
+
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ? AND verify_token = ? AND is_verified = 0");
         $stmt->bind_param('ss', $email, $token);
         $stmt->execute();
@@ -90,5 +95,12 @@ public function updateProfile($user_id, $name, $email, $phone, $address, $descri
             }
         }
         return 0; // Invalid token or user not found
+    }
+
+    public function updatePassword($userId, $hashedPassword)
+    {
+        $stmt = $this->conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $hashedPassword, $userId);
+        return $stmt->execute();
     }
 }

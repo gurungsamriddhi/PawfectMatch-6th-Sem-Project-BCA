@@ -23,8 +23,16 @@ class CenterController
 
     private function loadCenterView($filename)
     {
-        include __DIR__ . '/../views/adoptioncenter/' . $filename;
+        $db = new Database();
+        $conn = $db->connect();
+        $this->petModel = new Pet($conn);
     }
+
+    // private function loadCenterView($filename, $data = [])
+    // {
+    //     extract($data);
+    //     include __DIR__ . '/../views/adoptioncenter/' . $filename;
+    // }
 
     public function showLoginForm()
     {

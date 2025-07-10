@@ -1,4 +1,3 @@
-
 -- Create the database
 DROP DATABASE IF EXISTS pawfect_matchdb;
 CREATE DATABASE pawfect_matchdb;
@@ -21,17 +20,59 @@ CREATE TABLE users (
 CREATE TABLE pets (
     pet_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    type ENUM('dog', 'cat', 'rabbit', 'other') NOT NULL,
-    breed VARCHAR(100),
-    age INT,
-    gender ENUM('male', 'female') NOT NULL,
-    health_status VARCHAR(255),
+    type VARCHAR(50) NOT NULL,
+    breed VARCHAR(100) NOT NULL,
+    gender ENUM('Male', 'Female') NOT NULL,
+    age DECIMAL(3,1) NOT NULL,
+    date_arrival DATE NOT NULL,
+    size ENUM('Small', 'Medium', 'Large', 'Extra Large') NOT NULL,
+    weight DECIMAL(5,2) NOT NULL,
+    color VARCHAR(100) NOT NULL,
+    health_status ENUM('Excellent', 'Good', 'Fair', 'Poor') NOT NULL,
+    characteristics TEXT,
+    description TEXT NOT NULL,
+    health_notes TEXT,
+    adoption_center VARCHAR(150) NOT NULL,
+    contact_phone VARCHAR(20) NOT NULL,
+    contact_email VARCHAR(100) NOT NULL,
+    center_address TEXT NOT NULL,
+    center_website VARCHAR(255),
     image_path VARCHAR(255),
-    status ENUM('available', 'adopted') NOT NULL DEFAULT 'available',
+    status ENUM('available', 'adopted', 'pending') NOT NULL DEFAULT 'available',
     posted_by INT,
-    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (posted_by) REFERENCES users(user_id) ON DELETE SET NULL
 );
+
+--pets table in samriddhi's database 
+/*CREATE TABLE pets (
+    pet_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    type ENUM('dog', 'cat', 'rabbit', 'other') NOT NULL,
+    breed VARCHAR(100),
+    age DECIMAL(3,1),
+    date_arrival DATE,
+    size ENUM('Small', 'Medium', 'Large', 'Extra Large'),
+    weight DECIMAL(5,2),
+    color VARCHAR(100),
+    characteristics TEXT,
+    gender ENUM('Male', 'Female') NOT NULL,
+    health_status VARCHAR(255),
+    image_path VARCHAR(255),
+    status ENUM('available', 'adopted', 'pending') NOT NULL DEFAULT 'available',
+    posted_by INT,
+    description TEXT,
+    health_notes TEXT,
+    adoption_center VARCHAR(150) NOT NULL,
+    contact_phone VARCHAR(20) NOT NULL,
+    contact_email VARCHAR(100) NOT NULL,
+    center_address TEXT NOT NULL,
+    center_website VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (posted_by) REFERENCES users(user_id) ON DELETE SET NULL
+);*/
 
 -- 3. ADOPTION REQUESTS TABLE
 CREATE TABLE adoption_requests (

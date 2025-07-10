@@ -72,7 +72,7 @@
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <a href="index.php?page=admin/admin_login" class="btn btn-danger">Logout</a>
+          <a href="index.php?page=logout" class="btn btn-danger">Logout</a>
         </div>
       </div>
     </div>
