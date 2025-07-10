@@ -9,7 +9,7 @@ $register_old = $_SESSION['register_old'] ?? [];
 // Optionally clear session after reading
 unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['success_message']);
 ?>
-<?php include 'app/views/partials/sidebar.php'; ?>
+<?php include 'app/views/partials/sidebaradmin.php'; ?>
 <!-- Main Content -->
 <div class="body-wrapper w-100">
 	<!-- Header -->

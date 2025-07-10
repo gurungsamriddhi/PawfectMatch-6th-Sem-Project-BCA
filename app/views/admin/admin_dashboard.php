@@ -1,5 +1,5 @@
 
-<?php include 'app/views/partials/sidebar.php'; ?>
+<?php include 'app/views/partials/sidebaradmin.php'; ?>
  <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->

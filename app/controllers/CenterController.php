@@ -28,13 +28,7 @@ class CenterController
 
     public function showDashboard()
     {
-        // // Check if logged in
-        if (!isset($_SESSION['adoptioncenter'])) {
-            header("Location: index.php?page=adoptioncenter/center_login");
-            exit();
-        }
-
-
+      
         $this->loadCenterView('center_dashboard.php');
     }
 
