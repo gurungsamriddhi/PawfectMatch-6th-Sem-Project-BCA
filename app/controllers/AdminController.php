@@ -22,7 +22,7 @@ class AdminController
         $this->adminModel = new Admin($conn);
         $this->petModel = new Pet($conn);
         $this->userModel = new User($conn);
-        $this->contactModel=new Contact($conn);
+        $this->contactModel = new Contact($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -495,44 +495,45 @@ class AdminController
     {
         $messages = $this->contactModel->getAllMessages();
         include __DIR__ . '/../views/admin/contact_messages.php';
-        
     }
 
     public function sendContactReply()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $to = trim($_POST['email']);
-        $name = trim($_POST['name']);
-        $reply = trim($_POST['reply']);
-        $verified = $_POST['is_verified'] ?? 0;
-         $messageId = $_POST['message_id'] ?? null;
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $to = trim($_POST['email']);
+            $name = trim($_POST['name']);
+            $reply = trim($_POST['reply']);
+            $verified = $_POST['is_verified'] ?? 0;
+            $messageId = $_POST['message_id'] ?? null;
 
-        if (empty($reply) || strlen($reply) < 5) {
-            echo '<div class="alert alert-danger">Reply must be at least 5 characters long.</div>';
-            return;
-        }
-
-        if ($verified == 0) {
-            echo '<div class="alert alert-warning">This email is not verified. Reply may not be delivered.</div>';
-            return;
-        }
-
-        $subject = "Reply from Pawfect Match";
-        $body = "<p>Dear $name,</p><p>" . nl2br(htmlspecialchars($reply)) . "</p>";
-
-        $mailer = new Mailer();
-        $result = $mailer->sendMail($to, $subject, $body, $name);
-
-        if ($result === true) {
-              if ($messageId && $this->contactModel->markAsReplied($messageId, $reply)) {
-                echo '<div class="alert alert-success">Reply sent and saved successfully.</div>';
-            } else {
-                echo '<div class="alert alert-warning">Email sent, but failed to save reply to database.</div>';
+            if (empty($reply) || strlen($reply) < 5) {
+                echo '<div class="alert alert-danger">Reply must be at least 5 characters long.</div>';
+                return;
             }
-        } else {
-            echo '<div class="alert alert-danger">Failed to send email.</div>';
+
+            if ($verified == 0) {
+                echo '<div class="alert alert-warning">This email is not verified. Reply may not be delivered.</div>';
+                return;
+            }
+
+            $subject = "Response to Your Query from Pawfect Match Admin";
+            $body =  "<p>Dear <strong>$name</strong>,</p>
+            <p>Thank you for reaching out to us. We’ve reviewed your message and here is our response:</p>
+            <p style='margin-left:15px; color:#333;'><em>" . nl2br(htmlspecialchars($reply)) . "</em></p>
+            <p>If you have any further questions, feel free to get back to us anytime.</p>
+            <p>Warm regards,<br><strong>Pawfect Match Team</strong></p>";
+            $mailer = new Mailer();
+            $result = $mailer->sendMail($to, $subject, $body, $name);
+
+            if ($result === true) {
+                if ($messageId && $this->contactModel->markAsReplied($messageId, $reply)) {
+                    echo '<div class="alert alert-success">Reply sent and saved successfully.</div>';
+                } else {
+                    echo '<div class="alert alert-warning">Email sent, but failed to save reply to database.</div>';
+                }
+            } else {
+                echo '<div class="alert alert-danger">Failed to send email.</div>';
+            }
         }
     }
-
-}
 }
