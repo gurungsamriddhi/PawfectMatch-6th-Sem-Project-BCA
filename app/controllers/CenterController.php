@@ -23,16 +23,9 @@ class CenterController
 
     private function loadCenterView($filename)
     {
-        $db = new Database();
-        $conn = $db->connect();
-        $this->petModel = new Pet($conn);
+        include __DIR__ . '/../views/adoptioncenter/' . $filename;
     }
 
-    // private function loadCenterView($filename, $data = [])
-    // {
-    //     extract($data);
-    //     include __DIR__ . '/../views/adoptioncenter/' . $filename;
-    // }
 
     public function showLoginForm()
     {
@@ -41,12 +34,7 @@ class CenterController
 
     public function showDashboard()
 {
-    if (!isset($_SESSION['center_id'])) {
-        header("Location: index.php?page=adoptioncenter/center_login");
-        exit;
-    }
-
-    $center_id = $_SESSION['center_id'];
+ $center_id = $_SESSION['center_id'];
 
     $db = new Database();
     $conn = $db->connect();
