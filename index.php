@@ -1,4 +1,6 @@
  <?php
+ require_once 'app/controllers/CenterController.php';
+
     // index.php — Main Router
 
     require_once 'core/databaseconn.php';
@@ -133,6 +135,10 @@
             (new CenterController)->update_profile();
             break;
 
+        case 'adoptioncenter/change_password':
+            (new CenterController)->change_password();
+            break;
+
         case 'adoptioncenter/add_pets':
             (new CenterController)->showaddpetform();
             break;
@@ -141,12 +147,16 @@
             (new CenterController)->managepetsform();
             break;
 
-        case 'adoptioncenter/savepet':
-            (new CenterController)->savePet();
+        case 'adoptioncenter/savePets':
+        (new CenterController)->savePets();
             break;
 
         case 'adoptioncenter/editpets':
             (new CenterController)->editpets();
+            break;
+
+        case 'adoptioncenter/updatePet':
+            (new CenterController)->updatePet();
             break;
 
         case 'adoptioncenter/deletepet':
@@ -161,9 +171,7 @@
             (new CenterController)->feedback();
             break;
 
-        // case 'adoptioncenter/adoption_summary':
-        //     (new CenterController)->adoption_summary();
-        //     break;
+    
 
         case 'logout': //user
             session_unset();

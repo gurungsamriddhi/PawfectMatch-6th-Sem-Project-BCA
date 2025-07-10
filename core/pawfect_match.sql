@@ -147,11 +147,16 @@ CREATE TABLE adoption_centers (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-
-
-
-
-
-
-
-
+CREATE TABLE adoptions (
+    adoption_id INT AUTO_INCREMENT PRIMARY KEY,
+    pet_id INT NOT NULL,
+    adopter_id INT NOT NULL,
+    adoption_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    remarks TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE,
+    FOREIGN KEY (adopter_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

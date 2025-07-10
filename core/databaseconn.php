@@ -2,7 +2,7 @@
 class Database {
     private $host = 'localhost';
     private $user = 'root';
-    private $pass = '';
+    private $pass = '2607';
     private $dbname = 'pawfect_matchdb';
     private $conn = null;
 

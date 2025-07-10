@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../../mail/sendMail.php';
 
+
 class User
 {
     protected $conn;
@@ -12,6 +13,35 @@ class User
         $db = new Database();
         $this->conn = $db->connect();
     }
+    public function findByUserId($user_id)
+{
+    $stmt = $this->conn->prepare("SELECT * FROM users WHERE user_id = ?");
+    
+    if (!$stmt) {
+        die("Prepare failed: " . $this->conn->error); // helpful debug
+    }
+
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_assoc();
+}
+public function updateProfile($user_id, $name, $email, $phone, $address, $description, $logo_path)
+{
+    $sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, description = ?" .
+           ($logo_path ? ", logo_path = ?" : "") .
+           " WHERE id = ?";
+
+    if ($logo_path) {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssssssi", $name, $email, $phone, $address, $description, $logo_path, $user_id);
+    } else {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sssssi", $name, $email, $phone, $address, $description, $user_id);
+    }
+
+    return $stmt->execute();
+}
 
     public function findByEmail($email)
     {
