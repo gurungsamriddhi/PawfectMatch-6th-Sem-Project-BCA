@@ -29,6 +29,12 @@ class AdminController
         include __DIR__ . '/../views/admin/' . $filename;
     }
 
+    private function adminauthorization(){
+        if(!isset($_SESSION['admin'])){
+            header("Location: index.php?page=admin/admin_login");
+        }
+    }
+
     public function showadminloginform()
     {
         //open admin's login form
