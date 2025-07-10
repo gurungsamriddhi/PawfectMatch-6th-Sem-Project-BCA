@@ -105,7 +105,7 @@ if (isset($routes[$page])) {
         exit;
     }
     
-    if ($middleware === 'center_auth' && empty($_SESSION['center'])) {
+    if ($middleware === 'center_auth' && empty($_SESSION['adoptioncenter'])) {
         header("Location: index.php?page=adoptioncenter/center_login");
         exit;
     }

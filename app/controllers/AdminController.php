@@ -29,12 +29,6 @@ class AdminController
         include __DIR__ . '/../views/admin/' . $filename;
     }
 
-    private function adminauthorization(){
-        if(!isset($_SESSION['admin'])){
-            header("Location: index.php?page=admin/admin_login");
-        }
-    }
-
     public function showadminloginform()
     {
         //open admin's login form
@@ -80,29 +74,17 @@ class AdminController
 
     public function showdashboard()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
         $stats = $this->adminModel->getDashboardStats();
         $this->loadAdminView('admin_dashboard.php', ['stats' => $stats]);
     }
 
     public function showaddpetform()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
         $this->loadAdminView('addpet.php');
     }
 
     public function addPet()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header("Location: index.php?page=admin/addpet");
@@ -184,10 +166,7 @@ class AdminController
 
     public function ManagePets()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
 
         // Get all pets for admin management
         $pets = $this->petModel->getAllPetsForAdmin();
@@ -196,11 +175,7 @@ class AdminController
 
     public function getPetById()
     {
-        if (!isset($_SESSION['admin'])) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Unauthorized']);
-            exit();
-        }
+
 
         $petId = $_GET['id'] ?? null;
         if (!$petId) {
@@ -222,10 +197,7 @@ class AdminController
 
     public function updatePet()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header("Location: index.php?page=admin/PetManagement");
@@ -306,10 +278,7 @@ class AdminController
 
     public function deletePet()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
 
         $petId = $_POST['pet_id'] ?? null;
         if (!$petId) {
@@ -332,19 +301,13 @@ class AdminController
 
     public function showaddcenterform()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
         $this->loadAdminView('add_centerform.php');
     }
 
     public function addAdoptionCenter()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
 
         $name = $_POST['name'] ?? ''; //if $_Post ['name'] exists then assign that value otherwise assign empty string.
         $email = $_POST['email'] ?? '';
@@ -397,10 +360,7 @@ class AdminController
 
     public function ManageCenters()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
         $centers = $this->adminModel->getAllAdoptionCenterUsers();
 
         $this->loadAdminView('CenterManagement.php', ['centers' => $centers]);
@@ -408,10 +368,7 @@ class AdminController
 
     public function ManageUsers()
     {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?page=admin/admin_login");
-            exit();
-        }
+
         $users = $this->adminModel->getAllUsers();
         $this->loadAdminView('userManagement.php', ['users' => $users]);
     }
@@ -505,29 +462,28 @@ class AdminController
     }
 
     public function resetCenterPassword()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
-        $userId = $_POST['user_id'];
-        $tempPassword = bin2hex(random_bytes(4)); // generate temp password
-        $hashedPassword = password_hash($tempPassword, PASSWORD_DEFAULT);
-        $updated = $this->userModel->updatePassword($userId, $hashedPassword);
-        if (!$updated) {
-            echo '<div class="alert alert-danger">Failed to update password.</div>';
-            return;
-        }
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
+            $userId = $_POST['user_id'];
+            $tempPassword = bin2hex(random_bytes(4)); // generate temp password
+            $hashedPassword = password_hash($tempPassword, PASSWORD_DEFAULT);
+            $updated = $this->userModel->updatePassword($userId, $hashedPassword);
+            if (!$updated) {
+                echo '<div class="alert alert-danger">Failed to update password.</div>';
+                return;
+            }
 
-        $adoptioncenter = $this->adminModel->getAdoptionCenterDetailsByUserId($userId);
-        $mailer = new Mailer();
-        $mailResult = $mailer->sendResetPasswordEmail($adoptioncenter['email'], $adoptioncenter['name'], $tempPassword);
+            $adoptioncenter = $this->adminModel->getAdoptionCenterDetailsByUserId($userId);
+            $mailer = new Mailer();
+            $mailResult = $mailer->sendResetPasswordEmail($adoptioncenter['email'], $adoptioncenter['name'], $tempPassword);
 
-        if ($mailResult === true) {
-            echo '<div class="alert alert-success">Password reset and email sent successfully.</div>';
+            if ($mailResult === true) {
+                echo '<div class="alert alert-success">Password reset and email sent successfully.</div>';
+            } else {
+                echo '<div class="alert alert-danger">Password reset but failed to send email.</div>';
+            }
         } else {
-            echo '<div class="alert alert-danger">Password reset but failed to send email.</div>';
+            echo '<div class="alert alert-danger">Invalid request.</div>';
         }
-    } else {
-        echo '<div class="alert alert-danger">Invalid request.</div>';
     }
-}
-
 }
