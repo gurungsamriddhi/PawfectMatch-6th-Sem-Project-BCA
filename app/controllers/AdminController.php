@@ -25,7 +25,7 @@ class AdminController
         $this->petModel = new Pet($conn);
         $this->userModel = new User($conn);
         $this->contactModel = new Contact($conn);
-        $this->adoptionCenterModel= new AdoptionCenter($conn);
+        $this->adoptionCenterModel = new AdoptionCenter($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -55,14 +55,19 @@ class AdminController
             $errors['password'] = "Password is required.";
         }
 
+        // Proceed if no input errors
         if (empty($errors)) {
             $user = $this->adminModel->findByEmail($email);
-            if (!$user || $user['user_type'] !== 'admin' || !password_verify($password, $user['password'])) {
+
+            if (!$user) {
+                $errors['adminlogin'] = "Invalid email or password.";
+            } else if ($user['user_type'] !== 'admin') {
+                $errors['adminlogin'] = "Access denied. Not an admin.";
+            } else if (!password_verify($password, $user['password'])) {
                 $errors['adminlogin'] = "Invalid email or password.";
             }
         }
-
-        //if there are errors store them in session and return to the index.php page
+        //redirect with errors if any
         if (!empty($errors)) {
             $_SESSION['adminlogin_errors'] = $errors;
             header('Location: index.php?page=admin/admin_login');
