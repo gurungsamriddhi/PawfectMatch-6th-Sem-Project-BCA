@@ -119,3 +119,4 @@
                 </div>
             </div>
             <?php include 'app/views/partials/admin_footer.php'; ?>
+            <script src="public/assets/js/contact_messages.js"></script>

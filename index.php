@@ -50,7 +50,7 @@ $routes = [
     },
     'contactcontroller/showcontactform' => ['ContactController', 'showContactForm'],
     'contactcontroller/contactsubmit' => ['ContactController', 'contactsubmit'],
-    'contactsubmit' => ['UserController', 'contactSubmit'],
+    // 'contactsubmit' => ['UserController', 'contactSubmit'],
 
     // Admin Routes
     'admin/admin_login' => ['AdminController', 'showadminloginform'],
