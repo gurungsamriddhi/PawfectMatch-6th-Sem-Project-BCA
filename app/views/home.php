@@ -147,10 +147,12 @@
 	<div class="we-help-section">
 		<div class="container">
 			<div class="row justify-content-between">
-				<div class="col-lg-5">
+				<div class="col-lg-7 mb-5 mb-lg-0">
+					
 					<div class="img-wrap">
 						<img src="public/assets/images/adoptionprocess.png" alt="Image" class="img-fluid">
 					</div>
+					
 				</div>
 				<div class="col-lg-5 ps-lg-5">
 					<h2 class="section-title mb-4">How Our Adoption Process Works</h2>
