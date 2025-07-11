@@ -116,8 +116,6 @@ class UserController
         exit();
     }
 
-    public function contactSubmit(){
-        
-    }
+   
 }
 ?>

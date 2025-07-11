@@ -23,6 +23,8 @@ $routes = [
     'aboutus' => ['HomeController', 'aboutus'],
     'volunteer' => ['HomeController', 'volunteer'],
     'petdetails' => ['PetController', 'showpetdetails'],
+    'login'=>['UserController', 'Login'],
+    'register'=>['UserController', 'Register'],
     'donate' => ['DonateController', 'donate'],
 
     'logout' => function () {
