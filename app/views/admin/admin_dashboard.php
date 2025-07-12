@@ -85,7 +85,7 @@
                 <a href="index.php?page=admin/add_centerform" class="action-btn">
                   <i class="fas fa-building"></i>Add Adoption Center
                 </a>
-                <a href="#" class="action-btn">
+                <a href="index.php?page=admin/contact_messages" class="action-btn">
                   <i class="fas fa-envelope"></i>View Messages
                 </a>
                 <a href="#" class="action-btn">

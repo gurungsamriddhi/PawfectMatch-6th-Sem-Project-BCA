@@ -172,3 +172,4 @@
 
     
 <?php include 'app/views/partials/admin_footer.php'; ?>
+<script src="public/assets/js/center_management.js"></script>

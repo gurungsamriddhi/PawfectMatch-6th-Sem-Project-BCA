@@ -59,8 +59,11 @@ unset(
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"><!-- to use icons--of envelope user..-->
 	<link href="public/assets/css/tiny-slider.css" rel="stylesheet">
 	<link href="public/assets/css/style.css" rel="stylesheet">
-	<link href="public/assets/css/user_modal.css" rel="stylesheet">
+	<link href="public/assets/css/user.css" rel="stylesheet">
 	<title>Pets For Adoption </title>
+	<script>
+    const isLoggedIn = <?= isset($_SESSION['user_id']) ? 'true' : 'false' ?>;
+</script>
 </head>
 
 <body>

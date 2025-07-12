@@ -26,6 +26,8 @@ $routes = [
     'aboutus' => ['HomeController', 'aboutus'],
     'volunteer' => ['HomeController', 'volunteer'],
     'petdetails' => ['PetController', 'showpetdetails'],
+    'login'=>['UserController', 'Login'],
+    'register'=>['UserController', 'Register'],
     'donate' => ['DonateController', 'donate'],
 
     // Logout route as a closure
@@ -51,7 +53,7 @@ $routes = [
     },
     'contactcontroller/showcontactform' => ['ContactController', 'showContactForm'],
     'contactcontroller/contactsubmit' => ['ContactController', 'contactsubmit'],
-    'contactsubmit' => ['UserController', 'contactSubmit'],
+    // 'contactsubmit' => ['UserController', 'contactSubmit'],
 
     // Admin Routes (with admin_auth middleware)
     'admin/admin_login' => ['AdminController', 'showadminloginform'],

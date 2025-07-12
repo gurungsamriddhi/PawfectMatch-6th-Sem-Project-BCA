@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../models/Admin.php';
+require_once __DIR__ . '/../models/AdoptionCenter.php';
 require_once __DIR__ . '/../models/Pet.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Contact.php';
@@ -11,6 +12,7 @@ class AdminController
     private $petModel;
     private $userModel;
     private $contactModel;
+    private $adoptionCenterModel;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class AdminController
         $this->petModel = new Pet($conn);
         $this->userModel = new User($conn);
         $this->contactModel = new Contact($conn);
+        $this->adoptionCenterModel = new AdoptionCenter($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -52,14 +55,19 @@ class AdminController
             $errors['password'] = "Password is required.";
         }
 
+        // Proceed if no input errors
         if (empty($errors)) {
             $user = $this->adminModel->findByEmail($email);
-            if (!$user || $user['user_type'] !== 'admin' || !password_verify($password, $user['password'])) {
+
+            if (!$user) {
+                $errors['adminlogin'] = "Invalid email or password.";
+            } else if ($user['user_type'] !== 'admin') {
+                $errors['adminlogin'] = "Access denied. Not an admin.";
+            } else if (!password_verify($password, $user['password'])) {
                 $errors['adminlogin'] = "Invalid email or password.";
             }
         }
-
-        //if there are errors store them in session and return to the index.php page
+        //redirect with errors if any
         if (!empty($errors)) {
             $_SESSION['adminlogin_errors'] = $errors;
             header('Location: index.php?page=admin/admin_login');
@@ -331,7 +339,7 @@ class AdminController
             $errors['password'] = "Password must be minimum 8 characters, include uppercase, lowercase, number and special character.";
         }
         //Check if email already exists
-        $user = $this->adminModel->findByEmail($email);
+        $user = $this->userModel->findByEmail($email);
         if (empty($errors) && $user) { //calling the method findByEmail on the class User itself, not on an instance/object.
             $errors['email'] = 'This email is already registered.';
         }
@@ -364,7 +372,7 @@ class AdminController
     public function ManageCenters()
     {
 
-        $centers = $this->adminModel->getAllAdoptionCenterUsers();
+        $centers = $this->adoptionCenterModel->getAllAdoptionCenterUsers();
 
         $this->loadAdminView('CenterManagement.php', ['centers' => $centers]);
     }
@@ -372,7 +380,7 @@ class AdminController
     public function ManageUsers()
     {
 
-        $users = $this->adminModel->getAllUsers();
+        $users = $this->userModel->getAllUsers();
         $this->loadAdminView('userManagement.php', ['users' => $users]);
     }
 
@@ -383,7 +391,7 @@ class AdminController
             $user_id = $_POST['user_id'] ?? null;
 
             if ($user_id) {
-                $center = $this->adminModel->getAdoptionCenterDetailsByUserId($user_id);
+                $center = $this->adoptionCenterModel->getAdoptionCenterDetailsByUserId($user_id);
                 if (!$center) {
                     echo "No data for this center";
                     exit;
@@ -400,7 +408,7 @@ class AdminController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id = $_POST['user_id'] ?? null;
             if ($user_id) {
-                $user = $this->adminModel->getAdoptionCenterUserById($user_id);
+                $user = $this->adoptionCenterModel->getAdoptionCenterUserById($user_id);
                 if ($user) {
                     include 'app/views/partials/edit_center_modal.php';
                     return;
@@ -433,7 +441,7 @@ class AdminController
             }
 
             if (empty($errors)) {
-                $this->adminModel->updateCenterUser($user_id, $name, $email, $status);
+                $this->adoptionCenterModel->updateCenterUser($user_id, $name, $email, $status);
 
                 echo '<div class="alert alert-success">Update successful!</div>';
             } else {
@@ -452,7 +460,7 @@ class AdminController
             $user_id = $_POST['user_id'] ?? null;
 
             if ($user_id) {
-                $deleted = $this->adminModel->deleteCenterUser($user_id);
+                $deleted = $this->adoptionCenterModel->deleteCenterUser($user_id);
                 if ($deleted) {
                     echo '<div class="alert alert-success">Center user deleted successfully.</div>';
                 } else {
@@ -476,7 +484,7 @@ class AdminController
                 return;
             }
 
-            $adoptioncenter = $this->adminModel->getAdoptionCenterDetailsByUserId($userId);
+            $adoptioncenter = $this->adoptionCenterModel->getAdoptionCenterDetailsByUserId($userId);
             $mailer = new Mailer();
             $mailResult = $mailer->sendResetPasswordEmail($adoptioncenter['email'], $adoptioncenter['name'], $tempPassword);
 
