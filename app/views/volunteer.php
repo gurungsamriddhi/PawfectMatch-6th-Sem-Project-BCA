@@ -1,4 +1,5 @@
-<?php include 'app/views/partials/header.php';?>
+<?php include 'app/views/partials/header.php'; ?>
+
 <main>
     <!-- Start Hero Section -->
     <div class="hero">
@@ -123,9 +124,16 @@
         <div class="container">
             <h3 class="mb-4 text-center fw-bold">Volunteer With Us</h3>
             <form class="mx-auto" style="max-width:500px;" method="POST" action="index.php?page=volunteer&action=apply">
+                <?php if (isset($_SESSION['user'])): ?>
+                    <input type="hidden" name="user_id" value="<?= $_SESSION['user']['id'] ?>">
+                    <input type="hidden" name="name" value="<?= htmlspecialchars($_SESSION['user']['name']) ?>">
+                    <input type="hidden" name="email" value="<?= htmlspecialchars($_SESSION['user']['email']) ?>">
+                <?php endif; ?>
+
+                <!-- Area of Interest -->
                 <div class="mb-3">
                     <label for="volInterest" class="form-label fw-semibold">Area of Interest</label>
-                    <select class="form-select" name="area" id="volInterest" required>
+                    <select class="form-select guest-protected" name="area" id="volInterest" required>
                         <option value="" disabled selected>Select an option</option>
                         <option value="pet care">Animal care</option>
                         <option value="training">Adoption events / training</option>
@@ -133,18 +141,48 @@
                         <option value="other">Other</option>
                     </select>
                 </div>
+
+                <!-- Availability Days (Checkboxes) -->
                 <div class="mb-3">
-                    <label for="availability" class="form-label fw-semibold">Availability Days</label>
-                    <input type="text" class="form-control" name="availability_days" id="availability" placeholder="e.g., Weekends, Mon-Wed" required>
+                    <label class="form-label fw-semibold">Availability Days</label>
+                    <div class="form-check">
+                        <input class="form-check-input guest-protected" type="checkbox" name="availability_days[]" value="Weekends" id="weekends">
+                        <label class="form-check-label" for="weekends">Weekends</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input guest-protected" type="checkbox" name="availability_days[]" value="Weekdays" id="weekdays">
+                        <label class="form-check-label" for="weekdays">Weekdays</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input guest-protected" type="checkbox" name="availability_days[]" value="Mon-Wed" id="monwed">
+                        <label class="form-check-label" for="monwed">Mon-Wed</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input guest-protected" type="checkbox" name="availability_days[]" value="Thu-Fri" id="thufri">
+                        <label class="form-check-label" for="thufri">Thu-Fri</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input guest-protected" type="checkbox" name="availability_days[]" value="Evenings" id="evenings">
+                        <label class="form-check-label" for="evenings">Evenings</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input guest-protected" type="checkbox" name="availability_days[]" value="Flexible" id="flexible">
+                        <label class="form-check-label" for="flexible">Flexible</label>
+                    </div>
                 </div>
+
+                <!-- Remarks -->
                 <div class="mb-3">
                     <label for="remarks" class="form-label fw-semibold">Remarks (Optional)</label>
-                    <textarea class="form-control" name="remarks" id="remarks" rows="3"></textarea>
+                    <textarea class="form-control guest-protected" name="remarks" id="remarks" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold">Submit</button>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100 fw-bold guest-protected">Submit</button>
             </form>
         </div>
     </section>
+
 </main>
 <?php include 'app/views/partials/footer.php'; ?>
 

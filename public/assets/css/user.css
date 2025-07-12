@@ -79,3 +79,39 @@ button.login-btn:hover {
   color: #1b4d1b;
 }
 
+
+select.form-select {
+  height: 45px !important;
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 0.375rem !important;
+  border: 2px solid #3b5d50 !important;
+  background-color: #f9fff9 !important;
+  color: #155724 !important;
+}
+
+select.form-select:focus {
+  border-color: #3b5d50 !important;
+  box-shadow: 0 0 5px #3b5d50 !important;
+  background-color: #e6f4e6 !important;
+  color: #1b4d1b !important;
+}
+/* Custom checkbox border and appearance */
+input[type="checkbox"].form-check-input {
+  border: 2px solid #3b5d50;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.25rem;
+  background-color: #f9fff9;
+}
+
+/* Checked state */
+input[type="checkbox"].form-check-input:checked {
+  background-color: #3b5d50;
+  border-color: #3b5d50;
+}
+
+/* Focus state (optional for accessibility/highlight) */
+input[type="checkbox"].form-check-input:focus {
+  border-color: #3b5d50;
+  box-shadow: 0 0 0 0.2rem rgba(59, 93, 80, 0.25);
+}
