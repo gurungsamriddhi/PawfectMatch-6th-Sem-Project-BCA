@@ -1,6 +1,15 @@
 $(document).ready(function () {
   // Handle view button click
   let deleteUserId = null; // Store the user ID to delete
+  let resetUserId = null;
+
+  const replyModalEl = document.getElementById("replyModal");
+  const replyModal = new bootstrap.Modal(replyModalEl);
+
+  replyModalEl.addEventListener("hidden.bs.modal", function () {
+    location.reload();
+  });
+
   $(".action-buttons").on("click", "button", function () {
     const actionType = $(this).data("action");
     const userId = $(this).data("userid");
@@ -35,46 +44,122 @@ $(document).ready(function () {
         },
       });
     }
+    //reply for contact message in admin dashboard
+    if (actionType === "reply") {
+      const name = $(this).data("name");
+      const email = $(this).data("email");
+      const message = $(this).data("message");
+      const isVerified = $(this).data("is-verified");
 
-    
+      // Fill the modal
+      $("#replyMessageId").val($(this).data("message-id"));
+      $("#receiverEmail").val(email);
+      $("#replyEmail").val(email);
+      $("#replyName").val(name);
+      $("#replyVerified").val(isVerified);
+      $("#originalMessage").val(message);
+      $("#replyBody").val("");
+      $("#replyStatus").html("");
 
+      replyModal.show();
+    }
+
+    if (actionType === "reset") {
+      resetUserId = userId;
+      $("#resetConfirmModal").modal("show");
+    }
+
+    //deltebutton action start from here
     if (actionType === "delete") {
       deleteUserId = userId;
       $("#deleteConfirmModal").modal("show"); // Show the confirmation modal
     }
   });
 
+  //resetpassword buttonhandler
+  $("#confirmResetBtn").on("click", function () {
+    if (!resetUserId) return;
+    const $btn = $(this);
+    $btn.prop("disabled", true).text("Sending...");
+    $.ajax({
+      url: "index.php?page=admin/reset_password",
+      type: "POST",
+      data: { user_id: resetUserId },
+      success: function (response) {
+        if (response.includes("alert-success")) {
+          $("#resetConfirmModal .modal-body").html(
+            "<p>Password reset successfully and email sent to the adoptioncenter.</p>"
+          );
+          $("#resetConfirmModal .modal-footer").html(
+            '<button type="button" class="btn btn-secondary" id="resetOkBtn">OK</button>'
+          );
+
+          $("#resetOkBtn")
+            .off("click")
+            .on("click", function () {
+              $("#resetConfirmModal").modal("hide");
+              location.reload();
+            });
+        } else {
+          // Show error inside modal body
+          $("#resetConfirmModal .modal-body").html(
+            "<p>Failed to reset password. Try again.</p>"
+          );
+          $("#resetConfirmModal .modal-footer").html(
+            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
+          );
+          $btn.prop("disabled", false).text("Reset Password");
+        }
+      },
+      error: function () {
+        $("#resetConfirmModal .modal-body").html(
+          "<p>Something went wrong.</p>"
+        );
+        $btn.prop("disabled", false).text("Reset Password");
+      },
+    });
+  });
+
   //confirm delete button handler
   $("#confirmDeleteBtn").on("click", function () {
-    if (!deleteUserId) 
-      return;
-
+    if (!deleteUserId) return;
     $.ajax({
       url: "index.php?page=admin/delete_center_user",
       type: "POST",
       data: { user_id: deleteUserId },
       success: function (response) {
         if (response.includes("alert-success")) {
-          $("#deleteConfirmModal").modal("hide"); // Close the modal
+          // Show success message
+          $("#deleteConfirmModal .modal-body").html(
+            "<p>User deleted successfully.</p>"
+          );
+          // Replace footer with only OK button
+          $("#deleteConfirmModal .modal-footer").html(
+            '<button type="button" class="btn btn-secondary" id="deleteOkBtn">OK</button>'
+          );
+
+          // Attach click event to OK button
+          $("#deleteOkBtn")
+            .off("click")
+            .on("click", function () {
+              $("#deleteConfirmModal").modal("hide");
+              location.reload();
+            });
         } else {
           $("#deleteConfirmModal .modal-body").html(
-            '<div class="alert alert-danger">Failed to delete user. Try again.</div>'
+            "<p>Failed to delete user. Try again.</p>"
+          );
+          $("#deleteConfirmModal .modal-footer").html(
+            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
           );
         }
       },
       error: function () {
         $("#deleteConfirmModal .modal-body").html(
-          '<div class="alert alert-danger">Something went wrong.</div>'
+          "<p>Something went wrong.</p>"
         );
       },
     });
-  });
-
-  // Reload after modal is fully hidden
-  $("#deleteConfirmModal").on("hidden.bs.modal", function () {
-    if (deleteUserId) {
-      location.reload();
-    }
   });
 
   // Submit handler for the edit form
@@ -99,6 +184,44 @@ $(document).ready(function () {
         $("#edit-error-msg").html(
           '<div class="alert alert-danger">Something went wrong. Please try again.</div>'
         );
+      },
+    });
+  });
+
+  //handle replying to the email
+  $("#replyForm").on("submit", function (e) {
+    e.preventDefault();
+
+    const $submitBtn = $("#replyForm button[type='submit']");
+    $submitBtn.prop("disabled", true).text("Sending...");
+
+    $.ajax({
+      url: "index.php?page=admin/send_contact_reply",
+      type: "POST",
+      data: $(this).serialize(),
+      success: function (response) {
+        if (response.includes("alert-success")) {
+          $("#replyStatus").html(
+            "<p class='text-success'>Reply sent successfully.</p>"
+          );
+          $("#replyForm .modal-footer").html(
+            '<button type="button" class="btn btn-secondary" id="replyOkBtn">Close</button>'
+          );
+
+          $("#replyOkBtn").on("click", function () {
+            replyModal.hide();
+          });
+        } else {
+          $("#replyStatus").html(response);
+        }
+
+        $submitBtn.prop("disabled", false).text("Send");
+      },
+      error: function () {
+        $("#replyStatus").html(
+          '<div class="alert alert-danger">Something went wrong.</div>'
+        );
+        $submitBtn.prop("disabled", false).text("Send");
       },
     });
   });

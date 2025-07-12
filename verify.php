@@ -1,12 +1,17 @@
 <?php
 session_start();
+
 require_once 'core/databaseconn.php';
 require_once 'app/models/User.php';
+
 if (isset($_GET['email']) && ($_GET['token'])) {
     $email = $_GET['email'];
     $token = $_GET['token'];
+    
+    $db=new Database();
+    $conn= $db->connect();
 
-    $userModel = new User(); // ✅ Object instantiation
+    $userModel = new User($conn); // ✅ Object instantiation
     $verificationResult = $userModel->verifyUser($email, $token); // ✅ OOP method call
 
     if ($verificationResult === 1) {

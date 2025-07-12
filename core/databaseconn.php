@@ -4,7 +4,7 @@ class Database {
     private $user = 'root';
     private $pass = '2607';
     private $dbname = 'pawfect_matchdb';
-    private $conn = null;
+    private $conn = null; 
 
     public function connect() {
         if ($this->conn === null) {

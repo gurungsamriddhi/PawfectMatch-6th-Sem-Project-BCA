@@ -1,3 +1,12 @@
+<?php
+// extract $data to variables for easy access
+$errors = $data['errors'] ?? [];
+$old = $data['old'] ?? [];
+$success = $data['success'] ?? '';
+?>
+
+
+
 <?php include 'app/views/partials/header.php'; ?>
 <main>
   <!-- Start Contact us Hero Section -->
@@ -74,53 +83,48 @@
               <div class="row gx-3">
                 <!-- Contact Form -->
                 <div class="col-lg-6 mb-4">
-                  <form action="index.php?page=contactsubmit" method="POST">
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="form-group">
-                          <label class="text-black" for="fname">First name</label>
-                          <input type="text" class="form-control" id="fname" name="fname" required>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <label class="text-black" for="lname">Last name</label>
-                          <input type="text" class="form-control" id="lname" required>
-                        </div>
-                      </div>
+                  <?php if (!empty($success)): ?>
+                    <div class="alert alert-success"><?= $success ?></div>
+                  <?php endif; ?>
+
+                  <?php if (!empty($errors)): ?>
+                    <div class="alert alert-danger">
+                      <ul class="mb-0">
+                        <?php foreach ($errors as $error): ?>
+                          <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                      </ul>
                     </div>
-                    <div class="form-group">
-                      <label class="text-black" for="email">Email address</label>
-                      <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group mb-4">
-                      <label class="text-black" for="message">Message</label>
-                      <textarea class="form-control" id="message" cols="30" rows="5" name="message" required></textarea>
-                    </div>
-               <!-- Recipient selection: Admin or Adoption Center -->
-                    <div class="form-group mb-4">
-                      <label for="recipient_type">Send to:</label>
-                      <select id="recipient_type" name="recipient_type" class="form-control" required onchange="toggleCenterSelect()">
-                        <option value="" disabled selected>Select recipient</option>
-                        <option value="admin">Admin</option>
-                        <option value="adoption_center">Adoption Center</option>
-                      </select>
+                  <?php endif; ?>
+
+                  <?php
+                  $fname = $old['fname'] ?? ($_SESSION['user']['name'] ?? '');
+                  $email = $old['email'] ?? ($_SESSION['user']['email'] ?? '');
+                  $message = $old['message'] ?? '';
+                  ?>
+
+
+
+                 <form id="contact-form" action="index.php?page=contactcontroller/contactsubmit" method="POST">
+                    <div class="form-group mb-3">
+                      <label for="fname">Full Name</label>
+                      <input type="text" class="form-control" name="fname" id="fname"
+                             value="<?= htmlspecialchars($fname) ?>" required>
                     </div>
 
-                    <!-- Adoption centers dropdown, hidden by default -->
-                    <div class="form-group mb-4" id="centerSelect" style="display:none;">
-                      <label for="recipient_id">Choose Adoption Center</label>
-                      <select id="recipient_id" name="recipient_id" class="form-control">
-                        <option value="" disabled selected>Select center</option>
-                        <!-- Options will be filled dynamically by PHP -->
-                        <?php
-                        // Example PHP to fill options from $centers array
-                        foreach ($centers as $center) {
-                          echo "<option value=\"{$center['user_id']}\">" . htmlspecialchars($center['name']) . "</option>";
-                        }
-                        ?>
-                      </select>
+                    <div class="form-group mb-3">
+                      <label for="email">Email Address</label>
+                      <input type="email" class="form-control" name="email" id="email"
+                             value="<?= htmlspecialchars($email) ?>" required>
                     </div>
+
+                    <div class="form-group mb-3">
+                      <label for="message">Message</label>
+                      <textarea class="form-control" name="message" id="message" rows="5" required><?= htmlspecialchars($message) ?></textarea>
+                    </div>
+
+
+
                     <button type="submit" class="btn btn-primary-hover-outline">Send Message</button>
                   </form>
                 </div>
@@ -155,5 +159,10 @@
   </div>
   <!-- End Contact Section -->
 </main>
+<?php if (!empty($errors) || !empty($success)): ?>
+  <script>
+    window.location.hash = 'container';//to focus
+  </script>
+<?php endif; ?>
 
 <?php include 'app/views/partials/footer.php'; ?>

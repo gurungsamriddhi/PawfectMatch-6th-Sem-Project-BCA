@@ -2,19 +2,22 @@
 <?php
 
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../../core/databaseconn.php';
 class UserController
 {
     private $userModel;
 
     public function __construct()
-    {
-        $this->userModel = new User(); // inject once
+    { 
+        $db=new Database();
+        $conn=$db->connect();
+        $this->userModel = new User($conn); // inject once
     }
 
     public function Login()
     {
 
-        $email = $_POST['email'] ?? '';
+        $email = strtolower(trim($_POST['email'] ?? ''));
         $password = $_POST['password'] ?? '';
         $errors = [];
 
@@ -43,7 +46,8 @@ class UserController
         if (!empty($errors)) {
             $_SESSION['login_errors'] = $errors;
             $_SESSION['keep_login_modal_open'] = true;
-            header('Location: index.php');
+            //redirects back to the same page
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
             exit();
         }
         $_SESSION['user'] = [
@@ -52,7 +56,7 @@ class UserController
             'email' => $user['email'],
             'type' => $user['user_type']
         ];
-        header('Location:index.php');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
 
@@ -91,7 +95,7 @@ class UserController
         if (!empty($errors)) {
             $_SESSION['register_errors'] = $errors;
             $_SESSION['old'] = ['name' => $name, 'email' => $email];
-            header('location:index.php');
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
             exit();
         }
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -108,7 +112,7 @@ class UserController
             $_SESSION['old'] = ['name' => $name, 'email' => $email];
             $_SESSION['keep_register_modal_open'] = true;
         }
-        header('Location:index.php');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
 

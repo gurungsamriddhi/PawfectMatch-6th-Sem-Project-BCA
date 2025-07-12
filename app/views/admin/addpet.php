@@ -1,5 +1,4 @@
-
-  <?php include 'app/views/partials/sidebar.php'; ?>
+<?php include 'app/views/partials/sidebaradmin.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->
@@ -15,7 +14,27 @@
 
       <!-- Content -->
       <div class="container-fluid py-4">
-        <form id="addPetForm" enctype="multipart/form-data">
+        <?php if (isset($_SESSION['success_message'])): ?>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['success_message']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['addpet_errors'])): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+              <?php foreach ($_SESSION['addpet_errors'] as $error): ?>
+                <li><?php echo $error; ?></li>
+              <?php endforeach; ?>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <?php unset($_SESSION['addpet_errors']); ?>
+        <?php endif; ?>
+
+        <form id="addPetForm" action="index.php?page=admin/addPet" method="POST" enctype="multipart/form-data">
           <!-- Basic Info Section -->
           <div class="form-section">
             <div class="section-header">
@@ -88,19 +107,6 @@
                 <input type="file" id="photos" name="photos[]" multiple accept="image/*" style="display: none;">
               </div>
               <div class="preview-container" id="photoPreview"></div>
-            </div>
-
-            <div class="mb-4">
-              <label class="form-label">Upload Video (Optional)</label>
-              <div class="file-upload-area" id="videoUploadArea">
-                <div class="upload-icon">
-                  <i class="fas fa-video"></i>
-                </div>
-                <div class="upload-text">Click to upload video or drag and drop</div>
-                <div class="upload-hint">Supports: MP4, AVI, MOV (Max 50MB)</div>
-                <input type="file" id="video" name="video" accept="video/*" style="display: none;">
-              </div>
-              <div class="preview-container" id="videoPreview"></div>
             </div>
           </div>
 
@@ -200,11 +206,6 @@
               <label for="healthNotes" class="form-label">Health Notes</label>
               <textarea class="form-control" id="healthNotes" name="healthNotes" rows="3" placeholder="Any medical conditions, medications, or special care requirements..."></textarea>
             </div>
-
-            <div class="mb-3">
-              <label for="specialRequirements" class="form-label">Special Requirements</label>
-              <textarea class="form-control" id="specialRequirements" name="specialRequirements" rows="2" placeholder="Any special dietary needs, exercise requirements, or other care instructions..."></textarea>
-            </div>
           </div>
 
           <!-- Adoption Info Section -->
@@ -220,19 +221,19 @@
                 <input type="text" class="form-control" id="adoptionCenter" name="adoptionCenter" placeholder="e.g., Happy Paws Rescue Center" required>
               </div>
               <div class="form-col">
-                <label for="contactName" class="form-label">Contact Person Name *</label>
-                <input type="text" class="form-control" id="contactName" name="contactName" required>
+                <label for="contactPhone" class="form-label">Contact Phone *</label>
+                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" required>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-col">
-                <label for="contactPhone" class="form-label">Contact Phone *</label>
-                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" required>
-              </div>
-              <div class="form-col">
                 <label for="contactEmail" class="form-label">Contact Email *</label>
                 <input type="email" class="form-control" id="contactEmail" name="contactEmail" required>
+              </div>
+              <div class="form-col">
+                <label for="centerWebsite" class="form-label">Center Website (Optional)</label>
+                <input type="url" class="form-control" id="centerWebsite" name="centerWebsite" placeholder="https://www.example.com">
               </div>
             </div>
 
@@ -241,15 +242,6 @@
                 <label for="centerAddress" class="form-label">Center Address *</label>
                 <input type="text" class="form-control" id="centerAddress" name="centerAddress" placeholder="Full address of the adoption center" required>
               </div>
-              <div class="form-col">
-                <label for="centerWebsite" class="form-label">Center Website (Optional)</label>
-                <input type="url" class="form-control" id="centerWebsite" name="centerWebsite" placeholder="https://www.example.com">
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="adoptionNotes" class="form-label">Adoption Process Notes</label>
-              <textarea class="form-control" id="adoptionNotes" name="adoptionNotes" rows="3" placeholder="Any specific adoption requirements, process details, or special instructions for potential adopters..."></textarea>
             </div>
           </div>
 
@@ -284,7 +276,6 @@
 
       // File upload functionality
       setupFileUpload('photoUploadArea', 'photos', 'photoPreview', true);
-      setupFileUpload('videoUploadArea', 'video', 'videoPreview', false);
     });
 
     function setupFileUpload(uploadAreaId, inputId, previewId, isMultiple) {
@@ -331,8 +322,6 @@
       Array.from(files).forEach(file => {
         if (file.type.startsWith('image/')) {
           createImagePreview(file, previewContainer);
-        } else if (file.type.startsWith('video/')) {
-          createVideoPreview(file, previewContainer);
         }
       });
     }
@@ -342,8 +331,6 @@
       if (file) {
         if (file.type.startsWith('image/')) {
           createImagePreview(file, previewContainer);
-        } else if (file.type.startsWith('video/')) {
-          createVideoPreview(file, previewContainer);
         }
       }
     }
@@ -354,25 +341,7 @@
         const previewItem = document.createElement('div');
         previewItem.className = 'preview-item';
         previewItem.innerHTML = `
-          <img src="${e.target.result}" alt="Preview">
-          <button type="button" class="remove-preview" onclick="removePreview(this)">
-            <i class="fas fa-times"></i>
-          </button>
-        `;
-        container.appendChild(previewItem);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function createVideoPreview(file, container) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const previewItem = document.createElement('div');
-        previewItem.className = 'preview-item';
-        previewItem.innerHTML = `
-          <video controls>
-            <source src="${e.target.result}" type="${file.type}">
-          </video>
+          <img src="${e.target.result}" alt="Preview" style="max-width: 100px; max-height: 100px; border-radius: 8px; margin: 5px;">
           <button type="button" class="remove-preview" onclick="removePreview(this)">
             <i class="fas fa-times"></i>
           </button>
@@ -390,7 +359,6 @@
       if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
         document.getElementById('addPetForm').reset();
         document.getElementById('photoPreview').innerHTML = '';
-        document.getElementById('videoPreview').innerHTML = '';
       }
     }
 
@@ -403,10 +371,8 @@
 
     // Form submission
     document.getElementById('addPetForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
       // Basic validation
-      const requiredFields = ['petName', 'petType', 'breed', 'gender', 'age', 'dateArrival', 'size', 'weight', 'color', 'healthStatus', 'description', 'adoptionCenter', 'contactName', 'contactPhone', 'contactEmail', 'centerAddress'];
+      const requiredFields = ['petName', 'petType', 'breed', 'gender', 'age', 'dateArrival', 'size', 'weight', 'color', 'healthStatus', 'description', 'adoptionCenter', 'contactPhone', 'contactEmail', 'centerAddress'];
       let isValid = true;
       
       requiredFields.forEach(fieldId => {
@@ -420,16 +386,12 @@
       });
 
       if (!isValid) {
+        e.preventDefault();
         alert('Please fill in all required fields.');
         return;
       }
 
-      // Here you would typically send the form data to the server
-      // For now, we'll just show a success message
-      alert('Pet added successfully!');
-      
-      // Optionally reset the form
-      // resetForm();
+      // Form will submit to server for processing
     });
   </script>
 <script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->

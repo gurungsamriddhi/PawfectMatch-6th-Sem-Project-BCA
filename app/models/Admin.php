@@ -1,15 +1,14 @@
 <?php
-require_once __DIR__ . '/../../core/databaseconn.php';
 require_once __DIR__ . '/../../mail/sendMail.php';
 
 class Admin
 {
     protected $conn;
 
-    public function __construct()
+    public function __construct($conn)
     {
-        $db = new Database();
-        $this->conn = $db->connect();
+        
+        $this->conn = $conn;
     }
     //static function used to be able to call the function without using object used for select,fetching all data sql queries
     public function findByEmail($email)

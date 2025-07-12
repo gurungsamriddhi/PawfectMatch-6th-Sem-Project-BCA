@@ -40,7 +40,7 @@
             </ul>
           </li>
           <li class="sidebar-item">
-            <a href="#" class="sidebar-link"><i class="fas fa-envelope-open-text me-2"></i>Message Requests</a>
+            <a href="index.php?page=admin/contact_messages" class="sidebar-link"><i class="fas fa-envelope-open-text me-2"></i>Contact Messages</a>
           </li>
           <li class="sidebar-item">
             <a href="#" class="sidebar-link"><i class="fas fa-handshake me-2"></i>Volunteer Requests</a>
@@ -72,7 +72,7 @@
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <a href="index.php?page=admin/admin_login" class="btn btn-danger">Logout</a>
+          <a href="index.php?page=logout" class="btn btn-danger">Logout</a>
         </div>
       </div>
     </div>

@@ -1,189 +1,134 @@
- <?php
- require_once 'app/controllers/CenterController.php';
+<?php
+// index.php — Main Router
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    // index.php — Main Router
+// 1. Load all dependencies
+require_once 'core/databaseconn.php';
+require_once 'app/controllers/HomeController.php';
+require_once 'app/controllers/PetController.php';
+require_once 'app/controllers/UserController.php';
+require_once 'app/controllers/AdminController.php';
+require_once 'app/controllers/DonateController.php';
+require_once 'app/controllers/CenterController.php';
+require_once 'app/controllers/ContactController.php';
 
-    require_once 'core/databaseconn.php';
-    require_once 'app/controllers/HomeController.php';
-    require_once 'app/controllers/PetController.php';
-    require_once 'app/controllers/UserController.php';
-    require_once 'app/controllers/AdminController.php';
-    require_once 'app/controllers/DonateController.php';
-    require_once 'app/controllers/CenterController.php';
+// 2. Start session
+session_start();
 
-    // Start session (important for logout)
-    //session is used to keep track of user data cross multiple page requests(since http itself is stateless) called once at the top of every php file that uses session variables
-    session_start();
+// 3. Define routes centrally
+$routes = [
 
+    // Public Routes
+    'home' => ['HomeController', 'index'],
+    'browse' => ['PetController', 'browse'],
+    'adoptionprocess' => ['HomeController', 'adoptionprocess'],
+    'aboutus' => ['HomeController', 'aboutus'],
+    'volunteer' => ['HomeController', 'volunteer'],
+    'petdetails' => ['PetController', 'showpetdetails'],
+    'donate' => ['DonateController', 'donate'],
 
+    // Logout route as a closure
+    'logout' => function () {
+        $redirect = 'index.php?page=home'; // default redirect
 
-    // Get 'page' from the URL like ?page=home
-    $page = $_GET['page'] ?? 'home';
-    $current_page = $page; // set this for use in header.php
-    // Route based on the value of 'page'
-    switch ($page) {
-        case 'home':
-            (new HomeController)->index();
-            break;
-        case 'browse':
-            (new PetController)->browse();
-            break;
-        case 'adoptionprocess':
-            (new HomeController)->adoptionprocess();
-            break;
-        case 'aboutus':
-            (new HomeController)->aboutus();
-            break;
-        case 'contactus':
-            (new HomeController)->contactus();
-            break;
+        if (!empty($_SESSION['admin'])) {
+            $redirect = 'index.php?page=admin/admin_login';
+        } elseif (!empty($_SESSION['adoptioncenter'])) {
+            $redirect = 'index.php?page=adoptioncenter/center_login';
+        }
 
+        session_unset();
+        session_destroy();
+        header("Location: $redirect");
+        exit();
+    },
 
-        case 'volunteer':
-            (new HomeController)->volunteer();
-            break;
+    // Contact Routes
+    'contactus' => function () {
+        header('Location: index.php?page=contactcontroller/showcontactform');
+        exit();
+    },
+    'contactcontroller/showcontactform' => ['ContactController', 'showContactForm'],
+    'contactcontroller/contactsubmit' => ['ContactController', 'contactsubmit'],
+    'contactsubmit' => ['UserController', 'contactSubmit'],
 
-        case 'petdetails':
-            (new PetController)->showpetdetails();
-            break;
-        case 'donate':
-            (new DonateController)->donate();
-            break;
-        case 'contactsubmit':
-            (new UserController)->contactSubmit();
-            break;
+    // Admin Routes (with admin_auth middleware)
+    'admin/admin_login' => ['AdminController', 'showadminloginform'],
+    'admin/verify_admin' => ['AdminController', 'verify_adminLogin'],
+    'admin/admin_dashboard' => ['AdminController', 'showdashboard', 'admin_auth'],
+    'admin/addpet' => ['AdminController', 'showaddpetform', 'admin_auth'],
+    'admin/addPet' => ['AdminController', 'addPet', 'admin_auth'],
+    'admin/getPetById' => ['AdminController', 'getPetById', 'admin_auth'],
+    'admin/updatePet' => ['AdminController', 'updatePet', 'admin_auth'],
+    'admin/deletePet' => ['AdminController', 'deletePet', 'admin_auth'],
+    'admin/PetManagement' => ['AdminController', 'ManagePets', 'admin_auth'],
+    'admin/CenterManagement' => ['AdminController', 'ManageCenters', 'admin_auth'],
+    'admin/fetch_center_details' => ['AdminController', 'fetch_center_details', 'admin_auth'],
+    'admin/fetch_edit_form' => ['AdminController', 'fetch_edit_form', 'admin_auth'],
+    'admin/add_centerform' => ['AdminController', 'showaddcenterform', 'admin_auth'],
+    'admin/update_center_user' => ['AdminController', 'update_center_user', 'admin_auth'],
+    'admin/delete_center_user' => ['AdminController', 'delete_center_user', 'admin_auth'],
+    'admin/add_Center' => ['AdminController', 'addAdoptionCenter', 'admin_auth'],
+    'admin/userManagement' => ['AdminController', 'ManageUsers', 'admin_auth'],
+    'admin/reset_password' => ['AdminController', 'resetCenterPassword', 'admin_auth'],
+    'admin/contact_messages' => ['AdminController', 'showContactMessages', 'admin_auth'],
+    'admin/send_contact_reply' => ['AdminController', 'sendContactReply', 'admin_auth'],
 
-        case 'register':
-            (new UserController)->Register();
-            break;
-        case 'login':
-            (new UserController)->Login(); // call Login() method in UserController
-            break;
+    // Adoption Center Routes (with center_auth middleware)
+    'adoptioncenter/center_login' => ['CenterController', 'showLoginForm'],
+    'adoptioncenter/verify_center' => ['CenterController', 'verify_CenterLogin'], // Method name fixed (case-sensitive)
+    'adoptioncenter/center_dashboard' => ['CenterController', 'showDashboard', 'center_auth'],
+    'adoptioncenter/adoptioncenter_profile' => ['CenterController', 'showprofile', 'center_auth'],
+    'adoptioncenter/add_pets' => ['CenterController', 'showaddpetform', 'center_auth'],
+    'adoptioncenter/addPet' => ['CenterController', 'addPet', 'center_auth'],
+    'adoptioncenter/getPetById' => ['CenterController', 'getPetById', 'center_auth'],
+    'adoptioncenter/updatePet' => ['CenterController', 'updatePet', 'center_auth'],
+    'adoptioncenter/deletePet' => ['CenterController', 'deletePet', 'center_auth'],
+    'adoptioncenter/managepets' => ['CenterController', 'managepetsform', 'center_auth'],
+    'adoptioncenter/update_profile' => ['CenterController', 'update_profile', 'center_auth'],
+    'adoptioncenter/change_password' => ['CenterController', 'change_password', 'center_auth'],
+    'adoptioncenter/savePets' => ['CenterController', 'savePets', 'center_auth'],
+    'adoptioncenter/editpets' => ['CenterController', 'editpets', 'center_auth'],
+    'adoptioncenter/deletepet' => ['CenterController', 'deletepet', 'center_auth'],
+    'adoptioncenter/adoption_request' => ['CenterController', 'adoption_request', 'center_auth'],
+    'adoptioncenter/feedback' => ['CenterController', 'feedback', 'center_auth'],
+];
 
+// 4. Get current page requested
+$page = $_GET['page'] ?? 'home';
+$current_page = $page; // can be used in views/header
 
+// 5. Route handling logic
+if (isset($routes[$page])) {
+    $route = $routes[$page];
 
-        // ✅ Admin Pages
-        case 'admin/admin_login':
-            (new AdminController)->showadminloginform();
-            break;
-
-        case 'admin/verify_admin':
-            (new AdminController)->verify_adminLogin();
-            break;
-
-        case 'admin/admin_dashboard':
-            (new AdminController)->showdashboard();
-            break;
-
-        case 'admin/addpet':
-            (new AdminController)->showaddpetform();
-            break;
-        case 'admin/PetManagement':
-            (new AdminController)->ManagePets();
-            break;
-        case 'admin/CenterManagement':
-            (new AdminController)->ManageCenters();
-            break;
-
-        case 'admin/fetch_center_details':
-            (new AdminController)->fetch_center_details();
-            break;
-
-        case 'admin/fetch_edit_form':
-            (new AdminController)->fetch_edit_form();
-            break;
-
-        case 'admin/add_centerform':
-            (new AdminController)->showaddcenterform();
-            break;
-
-        case 'admin/update_center_user':
-            (new AdminController)->update_center_user();
-            break;
-
-        case 'admin/delete_center_user':
-            (new AdminController)->delete_center_user();
-            break;
-
-        case 'admin/add_Center':
-            (new AdminController)->addAdoptionCenter();
-            break;
-
-        case 'admin/userManagement':
-            (new AdminController)->ManageUsers();
-            break;
-
-
-        // ✅ Adoption Center Pages (example controller)
-        case 'adoptioncenter/center_login':
-            (new CenterController)->showLoginForm();
-            break;
-            
-        case 'adoptioncenter/verify_center':
-            (new CenterController)->verify_CenterLogin();
-            break;
-
-        case 'adoptioncenter/center_dashboard':
-            (new CenterController)->showDashboard();
-            break;
-
-        case 'adoptioncenter/adoptioncenter_profile':
-            (new CenterController)->showprofile();
-            break;
-
-        case 'adoptioncenter/update_profile':
-            (new CenterController)->update_profile();
-            break;
-
-        case 'adoptioncenter/change_password':
-            (new CenterController)->change_password();
-            break;
-
-        case 'adoptioncenter/add_pets':
-            (new CenterController)->showaddpetform();
-            break;
-
-        case 'adoptioncenter/managepets':
-            (new CenterController)->managepetsform();
-            break;
-
-        case 'adoptioncenter/savePets':
-        (new CenterController)->savePets();
-            break;
-
-        case 'adoptioncenter/editpets':
-            (new CenterController)->editpets();
-            break;
-
-        case 'adoptioncenter/updatePet':
-            (new CenterController)->updatePet();
-            break;
-
-        case 'adoptioncenter/deletepet':
-            (new CenterController)->deletepet();
-            break;
-
-        case 'adoptioncenter/adoption_request':
-            (new CenterController)->adoption_request();
-            break;
-
-        case 'adoptioncenter/feedback':
-            (new CenterController)->feedback();
-            break;
-
-    
-
-        case 'logout': //user
-            session_unset();
-            session_destroy();
-            header('Location: index.php?page=home');
-            exit();
-            break;
-
-        default:
-            echo "404 - Page Not Found";
-            break;
+    // If route is a closure (callable), execute directly
+    if (is_callable($route)) {
+        $route();
+        exit();
     }
-    ?>
 
- </html>
+    // Else it's [Controller, Method, Middleware?]
+    list($controller, $method, $middleware) = array_pad($route, 3, null);
+
+    // Middleware checks
+    if ($middleware === 'admin_auth' && empty($_SESSION['admin'])) {
+        header('Location: index.php?page=admin/admin_login');
+        exit();
+    }
+
+    if ($middleware === 'center_auth' && empty($_SESSION['adoptioncenter'])) {
+        header('Location: index.php?page=adoptioncenter/center_login');
+        exit();
+    }
+
+    // Instantiate controller and call method
+    (new $controller)->$method();
+    exit();
+} else {
+    // 404 fallback
+    header("HTTP/1.0 404 Not Found");
+    echo "404 - Page Not Found";
+    exit();
+}

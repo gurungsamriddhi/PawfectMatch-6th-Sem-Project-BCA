@@ -1,4 +1,3 @@
-
   <?php include 'app/views/partials/sidebarcenter.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
@@ -15,7 +14,7 @@
 
       <!-- Content -->
       <div class="container-fluid py-4">
-<form id="addPetForm" action="index.php?page=adoptioncenter/savePets" method="POST" enctype="multipart/form-data">
+<form action="index.php?page=adoptioncenter/savePets" method="POST" enctype="multipart/form-data">
           <div id="formMessage"></div>
           <!-- Basic Info Section -->
           <div class="form-section">
