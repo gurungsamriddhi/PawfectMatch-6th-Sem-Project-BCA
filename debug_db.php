@@ -1,7 +1,44 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+file_put_contents(__DIR__.'/debug.log', date('c')."\nPOST: ".print_r($_POST, true)."SESSION: ".print_r($_SESSION, true)."\n", FILE_APPEND);
 session_start();
 require_once 'core/databaseconn.php';
 require_once 'app/models/Pet.php';
+
+// Handle adoption request form submission
+echo "<!-- Handler reached -->\n";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pet_id'])) {
+    header('Content-Type: application/json');
+    $user_id = $_SESSION['user']['id'] ?? null;
+    $pet_id = $_POST['pet_id'];
+    $address = $_POST['address'];
+    $phone = $_POST['phone'];
+    $reason = $_POST['reason'];
+    $preferred_date = $_POST['preferred_date'];
+    $home_type = $_POST['home_type'];
+    $has_other_pets = $_POST['has_other_pets'];
+
+    if (!$user_id) {
+        error_log('SESSION: ' . print_r($_SESSION, true));
+        echo json_encode(['success' => false, 'message' => 'Not logged in', 'session' => $_SESSION]);
+        exit;
+    }
+
+    $db = new Database();
+    $conn = $db->connect();
+    $stmt = $conn->prepare("INSERT INTO adoption_form (request_id, user_id, pet_id, address, phone, reason, preferred_date, home_type, has_other_pets) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iissssss", $user_id, $pet_id, $address, $phone, $reason, $preferred_date, $home_type, $has_other_pets);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
+    }
+    exit;
+}
+echo json_encode(['success' => false, 'message' => 'Handler not reached or wrong request']);
+exit;
 
 echo "<h2>Database Debug Information</h2>";
 
