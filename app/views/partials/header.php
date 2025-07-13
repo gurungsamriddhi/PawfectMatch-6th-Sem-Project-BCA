@@ -62,7 +62,7 @@ unset(
 	<link href="public/assets/css/user.css" rel="stylesheet">
 	<title>Pets For Adoption </title>
 	<script>
-    const isLoggedIn = <?= isset($_SESSION['user_id']) ? 'true' : 'false' ?>;
+    const isLoggedIn = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
 </script>
 </head>
 
@@ -147,12 +147,12 @@ unset(
 						<?php endif; ?>
 
 						<div class="mb-3">
-							<label for="email" class="form-label fw-semibold">Email</label>
+							<label for="loginEmail" class="form-label fw-semibold">Email</label>
 							<div class="input-group">
 								<span class="input-group-text"><i class="fas fa-envelope"></i></span>
 								<input type="email"
 									class="form-control <?= isset($login_errors['email']) ? 'is-invalid' : '' ?>"
-									id="email" name="email"
+									id="loginEmail" name="email"
 									placeholder="Email"
 									autocomplete="new-email"
 									value="<?= htmlspecialchars($login_old['email'] ?? '') ?>">
@@ -220,10 +220,10 @@ unset(
 
 						<!-- Name Field -->
 						<div class="mb-3">
-							<label for="name" class="form-label fw-semibold">Name</label>
+							<label for="registerName" class="form-label fw-semibold">Name</label>
 							<input type="text"
 								class="form-control <?= isset($register_errors['name']) ? 'is-invalid' : '' ?>"
-								id="name"
+								id="registerName"
 								name="name"
 								placeholder="Full Name"
 								autocomplete="new-name"
@@ -235,11 +235,11 @@ unset(
 
 						<!-- Email Field -->
 						<div class="mb-3">
-							<label for="emailReg" class="form-label fw-semibold">Email</label>
+							<label for="registerEmail" class="form-label fw-semibold">Email</label>
 							<!--adds bootstrap .is-invalid class only if there was an email error in the session-->
 							<input type="email"
 								class="form-control <?= isset($register_errors['email']) ? 'is-invalid' : '' ?>"
-								id="emailReg"
+								id="registerEmail"
 								name="email"
 								placeholder="Email"
 								autocomplete="new-email"

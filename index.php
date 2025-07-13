@@ -10,6 +10,7 @@ require_once 'app/controllers/AdminController.php';
 require_once 'app/controllers/DonateController.php';
 require_once 'app/controllers/CenterController.php';
 require_once 'app/controllers/ContactController.php';
+require_once 'app/controllers/VolunteerController.php';
 
 // 2. Start session
 session_start();
@@ -51,6 +52,13 @@ $routes = [
     'contactcontroller/showcontactform' => ['ContactController', 'showContactForm'],
     'contactcontroller/contactsubmit' => ['ContactController', 'contactsubmit'],
     // 'contactsubmit' => ['UserController', 'contactSubmit'],
+
+
+
+    //volunteer routes
+      'volunteer/apply' => ['VolunteerController', 'apply'], 
+
+
 
     // Admin Routes
     'admin/admin_login' => ['AdminController', 'showadminloginform'],

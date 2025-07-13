@@ -105,6 +105,7 @@ CREATE TABLE adoption_centers (
 CREATE TABLE volunteers (
     volunteer_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    contact_number VARCHAR(20) NOT NULL,
     area ENUM('pet care', 'training', 'fundraising', 'other'),
     availability_days VARCHAR(100),
     status ENUM('pending', 'assigned', 'rejected') DEFAULT 'pending',

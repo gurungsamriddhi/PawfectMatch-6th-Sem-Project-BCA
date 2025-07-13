@@ -1,6 +1,3 @@
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('registerForm');
   const showPasswordCheck = document.getElementById('showPasswordCheck');
