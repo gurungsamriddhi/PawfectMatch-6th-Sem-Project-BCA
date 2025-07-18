@@ -312,16 +312,37 @@ document.addEventListener('DOMContentLoaded', function() {
         body: formData,
         credentials: 'same-origin'
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert('Adoption request submitted!');
+      .then(async res => {
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          // If response is not JSON but status is 200, treat as success
+          if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('adoptionRequestModal')).hide();
+            setTimeout(function() {
+              let thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+              thankYouModal.show();
+            }, 500);
+            return;
+          } else {
+            showErrorModal('An error occurred.');
+            return;
+          }
+        }
+        if (data && data.success) {
           bootstrap.Modal.getInstance(document.getElementById('adoptionRequestModal')).hide();
+          setTimeout(function() {
+            let thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+            thankYouModal.show();
+          }, 500);
         } else {
-          alert('Error: ' + (data.message || 'Unknown error'));
+          showErrorModal((data && data.message) || 'Unknown error');
         }
       })
-      .catch(() => alert('An error occurred.'));
+      .catch(() => {
+        showErrorModal('An error occurred.');
+      });
     };
   }
 });
@@ -421,6 +442,12 @@ function closePetModalAndAdopt(petId) {
     handleProtectedAction('adopt', petId);
   }, 500); // Increased delay to 500ms
 }
+
+function showErrorModal(message) {
+  document.getElementById('errorModalMessage').textContent = message;
+  let errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+  errorModal.show();
+}
 </script>
 <?php include 'app/views/partials/footer.php'; ?>
 
@@ -512,5 +539,41 @@ function closePetModalAndAdopt(petId) {
   </div>
 </div>
 
+<!-- Thank You Modal -->
+<div class="modal fade" id="thankYouModal" tabindex="-1" aria-labelledby="thankYouLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 18px; background: #f6fff8; box-shadow: 0 8px 32px rgba(60,120,80,0.10);">
+      <div class="modal-header border-0 d-flex align-items-center justify-content-between" style="background: #e6f9ed; border-radius: 18px 18px 0 0; padding: 1.2rem 1.5rem 1rem 1.5rem;">
+        <h5 class="modal-title w-100 text-success fw-bold m-0" id="thankYouLabel" style="font-size: 1.6rem; letter-spacing: 1px;">Thank You!</h5>
+        <button type="button" class="btn-close ms-2" style="position: static;" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" style="font-family: 'Segoe UI', 'Arial', sans-serif;">
+        <div class="mb-3" style="font-size:2.5rem; color:#7c4dff; line-height:1;">
+          <span style="font-size:2.2rem; vertical-align:middle;">&#128062;</span>
+          <span style="font-size:2.2rem; vertical-align:middle; margin-left:-0.5rem;">&#128062;</span>
+        </div>
+        <div class="mb-3 fs-5" style="color:#2d4739; font-weight: 500;">Thank you for your adoption request!<br>We appreciate your kindness and will contact you soon.</div>
+        <button class="btn btn-success px-4 py-2 mt-2" style="border-radius: 24px; font-size: 1.1rem; min-width: 120px;" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title w-100 text-danger" id="errorModalLabel">Error</h5>
+        <button type="button" class="btn-close position-absolute end-0 me-3 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="mb-3" style="font-size:2.5rem;"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="mb-3 fs-5" id="errorModalMessage">An error occurred.</div>
+        <button class="btn btn-danger px-4" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 	
 	
