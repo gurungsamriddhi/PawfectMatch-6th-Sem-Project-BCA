@@ -5,14 +5,16 @@ require_once __DIR__ . '/../models/AdoptionCenter.php';
 require_once __DIR__ . '/../models/Pet.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Contact.php';
+require_once __DIR__ . '/../models/Volunteer.php';
 
 class AdminController
 {
     private $adminModel;
     private $petModel;
     private $userModel;
-    private $contactModel;
+    private $contactModel; 
     private $adoptionCenterModel;
+    private $volunteerModel;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class AdminController
         $this->userModel = new User($conn);
         $this->contactModel = new Contact($conn);
         $this->adoptionCenterModel = new AdoptionCenter($conn);
+        $this->volunteerModel =new Volunteer($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -502,7 +505,8 @@ class AdminController
     public function showContactMessages()
     {
         $messages = $this->contactModel->getAllMessages();
-        include __DIR__ . '/../views/admin/contact_messages.php';
+        $this->loadAdminView('contact_messages.php', ['messages' => $messages]);
+
     }
 
     public function sendContactReply()
@@ -543,5 +547,11 @@ class AdminController
                 echo '<div class="alert alert-danger">Failed to send email.</div>';
             }
         }
+    }
+
+    //Volunteer View Requests
+    public function viewVolunteerRequests(){
+        $requests =$this->volunteerModel->getAllRequests(); 
+        $this->loadAdminView('volunteer_management.php' , ['requests'=>$requests]);
     }
 }

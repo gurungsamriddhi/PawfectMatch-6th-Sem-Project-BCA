@@ -24,21 +24,27 @@ $routes = [
     'aboutus' => ['HomeController', 'aboutus'],
     'volunteer' => ['HomeController', 'volunteer'],
     'petdetails' => ['PetController', 'showpetdetails'],
-    'login'=>['UserController', 'Login'],
-    'register'=>['UserController', 'Register'],
+    'login' => ['UserController', 'Login'],
+    'register' => ['UserController', 'Register'],
     'donate' => ['DonateController', 'donate'],
 
     'logout' => function () {
-        $redirect = 'index.php?page=home'; // default
+        $wasAdmin = !empty($_SESSION['admin']);
+        $wasCenter = !empty($_SESSION['center']);
 
-        if (!empty($_SESSION['admin'])) {
-            $redirect = 'index.php?page=admin/admin_login';
-        } elseif (!empty($_SESSION['center'])) {
-            $redirect = 'index.php?page=adoptioncenter/center_login';
-        }
-
+        // Destroy session
         session_unset();
         session_destroy();
+
+        // Decide redirect based on what the user was before logging out
+        if ($wasAdmin) {
+            $redirect = 'index.php?page=admin/admin_login';
+        } elseif ($wasCenter) {
+            $redirect = 'index.php?page=adoptioncenter/center_login';
+        } else {
+            $redirect = 'index.php?page=home';
+        }
+
         header("Location: $redirect");
         exit();
     },
@@ -56,7 +62,7 @@ $routes = [
 
 
     //volunteer routes
-      'volunteer/apply' => ['VolunteerController', 'apply'], 
+    'volunteer/apply' => ['VolunteerController', 'apply'],
 
 
 

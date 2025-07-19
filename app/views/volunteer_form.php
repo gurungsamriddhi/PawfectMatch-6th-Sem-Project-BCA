@@ -1,5 +1,18 @@
 <?php include 'app/views/partials/header.php'; ?>
 <?php
+// Province & Cities data for Nepal
+$nepaliProvincesCities = [
+    "Province 1" => ["Biratnagar", "Dharan", "Dhankuta", "Illam", "Morang", "Sunsari"],
+    "Province 2" => ["Janakpur", "Birgunj", "Rajbiraj", "Jaleshwar", "Bardibas"],
+    "Bagmati Province" => ["Kathmandu", "Lalitpur", "Bhaktapur", "Hetauda", "Madhyapur Thimi"],
+    "Gandaki Province" => ["Pokhara", "Baglung", "Gorkha", "Damauli", "Besisahar"],
+    "Lumbini Province" => ["Butwal", "Bhairahawa", "Gulmi", "Kapilvastu", "Dang"],
+    "Karnali Province" => ["Birendranagar", "Jumla", "Dolpa", "Surkhet", "Mugu"],
+    "Sudurpashchim Province" => ["Dhangadhi", "Tikapur", "Mahendranagar", "Baitadi", "Dadeldhura"]
+];
+?>
+
+<?php
 
 $volunteer_errors = $_SESSION['volunteer_errors'] ?? [];
 if (!empty($volunteer_errors)) {
@@ -158,15 +171,15 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
 
             <form class="mx-auto" style="max-width:500px;" method="POST" action="index.php?page=volunteer/apply" novalidate>
                 <?php if (isset($_SESSION['user'])): ?>
-                    <input type="hidden" name="user_id" value="<?= $_SESSION['user']['id'] ?>">
+                    <input type="hidden" name="user_id" value="<?= $_SESSION['user']['id'] ?? '' ?>">
                     <input type="hidden" name="name" value="<?= htmlspecialchars($_SESSION['user']['name']) ?>">
                 <?php endif; ?>
 
                 <!-- Email -->
                 <div class="mb-3">
                     <label for="userEmail" class="form-label fw-semibold">Email</label>
-                    <input type="email" class="form-control" id="userEmail" value="<?= htmlspecialchars($_SESSION['user']['email']) ?>" readonly>
-                    <input type="hidden" name="email" value="<?= htmlspecialchars($_SESSION['user']['email']) ?>">
+                    <input type="email" class="form-control guest-protected" id="userEmail" value="<?= htmlspecialchars($_SESSION['user']['email'] ?? '') ?>" readonly>
+                    <input type="hidden" name="email" value="<?= htmlspecialchars($_SESSION['user']['email'] ?? '') ?>">
                 </div>
 
                 <!-- Contact Number -->
@@ -243,6 +256,82 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
 
                 </div>
 
+                <!-- Address Line 1 -->
+                <div class="mb-3">
+                    <label for="addressLine1" class="form-label fw-semibold">Address Line 1</label>
+                    <input
+                        type="text"
+                        class="form-control guest-protected <?= isset($volunteer_errors['address_line1']) ? 'is-invalid' : '' ?>"
+                        name="address_line1"
+                        id="addressLine1"
+                        value="<?= htmlspecialchars($old['address_line1'] ?? '') ?>"
+                        required>
+                    <?php if (isset($volunteer_errors['address_line1'])): ?>
+                        <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['address_line1']) ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Address Line 2 -->
+                <div class="mb-3">
+                    <label for="addressLine2" class="form-label fw-semibold">Address Line 2 (Optional)</label>
+                    <input
+                        type="text"
+                        class="form-control guest-protected"
+                        name="address_line2"
+                        id="addressLine2"
+                        value="<?= htmlspecialchars($old['address_line2'] ?? '') ?>">
+                </div>
+
+                <!-- Province -->
+                <div class="mb-3">
+                    <label for="province" class="form-label fw-semibold">Province</label>
+                    <select
+                        class="form-select guest-protected <?= isset($volunteer_errors['province']) ? 'is-invalid' : '' ?>"
+                        name="province"
+                        id="province"
+                        required>
+                        <option value="" disabled <?= empty($old['province']) ? 'selected' : '' ?>>Select Province</option>
+                        <?php foreach (array_keys($nepaliProvincesCities) as $prov): ?>
+                            <option value="<?= htmlspecialchars($prov) ?>" <?= (isset($old['province']) && $old['province'] === $prov) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($prov) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php if (isset($volunteer_errors['province'])): ?>
+                        <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['province']) ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- City -->
+                <div class="mb-3">
+                    <label for="city" class="form-label fw-semibold">City</label>
+                    <select
+                        class="form-select guest-protected <?= isset($volunteer_errors['city']) ? 'is-invalid' : '' ?>"
+                        name="city"
+                        id="city"
+                        required>
+                        <option value="" disabled <?= empty($old['city']) ? 'selected' : '' ?>>Select City</option>
+                        <!-- City options populated dynamically by JS -->
+                    </select>
+                    <?php if (isset($volunteer_errors['city'])): ?>
+                        <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['city']) ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Postal Code -->
+                <div class="mb-3">
+                    <label for="postalCode" class="form-label fw-semibold">Postal Code</label>
+                    <input
+                        type="text"
+                        class="form-control guest-protected"
+                        name="postal_code"
+                        id="postalCode"
+                        value="<?= htmlspecialchars($old['postal_code'] ?? '') ?>">
+                </div>
+
+
+
+
                 <!-- Remarks -->
                 <div class="mb-3">
                     <label for="remarks" class="form-label fw-semibold">Remarks (Optional)</label>
@@ -262,49 +351,12 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
 
 
 </main>
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const areaSelect = document.getElementById('volInterest');
-        const checkboxes = document.querySelectorAll('input[name="availability_days[]"]');
-        const areaError = document.getElementById('areaError');
-
-        // Hide Area of Interest error when user selects a valid option
-        if (areaSelect) {
-            areaSelect.addEventListener('change', () => {
-                const selectedValue = areaSelect.value;
-
-                // If user selected a valid option
-                if (selectedValue !== '') {
-                    areaSelect.classList.remove('is-invalid');
-                    if (areaError) {
-                        areaError.style.display = 'none';
-                    }
-                }
-            });
-        }
-
-        // Hide Availability Days error when any checkbox is checked
-        checkboxes.forEach(box => {
-            box.addEventListener('change', () => {
-                const checkedCount = [...checkboxes].filter(c => c.checked).length;
-                if (checkedCount > 0) {
-                    const availError = document.getElementById('availabilityDaysError');
-                    if (availError) availError.style.display = 'none';
-                }
-            });
-        });
-
-        // Optional: Hide contact number error when user types
-        const contactInput = document.getElementById('contactNumber');
-        if (contactInput) {
-            contactInput.addEventListener('input', () => {
-                contactInput.classList.remove('is-invalid');
-                const next = contactInput.parentElement.querySelector('.invalid-feedback');
-                if (next) next.style.display = 'none';
-            });
-        }
-    });
+    const oldProvince = <?= json_encode($old['province'] ?? '') ?>;
+    const oldCity = <?= json_encode($old['city'] ?? '') ?>;
 </script>
-
+<script src="public/js/volunteerform.js"></script>
 
 <?php include 'app/views/partials/footer.php'; ?>

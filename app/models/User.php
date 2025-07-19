@@ -66,7 +66,7 @@ class User
         }
         return 0; // Invalid token or user not found
     }
-    
+
     //used to change the adoptioncenter password can be used further for user too
     public function updatePassword($userId, $hashedPassword)
     {
@@ -76,7 +76,7 @@ class User
     }
 
 
-     public function getAllAdoptionCenterUsers()
+    public function getAllAdoptionCenterUsers()
     {
         $stmt = $this->conn->prepare("SELECT user_id, name, user_type, email, status FROM users WHERE user_type = 'adoption_center'");
         $stmt->execute();
@@ -86,7 +86,7 @@ class User
     }
 
 
-     public function getAllUsers()
+    public function getAllUsers()
     {
         $stmt = $this->conn->prepare("SELECT user_id, name, user_type, email, status,is_verified,registered_at FROM users WHERE user_type = 'user'");
         $stmt->execute();
@@ -95,4 +95,15 @@ class User
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getAllRequests()
+    {
+        $stmt = $this->conn->prepare("
+        SELECT v.*, u.name, u.email 
+        FROM volunteers v 
+        JOIN users u ON v.user_id = u.user_id 
+        ORDER BY v.applied_at DESC
+    ");
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 }
