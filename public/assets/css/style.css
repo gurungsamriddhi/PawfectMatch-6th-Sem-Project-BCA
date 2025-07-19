@@ -1065,7 +1065,7 @@ textarea {
 .pet-card .pet-fav {
   position: absolute;
   top: 25px;
-  right: 28px;
+  left: 28px;
   font-size: 1.4rem;
   color: #e53935;
   background: #fff;
@@ -1378,4 +1378,116 @@ textarea {
 #registerModal.show,
 #loginRequiredModal.show {
   z-index: 1065 !important;
+}
+
+.custom-wide-modal {
+  max-width: 800px !important;
+}
+.custom-wide-modal .modal-content {
+  max-width: 800px !important;
+  width: 100%;
+  margin: auto;
+}
+
+/* #adoptionRequestForm .modal-content {
+  max-width: 800px;
+} */
+
+.custom-wide-modal .modal-footer{
+  margin: 20px 0px 20px 0px !important;
+}
+
+#petQuickViewModal .custom-pet-details-modal {
+  max-width: 900px !important;
+}
+
+#petQuickViewModal .modal-content {
+  max-width: 900px !important;
+}
+
+.info-block {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  font-size: 1rem;
+}
+
+.pet-details-section h6 {
+  font-size: 1.08rem;
+  color: #3b5d50;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.pet-details-section .badge {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.pet-details-section .d-flex.gap-3 {
+  margin-top: 24px;
+}
+
+.pet-details-section .btn-lg {
+  font-size: 1.1rem;
+  padding: 12px 32px;
+  border-radius: 8px;
+}
+
+.pet-summary-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 10px 0 10px 0;
+  margin: 0 auto 18px auto;
+  max-width: 420px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.pet-summary-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #3b5d50;
+}
+
+.pet-summary-meta i {
+  font-size: 1.18em;
+  color: #3b5d50;
+}
+
+.pet-details-section .btn-success {
+  background: #3bb54a !important;
+  border-color: #3bb54a !important;
+  color: #fff !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(59,181,74,0.08);
+  transition: background 0.18s, box-shadow 0.18s;
+}
+.pet-details-section .btn-success:hover {
+  background: #2e8c3c !important;
+  border-color: #2e8c3c !important;
+  box-shadow: 0 4px 16px rgba(59,181,74,0.15);
+}
+
+.pet-details-section .btn-outline-secondary {
+  color: #fff !important;
+  background: #e74c3c !important;
+  border-color: #e74c3c !important;
+  font-weight: 600;
+  transition: background 0.18s, border-color 0.18s;
+}
+.pet-details-section .btn-outline-secondary:hover {
+  background: #c0392b !important;
+  border-color: #c0392b !important;
+  color: #fff !important;
 }

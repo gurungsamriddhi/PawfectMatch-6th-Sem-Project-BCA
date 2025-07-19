@@ -1,64 +1,87 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+file_put_contents(__DIR__.'/debug.log', date('c')."\nPOST: ".print_r($_POST, true)."SESSION: ".print_r($_SESSION, true)."\n", FILE_APPEND);
 session_start();
 require_once 'core/databaseconn.php';
 require_once 'app/models/Pet.php';
 
-echo "<h2>Database Debug Information</h2>";
+// Handle adoption request form submission
+echo "<!-- Handler reached -->\n";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pet_id'])) {
+    header('Content-Type: application/json');
+    $user_id = $_SESSION['user']['id'] ?? null;
+    $pet_id = $_POST['pet_id'];
+    $address = $_POST['address'];
+    $phone = $_POST['phone'];
+    $reason = $_POST['reason'];
+    $preferred_date = $_POST['preferred_date'];
+    $home_type = $_POST['home_type'];
+    $has_other_pets = ($_POST['has_other_pets'] === 'Yes') ? 1 : 0;
 
-// Test database connection
-try {
+    if (!$user_id) {
+        error_log('SESSION: ' . print_r($_SESSION, true));
+        echo json_encode(['success' => false, 'message' => 'Not logged in', 'session' => $_SESSION]);
+        exit;
+    }
+
     $db = new Database();
     $conn = $db->connect();
-    echo "<p><strong>Database Connection:</strong> " . ($conn ? "SUCCESS" : "FAILED") . "</p>";
-    
-    if ($conn) {
-        // Check if pets table exists
-        $result = $conn->query("SHOW TABLES LIKE 'pets'");
-        echo "<p><strong>Pets Table:</strong> " . ($result->num_rows > 0 ? "EXISTS" : "NOT FOUND") . "</p>";
-        
-        if ($result->num_rows > 0) {
-            // Show table structure
-            $result = $conn->query("DESCRIBE pets");
-            echo "<h3>Pets Table Structure:</h3><ul>";
-            while ($row = $result->fetch_assoc()) {
-                echo "<li>" . $row['Field'] . " (" . $row['Type'] . ")</li>";
-            }
-            echo "</ul>";
-            
-            // Count pets
-            $result = $conn->query("SELECT COUNT(*) as count FROM pets");
-            $row = $result->fetch_assoc();
-            echo "<p><strong>Total Pets:</strong> " . $row['count'] . "</p>";
-        }
-        
-        // Check users table
-        $result = $conn->query("SHOW TABLES LIKE 'users'");
-        echo "<p><strong>Users Table:</strong> " . ($result->num_rows > 0 ? "EXISTS" : "NOT FOUND") . "</p>";
-        
-        if ($result->num_rows > 0) {
-            $result = $conn->query("SELECT COUNT(*) as count FROM users WHERE user_type = 'admin'");
-            $row = $result->fetch_assoc();
-            echo "<p><strong>Admin Users:</strong> " . $row['count'] . "</p>";
-        }
+
+    // 1. Check if adoption_requests row exists
+    $request_id = null;
+    $check = $conn->prepare("SELECT request_id FROM adoption_requests WHERE user_id = ? AND pet_id = ?");
+    if (!$check) {
+        error_log('Prepare failed (check request): ' . $conn->error);
+        echo json_encode(['success' => false, 'message' => 'Prepare failed (check request): ' . $conn->error]);
+        exit;
     }
-    
-} catch (Exception $e) {
-    echo "<p><strong>Error:</strong> " . $e->getMessage() . "</p>";
+    $check->bind_param("ii", $user_id, $pet_id);
+    $check->execute();
+    $check->bind_result($request_id);
+    if ($check->fetch()) {
+        // Found existing request_id
+        $check->close();
+    } else {
+        $check->close();
+        // Insert new adoption_requests row
+        $insert_req = $conn->prepare("INSERT INTO adoption_requests (user_id, pet_id) VALUES (?, ?)");
+        if (!$insert_req) {
+            error_log('Prepare failed (insert request): ' . $conn->error);
+            echo json_encode(['success' => false, 'message' => 'Prepare failed (insert request): ' . $conn->error]);
+            exit;
+        }
+        $insert_req->bind_param("ii", $user_id, $pet_id);
+        if (!$insert_req->execute()) {
+            error_log('Execute failed (insert request): ' . $insert_req->error);
+            echo json_encode(['success' => false, 'message' => 'Database error (insert request): ' . $insert_req->error]);
+            exit;
+        }
+        $request_id = $insert_req->insert_id;
+        $insert_req->close();
+    }
+
+    // 2. Insert into adoption_form with the request_id
+    $stmt = $conn->prepare("INSERT INTO adoption_form (request_id, user_id, pet_id, address, phone, reason, preferred_date, home_type, has_other_pets) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        error_log('Prepare failed: ' . $conn->error);
+        echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);
+        exit;
+    }
+    $ok = $stmt->bind_param("iiisssssi", $request_id, $user_id, $pet_id, $address, $phone, $reason, $preferred_date, $home_type, $has_other_pets);
+    if (!$ok) {
+        error_log('Bind param failed: ' . $stmt->error);
+        echo json_encode(['success' => false, 'message' => 'Bind param failed: ' . $stmt->error]);
+        exit;
+    }
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        error_log('Execute failed: ' . $stmt->error);
+        echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
+    }
+    exit;
 }
 
-// Check session
-echo "<h3>Session Information:</h3>";
-echo "<p><strong>Session ID:</strong> " . session_id() . "</p>";
-echo "<p><strong>Session Data:</strong></p>";
-echo "<pre>" . print_r($_SESSION, true) . "</pre>";
-
-// Test Pet model
-echo "<h3>Pet Model Test:</h3>";
-try {
-    $petModel = new Pet();
-    $pets = $petModel->getAllPetsForAdmin();
-    echo "<p><strong>Pet Model Test:</strong> SUCCESS - Found " . count($pets) . " pets</p>";
-} catch (Exception $e) {
-    echo "<p><strong>Pet Model Error:</strong> " . $e->getMessage() . "</p>";
-}
-?> 
+echo json_encode(['success' => false, 'message' => 'Handler not reached or wrong request']);
+exit; 

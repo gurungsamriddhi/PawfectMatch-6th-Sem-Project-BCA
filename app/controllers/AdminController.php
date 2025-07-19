@@ -554,4 +554,10 @@ class AdminController
         $requests =$this->volunteerModel->getAllRequests(); 
         $this->loadAdminView('volunteer_management.php' , ['requests'=>$requests]);
     }
+    public function showAdoptionRequests()
+    {
+        require_once __DIR__ . '/../models/Adoption.php';
+        $forms = Adoption::getAllForms();
+        $this->loadAdminView('adoption_request.php', ['forms' => $forms]);
+    }
 }

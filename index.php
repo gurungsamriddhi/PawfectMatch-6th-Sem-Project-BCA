@@ -87,6 +87,7 @@ $routes = [
     'admin/reset_password' => ['AdminController', 'resetCenterPassword', 'admin_auth'],
     'admin/contact_messages' => ['AdminController', 'showContactMessages', 'admin_auth'],
     'admin/send_contact_reply' => ['AdminController', 'sendContactReply', 'admin_auth'],
+    'admin/adoption_request' => ['AdminController', 'showAdoptionRequests', 'admin_auth'],
 
     // Center Routes
     'adoptioncenter/center_login' => ['CenterController', 'showLoginForm'],

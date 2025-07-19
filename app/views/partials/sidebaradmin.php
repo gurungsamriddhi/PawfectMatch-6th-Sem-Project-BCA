@@ -40,6 +40,9 @@
             </ul>
           </li>
           <li class="sidebar-item">
+            <a href="index.php?page=admin/adoption_request" class="sidebar-link"><i class="fas fa-file-signature me-2"></i>Adoption Requests</a>
+          </li>
+          <li class="sidebar-item">
             <a href="index.php?page=admin/contact_messages" class="sidebar-link"><i class="fas fa-envelope-open-text me-2"></i>Contact Messages</a>
           </li>
           <li class="sidebar-item">
