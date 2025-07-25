@@ -13,13 +13,18 @@ $nepaliProvincesCities = [
 ?>
 
 <?php
-
+// Always safely define variables
 $volunteer_errors = $_SESSION['volunteer_errors'] ?? [];
+$volunteer_old = [];
+
+// Only assign old values if there were errors
 if (!empty($volunteer_errors)) {
     $volunteer_old = $_SESSION['volunteer_old'] ?? [];
 }
+
 $volunteer_success = $_SESSION['volunteer_success'] ?? '';
 
+// Clear session after using values
 unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volunteer_success']);
 ?>
 <main>
@@ -151,10 +156,17 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                 <div class="alert alert-danger"><?= htmlspecialchars($volunteer_errors['general']) ?></div>
             <?php endif; ?>
 
+            <?php if (!empty($volunteer_errors)): ?>
+                <div class="alert alert-danger">
+                    Please fix the errors below and try again.
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty($volunteer_success)): ?>
                 <div id="volunteerSuccessMsg" class="alert alert-success">
                     <?= htmlspecialchars($volunteer_success) ?>
                 </div>
+
                 <script>
                     setTimeout(() => {
                         const msg = document.getElementById('volunteerSuccessMsg');
@@ -194,15 +206,16 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                             id="contactNumber"
                             placeholder="98XXXXXXXX"
                             required
-                            value="<?= htmlspecialchars($old['contact_number'] ?? '') ?>">
+                            value="<?= htmlspecialchars($volunteer_old['contact_number'] ?? '') ?>">
+
                         <?php if (isset($volunteer_errors['contact_number'])): ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['contact_number']) ?></div>
                         <?php endif; ?>
                     </div>
-                </div>
 
+                </div>
                 <!-- Area of Interest -->
-                <?php $oldArea = $old['area'] ?? ''; ?>
+                <?php $oldArea = $volunteer_old['area'] ?? ''; ?>
                 <div class="mb-3">
                     <label for="volInterest" class="form-label fw-semibold">Area of Interest</label>
                     <select
@@ -222,7 +235,7 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                 </div>
 
                 <!-- Availability Days -->
-                <?php $oldAvailability = $old['availability_days'] ?? []; ?>
+                <?php $oldAvailability = $volunteer_old['availability_days'] ?? []; ?>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Availability Days</label>
                     <?php if (isset($volunteer_errors['availability_days'])): ?>
@@ -259,16 +272,18 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                 <!-- Address Line 1 -->
                 <div class="mb-3">
                     <label for="addressLine1" class="form-label fw-semibold">Address Line 1</label>
-                    <input
-                        type="text"
-                        class="form-control guest-protected <?= isset($volunteer_errors['address_line1']) ? 'is-invalid' : '' ?>"
-                        name="address_line1"
-                        id="addressLine1"
-                        value="<?= htmlspecialchars($old['address_line1'] ?? '') ?>"
-                        required>
-                    <?php if (isset($volunteer_errors['address_line1'])): ?>
-                        <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['address_line1']) ?></div>
-                    <?php endif; ?>
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            class="form-control guest-protected <?= isset($volunteer_errors['address_line1']) ? 'is-invalid' : '' ?>"
+                            name="address_line1"
+                            id="addressLine1"
+                            value="<?= htmlspecialchars($volunteer_old['address_line1'] ?? '') ?>"
+                            required>
+                        <?php if (isset($volunteer_errors['address_line1'])): ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['address_line1']) ?></div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <!-- Address Line 2 -->
@@ -279,54 +294,62 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                         class="form-control guest-protected"
                         name="address_line2"
                         id="addressLine2"
-                        value="<?= htmlspecialchars($old['address_line2'] ?? '') ?>">
+                        value="<?= htmlspecialchars($volunteer_old['address_line2'] ?? '') ?>">
                 </div>
 
                 <!-- Province -->
                 <div class="mb-3">
                     <label for="province" class="form-label fw-semibold">Province</label>
+
                     <select
                         class="form-select guest-protected <?= isset($volunteer_errors['province']) ? 'is-invalid' : '' ?>"
                         name="province"
                         id="province"
                         required>
-                        <option value="" disabled <?= empty($old['province']) ? 'selected' : '' ?>>Select Province</option>
+                        <option value="" disabled <?= empty($volunteer_old['province']) ? 'selected' : '' ?>>Select Province</option>
                         <?php foreach (array_keys($nepaliProvincesCities) as $prov): ?>
-                            <option value="<?= htmlspecialchars($prov) ?>" <?= (isset($old['province']) && $old['province'] === $prov) ? 'selected' : '' ?>>
+                            <option value="<?= htmlspecialchars($prov) ?>" <?= (isset($volunteer_old['province']) && $volunteer_old['province'] === $prov) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($prov) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                     <?php if (isset($volunteer_errors['province'])): ?>
-                        <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['province']) ?></div>
+                        <div id="provinceError" class="text-danger mb-2"><?= htmlspecialchars($volunteer_errors['province']) ?></div>
                     <?php endif; ?>
                 </div>
 
                 <!-- City -->
                 <div class="mb-3">
                     <label for="city" class="form-label fw-semibold">City</label>
-                    <select
-                        class="form-select guest-protected <?= isset($volunteer_errors['city']) ? 'is-invalid' : '' ?>"
-                        name="city"
-                        id="city"
-                        required>
-                        <option value="" disabled <?= empty($old['city']) ? 'selected' : '' ?>>Select City</option>
-                        <!-- City options populated dynamically by JS -->
-                    </select>
-                    <?php if (isset($volunteer_errors['city'])): ?>
-                        <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['city']) ?></div>
-                    <?php endif; ?>
+                    <div class="input-group">
+                        <select
+                            class="form-select guest-protected <?= isset($volunteer_errors['city']) ? 'is-invalid' : '' ?>"
+                            name="city"
+                            id="city"
+                            required>
+                            <option value="" disabled <?= empty($volunteer_old['city']) ? 'selected' : '' ?>>Select City</option>
+                            <!-- City options populated dynamically by JS -->
+                        </select>
+                        <?php if (isset($volunteer_errors['city'])): ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['city']) ?></div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <!-- Postal Code -->
                 <div class="mb-3">
                     <label for="postalCode" class="form-label fw-semibold">Postal Code</label>
-                    <input
-                        type="text"
-                        class="form-control guest-protected"
-                        name="postal_code"
-                        id="postalCode"
-                        value="<?= htmlspecialchars($old['postal_code'] ?? '') ?>">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            class="form-control guest-protected <?= isset($volunteer_errors['postal_code']) ? 'is-invalid' : '' ?>"
+                            name="postal_code"
+                            id="postalCode"
+                            value="<?= htmlspecialchars($volunteer_old['postal_code'] ?? '') ?>">
+                        <?php if (isset($volunteer_errors['postal_code'])): ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($volunteer_errors['postal_code']) ?></div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
 
@@ -335,13 +358,16 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                 <!-- Remarks -->
                 <div class="mb-3">
                     <label for="remarks" class="form-label fw-semibold">Remarks (Optional)</label>
-                    <textarea
-                        class="form-control guest-protected"
-                        name="remarks"
-                        id="remarks"
-                        rows="3"><?= htmlspecialchars($old['remarks'] ?? '') ?></textarea>
+                    <div class="input group">
+                        <textarea
+                            class="form-control guest-protected"
+                            name="remarks"
+                            id="remarks"
+                            rows="3"
+                            value="<?= htmlspecialchars($volunteer_old['remarks'] ?? '') ?>">
+                    </textarea>
+                    </div>
                 </div>
-
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary w-100 fw-bold guest-protected">Submit</button>
             </form>
@@ -354,9 +380,10 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
 
 
 <script>
-    const oldProvince = <?= json_encode($old['province'] ?? '') ?>;
-    const oldCity = <?= json_encode($old['city'] ?? '') ?>;
+    const provincesCities = <?= json_encode($nepaliProvincesCities) ?>;
+    const oldProvince = <?= json_encode($volunteer_old['province'] ?? '') ?>;
+    const oldCity = <?= json_encode($volunteer_old['city'] ?? '') ?>;
 </script>
-<script src="public/js/volunteerform.js"></script>
+<script src="public/assets/js/volunteerform.js"></script>
 
 <?php include 'app/views/partials/footer.php'; ?>

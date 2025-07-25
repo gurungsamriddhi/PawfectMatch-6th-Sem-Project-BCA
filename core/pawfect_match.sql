@@ -101,7 +101,6 @@ CREATE TABLE adoption_centers (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- 6. VOLUNTEERS TABLE
 CREATE TABLE volunteers (
     volunteer_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -112,6 +111,11 @@ CREATE TABLE volunteers (
     remarks TEXT,
     assigned_center_id INT DEFAULT NULL,
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   address_line1 VARCHAR(255),
+    address_line2 VARCHAR(255),
+    city VARCHAR(100),
+    province VARCHAR(100),
+    postal_code VARCHAR(20),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (assigned_center_id) REFERENCES adoption_centers(center_id) ON DELETE SET NULL
 );

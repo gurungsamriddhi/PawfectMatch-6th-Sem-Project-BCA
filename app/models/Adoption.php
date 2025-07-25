@@ -21,7 +21,7 @@ class Adoption {
         }
         return $requests;
     }
-
+//approve request posted by admin in admin dashboard and by adoption center in adoption center respectively
     public static function getAllRequests() {
         $db = new Database();
         $conn = $db->connect();
