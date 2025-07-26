@@ -32,6 +32,7 @@ $routes = [
     'donate' => ['DonateController', 'donate'],
     'user_dashboard' => ['UserController', 'dashboard'],
     'user_profile' => ['UserController', 'user_profile'],
+    'update_profile' => ['UserController', 'update_profile'],
     'user_saved_pets' => ['UserController', 'user_saved_pets'],
     'user_adoption_requests' => ['UserController', 'user_adoption_requests'],
     'user_donations' => ['UserController', 'user_donations'],
