@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
 <!-- Main Content -->
 <div class="body-wrapper w-100">
     <!-- Header -->
@@ -14,7 +14,7 @@
     <!-- Content -->
     <div class="container-fluid py-4">
         <div class="top-actions">
-            <div class="filter-group">
+            <!-- <div class="filter-group">
                 <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by msgname:</label>
                 <select class="filter" id="typeFilter" onchange="filterByType(this)">
                     <option value="All">All</option>
@@ -23,7 +23,7 @@
                     <option value="Chitwan">Chitwan</option>
                     <option value="Tanahun">Tanahun</option>
                 </select>
-            </div>
+            </div> -->
         </div>
         <div class="table-responsive">
             <table class="table view-table" id="msgTable">
@@ -118,5 +118,5 @@
                     </form>
                 </div>
             </div>
-            <?php include 'app/views/partials/admin_footer.php'; ?>
+            <?php include 'app/views/admin/adminpartials/admin_footer.php'; ?>
             <script src="public/assets/js/contact_messages.js"></script>

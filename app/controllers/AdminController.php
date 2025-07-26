@@ -6,15 +6,17 @@ require_once __DIR__ . '/../models/Pet.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Contact.php';
 require_once __DIR__ . '/../models/Volunteer.php';
+require_once __DIR__ . '/../models/Adoption.php';
 
 class AdminController
 {
     private $adminModel;
     private $petModel;
     private $userModel;
-    private $contactModel; 
+    private $contactModel;
     private $adoptionCenterModel;
     private $volunteerModel;
+    private $AdoptionModel;
 
     public function __construct()
     {
@@ -28,7 +30,8 @@ class AdminController
         $this->userModel = new User($conn);
         $this->contactModel = new Contact($conn);
         $this->adoptionCenterModel = new AdoptionCenter($conn);
-        $this->volunteerModel =new Volunteer($conn);
+        $this->volunteerModel = new Volunteer($conn);
+        $this->AdoptionModel = new Adoption($conn);
     }
 
     private function loadAdminView($filename, $data = [])
@@ -387,6 +390,71 @@ class AdminController
         $this->loadAdminView('userManagement.php', ['users' => $users]);
     }
 
+    public function user_view()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id = $_POST['user_id'] ?? null;
+
+            if ($user_id) {
+                $user = $this->userModel->findUserById($user_id);
+
+                if ($user) {
+                    // Load the modal view and pass the $user data
+                    include 'app/views/admin/adminpartials/user_view.php';
+                    exit; // Important if returning modal via AJAX
+                } else {
+                    echo "User not found.";
+                }
+            } else {
+                echo "Invalid user ID.";
+            }
+        } else {
+            echo "Invalid request.";
+        }
+    }
+
+    public function user_delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id = $_POST['user_id'];
+
+            if ($this->userModel->softDeleteUser($user_id)) {
+                echo '<div class="alert alert-success">User deleted successfully</div>';
+            } else {
+                echo '<div class="alert alert-danger">Failed to delete user</div>';
+            }
+        }
+    }
+    // public function user_suspend()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $userId = $_POST['user_id'];
+    //         $action = $_POST['action'];
+
+    //         if ($action === 'suspend') {
+    //             $status = 'suspended';
+    //         } elseif ($action === 'unsuspend') {
+    //             $status = 'active';
+    //         } else {
+    //             echo '<div class="alert alert-danger">Invalid action.</div>';
+    //             return;
+    //         }
+
+    //         $result = $this->userModel->updateStatus($userId, $status);
+
+    //         if ($result) {
+    //             echo '<div class="alert alert-success">User status updated.</div>';
+    //         } else {
+    //             echo '<div class="alert alert-danger">Failed to update status.</div>';
+    //         }
+    //     }
+    // }
+
+
+
+
+
+
 
     public function fetch_center_details()
     {
@@ -399,7 +467,7 @@ class AdminController
                     echo "No data for this center";
                     exit;
                 }
-                include 'app/views/partials/center_details_modal.php';
+                include 'app/views/admin/adminpartials/center_details_modal.php';
             } else {
                 echo "<p class='text-danger'>No details found.</p>";
             }
@@ -413,7 +481,7 @@ class AdminController
             if ($user_id) {
                 $user = $this->adoptionCenterModel->getAdoptionCenterUserById($user_id);
                 if ($user) {
-                    include 'app/views/partials/edit_center_modal.php';
+                    include 'app/views/admin/adminpartials/edit_center_modal.php';
                     return;
                 }
             }
@@ -506,7 +574,6 @@ class AdminController
     {
         $messages = $this->contactModel->getAllMessages();
         $this->loadAdminView('contact_messages.php', ['messages' => $messages]);
-
     }
 
     public function sendContactReply()
@@ -550,14 +617,47 @@ class AdminController
     }
 
     //Volunteer View Requests
-    public function viewVolunteerRequests(){
-        $requests =$this->volunteerModel->getAllRequests(); 
-        $this->loadAdminView('volunteer_management.php' , ['requests'=>$requests]);
+    public function viewVolunteerRequests()
+    {
+        $requests = $this->volunteerModel->getAllRequests();
+        $this->loadAdminView('volunteer_management.php', ['requests' => $requests]);
     }
+
+    //view all the adoption request for the pets added by the admin
     public function showAdoptionRequests()
     {
-        require_once __DIR__ . '/../models/Adoption.php';
-        $forms = Adoption::getAllForms();
+
+        $forms = $this->AdoptionModel->getAllForms();
         $this->loadAdminView('adoption_request.php', ['forms' => $forms]);
     }
+
+    // public function adoptionRequestAction()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $requestId = (int) $_POST['request_id'];
+    //         $action = $_POST['action']; // 'approve' or 'reject'
+
+    //         $status = $action === 'approve' ? 'approved' : 'rejected';
+
+    //         $this->loadModel('Adoption'); // make sure this is correct
+    //         $requestDetails = $this->AdoptionModel->getAdoptionRequestById($requestId);
+
+    //         if ($requestDetails) {
+    //             // Update status in DB
+    //             $this->AdoptionModel->updateAdoptionRequestStatus($requestId, $status);
+
+    //             // Send email
+    //             $subject = "Adoption Request " . ucfirst($status);
+    //             $message = "Dear {$requestDetails['name']},<br>Your adoption request for <strong>{$requestDetails['pet_name']}</strong> has been <strong>$status</strong>.<br><br>Thank you!";
+
+    //             $this->loadHelper('Mailer');
+    //             $mailer = new Mailer();
+    //             $mailer->sendMail($requestDetails['email'], $subject, $message);
+
+    //             echo 'success';
+    //         } else {
+    //             echo 'not_found';
+    //         }
+    //     }
+    // }
 }

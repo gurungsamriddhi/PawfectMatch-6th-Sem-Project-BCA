@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
 <!-- Main Content -->
 <div class="body-wrapper w-100">
     <!-- Header -->
@@ -175,5 +175,5 @@
 
 
 
-        <?php include 'app/views/partials/admin_footer.php'; ?>
+        <?php include 'app/views/admin/adminpartials/admin_footer.php'; ?>
         <script src="public/assets/js/center_management.js"></script>

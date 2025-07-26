@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
 <style>
 .adoption-card {
   background: #fff;
@@ -229,4 +229,4 @@ function showAdoptionDetails(form) {
   document.getElementById('adoptionDetailsBody').innerHTML = html;
 }
 </script>
-<?php include 'app/views/partials/admin_footer.php'; ?> 
+<?php include 'app/views/admin/adminpartials/admin_footer.php'; ?> 

@@ -88,6 +88,12 @@ $routes = [
     'admin/contact_messages' => ['AdminController', 'showContactMessages', 'admin_auth'],
     'admin/send_contact_reply' => ['AdminController', 'sendContactReply', 'admin_auth'],
     'admin/adoption_request' => ['AdminController', 'showAdoptionRequests', 'admin_auth'],
+    'admin/user_view' => ['AdminController', 'user_view', 'admin_auth'],
+    'admin/user_suspend' => ['AdminController', 'user_suspend', 'admin_auth'],
+    'admin/user_delete' => ['AdminController', 'user_delete', 'admin_auth'],
+    'admin/update_adoption_status' => ['AdminController', 'updateAdoptionStatus', 'admin_auth'],
+
+
 
     // Center Routes
     'adoptioncenter/center_login' => ['CenterController', 'showLoginForm'],
