@@ -91,15 +91,15 @@ unset(
 					<li class="nav-item <?= ($current_page == 'browse') ? 'active' : '' ?>">
 						<a class="nav-link" href="index.php?page=browse">Browse</a>
 					</li>
-				<ul class="navbar-nav custom-navbar-nav ms-auto">
                     <li class="nav-item dropdown <?= ($current_page == 'donate' || $current_page == 'volunteer') ? 'active' : '' ?>">
-                       <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Services</a>
-					   <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                       <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" onclick="toggleServicesDropdown(event)">
+                         Services
+                       </a>
+					   <ul class="dropdown-menu" id="servicesDropdownMenu" aria-labelledby="servicesDropdown" style="display: none;">
 						<li><a class="dropdown-item <?= ($current_page == 'donate') ? 'active' : '' ?>" href="index.php?page=donate">Donation</a></li>
 						<li><a class="dropdown-item <?= ($current_page == 'volunteer') ? 'active' : '' ?>" href="index.php?page=volunteer">Volunteer</a></li>
 					   </ul>
 				    </li>
-				</ul>
                     <li class="nav-item <?= ($current_page == 'adoptionprocess') ? 'active' : '' ?>">
 						<a class="nav-link" href="index.php?page=adoptionprocess">Adoption Process</a>
 					</li>
@@ -366,7 +366,25 @@ function toggleUserDropdown(event) {
     // Toggle current dropdown
     dropdownMenu.style.display = isVisible ? 'none' : 'block';
     
-    console.log('Dropdown toggled, visible:', !isVisible);
+    console.log('User dropdown toggled, visible:', !isVisible);
+}
+
+function toggleServicesDropdown(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const dropdownMenu = document.getElementById('servicesDropdownMenu');
+    const isVisible = dropdownMenu.style.display === 'block';
+    
+    // Close all other dropdowns first
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.style.display = 'none';
+    });
+    
+    // Toggle current dropdown
+    dropdownMenu.style.display = isVisible ? 'none' : 'block';
+    
+    console.log('Services dropdown toggled, visible:', !isVisible);
 }
 
 function confirmLogout(event) {
@@ -383,20 +401,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
-        const dropdownMenu = document.getElementById('userDropdownMenu');
+        const userDropdownMenu = document.getElementById('userDropdownMenu');
         const userDropdown = document.getElementById('userDropdown');
+        const servicesDropdownMenu = document.getElementById('servicesDropdownMenu');
+        const servicesDropdown = document.getElementById('servicesDropdown');
         
-        if (dropdownMenu && !userDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.style.display = 'none';
+        // Close user dropdown if clicking outside
+        if (userDropdownMenu && !userDropdown.contains(event.target) && !userDropdownMenu.contains(event.target)) {
+            userDropdownMenu.style.display = 'none';
+        }
+        
+        // Close services dropdown if clicking outside
+        if (servicesDropdownMenu && !servicesDropdown.contains(event.target) && !servicesDropdownMenu.contains(event.target)) {
+            servicesDropdownMenu.style.display = 'none';
         }
     });
     
     // Close dropdown when pressing Escape
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
-            const dropdownMenu = document.getElementById('userDropdownMenu');
-            if (dropdownMenu) {
-                dropdownMenu.style.display = 'none';
+            const userDropdownMenu = document.getElementById('userDropdownMenu');
+            const servicesDropdownMenu = document.getElementById('servicesDropdownMenu');
+            
+            if (userDropdownMenu) {
+                userDropdownMenu.style.display = 'none';
+            }
+            if (servicesDropdownMenu) {
+                servicesDropdownMenu.style.display = 'none';
             }
         }
     });
