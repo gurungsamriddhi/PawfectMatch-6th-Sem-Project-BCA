@@ -7,7 +7,27 @@ class Volunteer
     {
         $this->conn = $conn;
     }
-     public function findVolunteerById($volunteer_id)
+    //checks whether the user has already applied to be a volunteer and if so retrieves all their recent application
+    public function findVolunteerByUserId($user_id)
+    {
+        $query = "SELECT * FROM volunteers WHERE user_id = ? ORDER BY applied_at DESC LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 1) {
+            return $result->fetch_assoc();
+        } else {
+            return false;
+        }
+    }
+
+    public function findVolunteerById($volunteer_id)
     {
         $query = "
         SELECT 
@@ -91,21 +111,51 @@ class Volunteer
     public function getAllRequests()
     {
         $stmt = $this->conn->prepare("
-        SELECT v.*, u.name, u.email 
-        FROM volunteers v 
-        JOIN users u ON v.user_id = u.user_id 
+        SELECT v.*, u.name, u.email, ac.name AS assigned_center
+        FROM volunteers v
+        JOIN users u ON v.user_id = u.user_id
+        LEFT JOIN adoption_centers ac ON v.assigned_center_id = ac.center_id
         ORDER BY v.applied_at DESC
     ");
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function assignVolunteerToCenter($volunteer_id, $center_id)
-    {
-        $stmt = $this->conn->prepare("UPDATE volunteers SET status = 'assigned', assigned_center_id = ? WHERE volunteer_id = ?");
-        $stmt->bind_param("ii", $center_id, $volunteer_id);
-        $stmt->execute();
 
-        return $stmt->affected_rows > 0;
+    public function approveAndAssignVolunteer($volunteer_id, $center_id)
+    {
+        $query = "UPDATE volunteers SET status = 'assigned', assigned_center_id = ? WHERE volunteer_id = ?";
+        $stmt = $this->conn->prepare($query);
+        if (!$stmt) {
+            return false; // or throw exception
+        }
+        $stmt->bind_param("ii", $center_id, $volunteer_id);
+        return $stmt->execute();
+    }
+
+    public function rejectVolunteerRequest($volunteer_id)
+    {
+        $query = "UPDATE volunteers SET status = 'rejected' WHERE volunteer_id = ?";
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("i", $volunteer_id);
+        return $stmt->execute();
+    }
+
+    public function getVolunteersByCenter($centerId)
+    {
+        $query = "SELECT v.*, u.name, u.email 
+              FROM volunteers v 
+              JOIN users u ON v.user_id = u.user_id
+              WHERE v.assigned_center_id = ? AND v.status = 'assigned'";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $centerId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 }

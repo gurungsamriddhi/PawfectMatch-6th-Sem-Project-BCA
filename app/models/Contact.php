@@ -10,8 +10,9 @@ class Contact
         $this->conn = $conn;
     }
     //userId parameter optional
-public function saveMessage($name, $email, $message, $userId = null)
+    public function saveMessage($name, $email, $message, $userId = null)
     {
+         error_log("saveMessage called with userId: " . var_export($userId, true));
         if ($userId) {
             $stmt = $this->conn->prepare("INSERT INTO contact_messages (user_id, name, email, message) VALUES (?, ?, ?, ?)");
             $stmt->bind_param('isss', $userId, $name, $email, $message);
@@ -23,6 +24,7 @@ public function saveMessage($name, $email, $message, $userId = null)
         if ($stmt->execute()) {
             return true;
         }
+         error_log("MySQL error: " . $this->conn->error);
         return false;
     }
 

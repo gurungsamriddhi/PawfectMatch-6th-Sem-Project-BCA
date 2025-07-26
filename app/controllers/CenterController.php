@@ -497,6 +497,20 @@ class CenterController
         $this->loadCenterView('adoption_request.php');
     }
 
+    public function viewAssignedVolunteers()
+    {
+        $centerId = $_SESSION['center_id']; // from session after login
+
+        // Load model
+        $volunteerModel = new Volunteer($this->conn);
+
+        // Get assigned volunteers
+        $volunteers = $volunteerModel->getVolunteersByCenter($centerId);
+
+        // Load view
+       $this->loadCenterView('view_volunteers.php');
+    }
+   
     // public function approveRequest()
     // {
     //     $conn = $this->conn;

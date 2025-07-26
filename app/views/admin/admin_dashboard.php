@@ -67,7 +67,7 @@
               <div class="card-body">
                 <i class="fas fa-clock icon"></i>
                 <div class="number"><?=htmlspecialchars($stats['pending_Requests'])?></div>
-                <div class="label">Pending Requests</div>
+                <div class="label">Adoption Requests</div>
               </div>
             </div>
           </div>

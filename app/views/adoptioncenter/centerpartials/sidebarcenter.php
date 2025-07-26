@@ -58,6 +58,11 @@
                   </a>
                 </li>
               </ul>
+            <li class="sidebar-item">
+              <a href="index.php?page=adoptioncenter/view_volunteers" class="sidebar-link">
+                <i class="fas fa-user me-2"></i> View Volunteers
+              </a>
+            </li>
             </li>
 
 

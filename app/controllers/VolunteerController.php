@@ -35,6 +35,8 @@ class VolunteerController
 
         $errors = [];
 
+
+
         if (empty($contact_number)) {
             $errors['contact_number'] = "Contact number is required.";
         } elseif (!preg_match('/^9\d{9}$/', $contact_number)) {
@@ -102,20 +104,36 @@ class VolunteerController
             header('Location: index.php?page=volunteer');
             exit();
         }
+        
+        // ✅ NOW CHECK EXISTING VOLUNTEER APPLICATION
+        $existing = $this->volunteerModel->findVolunteerByUserId($user_id);
+        if ($existing) {
+            if ($existing['status'] === 'assigned') {
+                $_SESSION['volunteer_errors']['alreadyassigned'] = "You have already been assigned as a volunteer. Please check your email.";
+                header("Location: index.php?page=volunteer");
+                exit;
+            } elseif ($existing['status'] === 'pending') {
+                $_SESSION['volunteer_errors']['pending'] = "Your application is still pending. Please wait 2–3 days before resubmitting.";
+                header("Location: index.php?page=volunteer");
+                exit;
+            }
+        }
 
-       $availability_days_str = implode(',', $availability_days);
+        $availability_days_str = implode(',', $availability_days);
 
         // Delegate to model for DB insert
-        $success = $this->volunteerModel->addVolunteerRequest($user_id,
-         $contact_number,
-         $area,
-         $availability_days_str,
-         $remarks,
-         $address_line1,
-         $address_line2,
-         $province,
-         $city,
-         $postal_code);
+        $success = $this->volunteerModel->addVolunteerRequest(
+            $user_id,
+            $contact_number,
+            $area,
+            $availability_days_str,
+            $remarks,
+            $address_line1,
+            $address_line2,
+            $province,
+            $city,
+            $postal_code
+        );
 
         if ($success) {
             $_SESSION['volunteer_success'] = "Your volunteer application has been submitted successfully. 

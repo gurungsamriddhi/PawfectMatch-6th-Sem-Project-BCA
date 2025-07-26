@@ -148,7 +148,7 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
 
     <!-- Volunteer Registration Form -->
 
-    <section id="volunteerForm" class="py-5 bg-light">
+    <section id="volunteerForm" class="py-5 bg-light" >
         <div class="container">
             <h3 class="mb-4 text-center fw-bold">Volunteer With Us</h3>
 
@@ -156,7 +156,15 @@ unset($_SESSION['volunteer_errors'], $_SESSION['volunteer_old'], $_SESSION['volu
                 <div class="alert alert-danger"><?= htmlspecialchars($volunteer_errors['general']) ?></div>
             <?php endif; ?>
 
-            <?php if (!empty($volunteer_errors)): ?>
+            <?php if (!empty($volunteer_errors['alreadyassigned'])): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($volunteer_errors['alreadyassigned']) ?></div>
+            <?php endif; ?>
+
+            <?php if (!empty($volunteer_errors['pending'])): ?>
+                <div class="alert alert-warning"><?= htmlspecialchars($volunteer_errors['pending']) ?></div>
+            <?php endif; ?>
+
+            <?php if (!empty($volunteer_errors) && empty($volunteer_errors['alreadyassigned']) && empty($volunteer_errors['pending'])): ?>
                 <div class="alert alert-danger">
                     Please fix the errors below and try again.
                 </div>

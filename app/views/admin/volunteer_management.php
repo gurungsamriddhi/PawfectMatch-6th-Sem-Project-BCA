@@ -88,14 +88,14 @@
                                         class="edit-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#assignApproveModal"
-                                        data-volunteer_id="<?= $request['volunteer_id'] ?>">
+                                        data-requestid="<?= $request['volunteer_id'] ?>">
                                         Approve & Assign
                                     </button>
 
                                     <!-- Reject -->
                                     <button type="button"
                                         class="delete-btn"
-                                        data-volunteer_id="<?= $request['volunteer_id'] ?>">
+                                        data-requestid="<?= $request['volunteer_id'] ?>">
                                         Reject
                                     </button>
                                 <?php endif; ?>
@@ -137,7 +137,7 @@
                             <select id="center_id" class="form-select" name="center_id" required>
                                 <option value="">-- Select Center --</option>
                                 <?php foreach ($centers as $center): ?>
-                                    <option value="<?= htmlspecialchars($center['user_id']) ?>">
+                                    <option value="<?= htmlspecialchars($center['center_id']) ?>">
                                         <?= htmlspecialchars($center['name']) ?> - <?= htmlspecialchars($center['email']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -145,12 +145,32 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <div id="assignApproveMessage" class="mb-3"></div>
                         <button type="submit" class="btn btn-success">Approve & Assign</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+<!-- Reject Confirmation Modal -->
+<div class="modal fade" id="rejectConfirmModal" tabindex="-1" aria-labelledby="rejectConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rejectConfirmModalLabel">Confirm Reject</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to reject this volunteer request?
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="confirmRejectBtn" class="btn btn-danger">Reject</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 </div>
@@ -159,4 +179,4 @@
 
 
 <?php include 'app/views/admin/adminpartials/admin_footer.php'; ?>
-<script src="public/assets/js/request_management.js"></script>
+<script src="public/assets/js/volunteerrequest_management.js"></script>

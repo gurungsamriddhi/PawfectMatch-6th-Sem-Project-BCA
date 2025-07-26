@@ -40,10 +40,19 @@
                 </thead>
                 <tbody>
                     <?php foreach ($messages as $msg): ?>
+                        <?php
+                        $maxLength = 20; // max chars for preview
+                        $fullMessage = $msg['message'];
+                        $previewMessage = (strlen($fullMessage) > $maxLength)
+                            ? substr($fullMessage, 0, $maxLength) . '...'
+                            : $fullMessage;
+                        ?>
                         <tr>
                             <td><?= htmlspecialchars($msg['name']) ?></td>
                             <td><?= htmlspecialchars($msg['email']) ?></td>
-                            <td><?= nl2br(htmlspecialchars($msg['message'])) ?></td>
+                            <td title="<?= htmlspecialchars($fullMessage) ?>">
+                                <?= nl2br(htmlspecialchars($previewMessage)) ?>
+                            </td>
                             <td>
                                 <?php if ($msg['is_verified'] == 1): ?>
                                     <span class="status-badge status-active">Verified</span>
@@ -70,7 +79,7 @@
                                         data-message-id="<?= $msg['message_id'] ?>"
                                         data-name="<?= htmlspecialchars($msg['name'], ENT_QUOTES) ?>"
                                         data-email="<?= htmlspecialchars($msg['email'], ENT_QUOTES) ?>"
-                                        data-message="<?= htmlspecialchars($msg['message'], ENT_QUOTES) ?>"
+                                        data-message="<?= htmlspecialchars($fullMessage, ENT_QUOTES) ?>"
                                         data-is-verified="<?= $msg['is_verified'] ?>">
                                         Reply
                                     </button>

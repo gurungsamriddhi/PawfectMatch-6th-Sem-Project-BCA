@@ -7,6 +7,7 @@ require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Contact.php';
 require_once __DIR__ . '/../models/Volunteer.php';
 require_once __DIR__ . '/../models/Adoption.php';
+require_once __DIR__ . '/../../mail/sendMail.php';
 
 class AdminController
 {
@@ -620,33 +621,12 @@ class AdminController
     public function viewVolunteerRequests()
     {
         $requests = $this->volunteerModel->getAllRequests();
-        $centers = $this->adoptionCenterModel->getAllAdoptionCenterUsers();
+        $centers = $this->adoptionCenterModel->getAllCentersWithUserInfo();
 
         $this->loadAdminView('volunteer_management.php', ['requests' => $requests, 'centers' => $centers]);
     }
 
-    public function approveAndAssignVolunteer()
-    {
-        // Get POST data safely
-        $volunteer_id = $_POST['volunteer_id'] ?? null;
-        $center_id = $_POST['center_id'] ?? null;
 
-        if (!$volunteer_id || !$center_id) {
-            echo json_encode(['success' => false, 'message' => 'Missing data']);
-            return;
-        }
-
-        // Update volunteer status and assign center
-        $result = $this->volunteerModel->assignVolunteerToCenter($volunteer_id, $center_id);
-
-        if ($result) {
-            // Optional: send email notification here (explained below)
-
-            echo json_encode(['success' => true, 'message' => 'Volunteer approved and assigned successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to assign volunteer']);
-        }
-    }
 
 
     //view all the adoption request for the pets added by the admin
@@ -690,10 +670,10 @@ class AdminController
     {
         $volunteer_id = $_POST['volunteer_id'] ?? null;  // use POST here
 
-        // if (!$volunteer_id || !is_numeric($volunteer_id)) {
-        //     echo "Invalid user ID.";
-        //     return;
-        // }
+        if (!$volunteer_id || !is_numeric($volunteer_id)) {
+            echo "Invalid user ID.";
+            return;
+        }
 
         $volunteer = $this->volunteerModel->findVolunteerById((int)$volunteer_id);
 
@@ -703,4 +683,127 @@ class AdminController
             echo "No volunteer data found.";
         }
     }
+
+    public function approve_and_assign_volunteer()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $volunteer_id = $_POST['volunteer_id'] ?? null;
+            $center_id = $_POST['center_id'] ?? null;
+
+            if (!$volunteer_id || !$center_id) {
+                echo json_encode(['success' => false, 'message' => 'Missing required data.']);
+                exit;
+            }
+
+            // Instead of calling getCenterIdByUserId, just check center exists with getAdoptionCenterDetailsByCenterId
+            $centerExists = $this->adoptionCenterModel->getAdoptionCenterDetailsByCenterId($center_id);
+            if (!$centerExists) {
+                echo json_encode(['success' => false, 'message' => 'Invalid adoption center selected.']);
+                exit;
+            }
+
+            // Step 2: Update volunteer with center_id (assigned_center_id)
+            $success = $this->volunteerModel->approveAndAssignVolunteer($volunteer_id, $center_id);
+            if (!$success) {
+                echo json_encode(['success' => false, 'message' => 'Failed to assign volunteer.']);
+                exit;
+            }
+
+            // Step 3: Get data for email
+            $volunteer = $this->volunteerModel->findVolunteerById($volunteer_id);
+            $center = $this->adoptionCenterModel->getAdoptionCenterDetailsByCenterId($center_id);
+
+            if (!$volunteer || !$center) {
+                echo json_encode(['success' => true, 'message' => 'Volunteer assigned, but failed to fetch email info.']);
+                exit;
+            }
+
+            // Step 4: Send email
+            $volunteerName = htmlspecialchars($volunteer['name'] ?? '');
+            $volunteerEmail = $volunteer['email'] ?? ''; // Use raw here for sending mail
+            $centerName = htmlspecialchars($center['name'] ?? '');
+            $centerEmail = htmlspecialchars($center['user_email'] ?? '');
+            $centerPhone = htmlspecialchars($center['phone'] ?? 'N/A');
+
+            $subject = "Volunteer Assignment Notification - Pawfect Match";
+            $body = "
+    Dear {$volunteerName},<br><br>
+    Congratulations! You have been assigned as a volunteer to the adoption center '<strong>{$centerName}</strong>'.<br><br>
+    Please contact them for further details:<br>
+    Email: {$centerEmail}<br>
+    Phone: {$centerPhone}<br><br>
+    Thank you for your support!<br><br>
+    Regards,<br>
+    Pawfect Match Team
+";
+
+            $mailer = new Mailer();
+            $mailResult = $mailer->sendMail($volunteerEmail, $subject, $body, $volunteerName);
+            if ($mailResult === true) {
+                echo json_encode(['success' => true, 'message' => 'Volunteer approved and assigned. Notification email sent.']);
+            } else {
+                error_log("Mail sending error: $mailResult");
+                echo json_encode(['success' => true, 'message' => 'Volunteer assigned, but email sending failed: ' . $mailResult]);
+            }
+        } else {
+            // Not a POST request
+            echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+        }
+    }
+
+    public function reject_volunteer_request()
+{
+    header('Content-Type: application/json');
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $volunteer_id = $_POST['volunteer_id'] ?? null;
+
+        if (!$volunteer_id) {
+            echo json_encode(['success' => false, 'message' => 'Missing volunteer ID.']);
+            exit;
+        }
+
+        // Step 1: Reject the volunteer request (update status in DB)
+        $success = $this->volunteerModel->rejectVolunteerRequest($volunteer_id);
+        if (!$success) {
+            echo json_encode(['success' => false, 'message' => 'Failed to reject volunteer request.']);
+            exit;
+        }
+
+        // Step 2: Fetch volunteer details for email
+        $volunteer = $this->volunteerModel->findVolunteerById($volunteer_id);
+        if (!$volunteer) {
+            echo json_encode(['success' => true, 'message' => 'Volunteer rejected but could not find volunteer details for email.']);
+            exit;
+        }
+
+        // Step 3: Send rejection email
+        $volunteerName = htmlspecialchars($volunteer['name'] ?? '');
+        $volunteerEmail = $volunteer['email'] ?? '';
+
+        $subject = "Volunteer Request Rejected - Pawfect Match";
+        $body = "
+            Dear {$volunteerName},<br><br>
+            We regret to inform you that your volunteer request has been rejected.<br><br>
+            Thank you for your interest and support.<br><br>
+            Regards,<br>
+            Pawfect Match Team
+        ";
+
+        $mailer = new Mailer();
+        $mailResult = $mailer->sendMail($volunteerEmail, $subject, $body, $volunteerName);
+
+        if ($mailResult === true) {
+            echo json_encode(['success' => true, 'message' => 'Volunteer request rejected and notification email sent.']);
+        } else {
+            echo json_encode(['success' => true, 'message' => 'Volunteer request rejected but email failed: ' . $mailResult]);
+        }
+    } else {
+        // Invalid request method
+        echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    }
 }
+
+        }

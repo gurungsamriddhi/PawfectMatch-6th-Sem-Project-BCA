@@ -9,7 +9,7 @@ require_once 'app/controllers/HomeController.php';
 require_once 'app/controllers/PetController.php';
 require_once 'app/controllers/UserController.php';
 require_once 'app/controllers/AdminController.php';
-require_once 'app/controllers/DonateController.php';
+require_once 'app/controllers/DonationController.php';
 require_once 'app/controllers/CenterController.php';
 require_once 'app/controllers/ContactController.php';
 require_once 'app/controllers/VolunteerController.php';
@@ -29,12 +29,11 @@ $routes = [
     'petdetails' => ['PetController', 'showpetdetails'],
     'login' => ['UserController', 'Login'],
     'register' => ['UserController', 'Register'],
-    'donate' => ['DonateController', 'donate'],
+    'donate' => ['DonationController', 'donateForm'],
 
-    // Logout route as a closure
     'logout' => function () {
         $wasAdmin = !empty($_SESSION['admin']);
-        $wasCenter = !empty($_SESSION['adoptioncenter']);
+        $wasCenter = !empty($_SESSION['center']);
 
         // Destroy session
         session_unset();
@@ -98,6 +97,8 @@ $routes = [
     'admin/user_delete' => ['AdminController', 'user_delete', 'admin_auth'],
     'admin/update_adoption_status' => ['AdminController', 'updateAdoptionStatus', 'admin_auth'],
     'admin/volunteer_view' => ['AdminController', 'volunteer_view', 'admin_auth'],
+    'admin/approve_and_assign_volunteer' => ['AdminController', 'approve_and_assign_volunteer', 'admin_auth'],
+    'admin/reject_volunteer_request'=> ['AdminController', 'reject_volunteer_request', 'admin_auth'],   
 
 
 
@@ -119,6 +120,7 @@ $routes = [
     'adoptioncenter/deletepet' => ['CenterController', 'deletepet', 'center_auth'],
     'adoptioncenter/adoption_request' => ['CenterController', 'adoption_request', 'center_auth'],
     'adoptioncenter/feedback' => ['CenterController', 'feedback', 'center_auth'],
+    'adoptioncenter/view_volunteers' => ['CenterController', 'viewAssignedVolunteers', 'center_auth'],
 ];
 
 // 4. Get current page requested
@@ -138,16 +140,18 @@ if (isset($routes[$page])) {
     // Else it's [Controller, Method, Middleware?]
     list($controller, $method, $middleware) = array_pad($route, 3, null);
 
-    // Middleware checks
+    // Check middleware
     if ($middleware === 'admin_auth' && empty($_SESSION['admin'])) {
-        header('Location: index.php?page=admin/admin_login');
-        exit();
+        header("Location: index.php?page=admin/admin_login");
+        exit;
     }
 
     if ($middleware === 'center_auth' && empty($_SESSION['adoptioncenter'])) {
-        header('Location: index.php?page=adoptioncenter/center_login');
-        exit();
+        header("Location: index.php?page=adoptioncenter/center_login");
+        exit;
     }
+
+
 
     // Instantiate controller and call method
     (new $controller)->$method();
