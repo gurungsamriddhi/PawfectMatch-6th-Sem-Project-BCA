@@ -1,5 +1,5 @@
 
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
  <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->
@@ -67,7 +67,7 @@
               <div class="card-body">
                 <i class="fas fa-clock icon"></i>
                 <div class="number"><?=htmlspecialchars($stats['pending_Requests'])?></div>
-                <div class="label">Pending Requests</div>
+                <div class="label">Adoption Requests</div>
               </div>
             </div>
           </div>
@@ -88,11 +88,11 @@
                 <a href="index.php?page=admin/contact_messages" class="action-btn">
                   <i class="fas fa-envelope"></i>View Messages
                 </a>
-                <a href="#" class="action-btn">
+                <a href="index.php?page=admin/volunteer_management" class="action-btn">
                   <i class="fas fa-user-check"></i>Approve Volunteers
                 </a>
-                <a href="report.php" class="action-btn">
-                  <i class="fas fa-chart-bar"></i>View Reports
+                <a href="index.php?page=admin/PetManagement" class="action-btn">
+                  <i class="fas fa-chart-bar"></i>View Pets
                 </a>
                 <a href="donation.php" class="action-btn">
                   <i class="fas fa-donate"></i>Donation
@@ -104,5 +104,5 @@
       </div>
     </div>
   </div>
-<?php include 'app/views/partials/admin_footer.php'; ?>
+<?php include 'app/views/admin/adminpartials/admin_footer.php'; ?>
 

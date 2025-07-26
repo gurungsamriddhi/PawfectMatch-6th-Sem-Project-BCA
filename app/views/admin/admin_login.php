@@ -53,7 +53,7 @@ unset($_SESSION['adminlogin_errors']);
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label fw-semibold">Password</label>
+                    <label for="adminPassword" class="form-label fw-semibold">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         <input type="password"
@@ -68,7 +68,7 @@ unset($_SESSION['adminlogin_errors']);
                     </div>
                     <div class="form-check mb-3 mt-3">
                         <input type="checkbox" class="form-check-input" id="showAdminPasswordCheck" />
-                        <label for="showAdminPasswordCheck" class="form-check-label">Show Passwords</label>
+                        <label for="showAdminPasswordCheck" class="form-check-label">Show Password</label>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-success w-100 fw-semibold">Login</button>

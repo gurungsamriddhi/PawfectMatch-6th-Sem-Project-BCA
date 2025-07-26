@@ -1,8 +1,8 @@
 <?php include 'app/views/partials/header.php'; ?>
 
 <!-- Hero Section -->
-<section class="text-white d-flex align-items-center" style="height: 100vh; background: linear-gradient(rgb(56, 94, 80), #436c5d); overflow: hidden;">
-  <div class="container h-100">
+<section class="text-white d-flex align-items-center" style="height: 60vh; background: linear-gradient(rgb(56, 94, 80), #436c5d); overflow: hidden;">
+  <div class="container ">
     <div class="row align-items-center h-100">
       <!-- Left side: Text -->
       <div class="col-md-6 text-start">

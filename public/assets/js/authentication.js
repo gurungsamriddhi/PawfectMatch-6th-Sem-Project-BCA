@@ -1,58 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('registerForm');
-  const showPasswordCheck = document.getElementById('showPasswordCheck');
-//register form checkbox and password comparison
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      const password = document.getElementById('passwordReg')?.value.trim();
-      const confirmPassword = document.getElementById('confirmPasswordReg')?.value.trim();
-      const mismatchMessage = document.getElementById('passwordMismatch');
 
-      // Reset previous error
-      if (mismatchMessage) mismatchMessage.style.display = 'none';
-
-      // Validate password match
-      if (password !== confirmPassword) {
-        e.preventDefault();
-        if (mismatchMessage) mismatchMessage.style.display = 'block';
-      }
-    });
-
+  // 🔁 Reusable function for clearing invalid input feedback
+  function setupInputValidationCleanup(form) {
+    if (!form) return;
     const inputs = form.querySelectorAll('input');
-
     inputs.forEach(input => {
-      input.addEventListener('input', () => {
-        if (input.classList.contains('is-invalid')) {
-          input.classList.remove('is-invalid');//remove red border or error style
-          const feedback = input.nextElementSibling;
-          if (feedback && feedback.classList.contains('invalid-feedback')) {
-            feedback.style.display = 'none';// hide the error message
-          }
-        }
-      });
-    });
-  }
-
-  if (showPasswordCheck) {
-    showPasswordCheck.addEventListener('change', function () {
-      const passwordField = document.getElementById('passwordReg');
-      const confirmPasswordField = document.getElementById('confirmPasswordReg');
-
-      if (passwordField && confirmPasswordField) {
-        const type = this.checked ? 'text' : 'password'; //if checkbox checked, show password as text,else hide it
-        passwordField.type = type;
-        confirmPasswordField.type = type;
-      }
-    });
-  }
-
-
-  const loginForm = document.getElementById('loginForm');
-  const ShowLoginPasswordCheck = document.getElementById('ShowLoginPasswordCheck');
-
-  if (loginForm) {
-    const loginInputs = loginForm.querySelectorAll('input');
-    loginInputs.forEach(input => {
       input.addEventListener('input', () => {
         if (input.classList.contains('is-invalid')) {
           input.classList.remove('is-invalid');
@@ -65,40 +17,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (ShowLoginPasswordCheck) {
-    ShowLoginPasswordCheck.addEventListener('change', function () {
-      const loginPassword = document.getElementById('loginPassword');
-      if (loginPassword) {
-        loginPassword.type = this.checked ? 'text' : 'password';
+  // 🔁 Reusable function for password visibility toggle
+  function setupPasswordToggle(checkboxId, inputIds = []) {
+    const checkbox = document.getElementById(checkboxId);
+    if (!checkbox) return;
+
+    checkbox.addEventListener('change', function () {
+      inputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.type = this.checked ? 'text' : 'password';
+        }
+      });
+    });
+  }
+
+  // 👉 Register form setup
+  const registerForm = document.getElementById('registerForm');
+  setupInputValidationCleanup(registerForm);
+  setupPasswordToggle('showPasswordCheck', ['passwordReg', 'confirmPasswordReg']);
+
+  if (registerForm) {
+    registerForm.addEventListener('submit', function (e) {
+      const password = document.getElementById('passwordReg')?.value.trim();
+      const confirmPassword = document.getElementById('confirmPasswordReg')?.value.trim();
+      const mismatchMessage = document.getElementById('passwordMismatch');
+
+      if (mismatchMessage) mismatchMessage.style.display = 'none';
+
+      if (password !== confirmPassword) {
+        e.preventDefault();
+        if (mismatchMessage) mismatchMessage.style.display = 'block';
       }
     });
   }
 
-const adminLoginForm = document.getElementById('adminLoginForm');
-const showAdminPasswordCheck = document.getElementById('showAdminPasswordCheck');
+  //Login form setup
+  setupInputValidationCleanup(document.getElementById('loginForm'));
+  setupPasswordToggle('ShowLoginPasswordCheck', ['loginPassword']);
 
-if (adminLoginForm) {
-  const adminInputs = adminLoginForm.querySelectorAll('input');
-  adminInputs.forEach(input => {
-    input.addEventListener('input', () => {
-      if (input.classList.contains('is-invalid')) {
-        input.classList.remove('is-invalid');
-        const feedback = input.nextElementSibling;
-        if (feedback && feedback.classList.contains('invalid-feedback')) {
-          feedback.style.display = 'none';
-        }
-      }
-    });
-  });
-}
+  //Admin login form setup
+  setupInputValidationCleanup(document.getElementById('adminLoginForm'));
+  setupPasswordToggle('showAdminPasswordCheck', ['adminPassword']);
 
-if (showAdminPasswordCheck) {
-  showAdminPasswordCheck.addEventListener('change', function () {
-    const adminPassword = document.getElementById('adminPassword');
-    if (adminPassword) {
-      adminPassword.type = this.checked ? 'text' : 'password';
-    }
-  });
-}
-
+  // Adoption center login form setup
+  setupInputValidationCleanup(document.getElementById('centerLoginForm'));
+  setupPasswordToggle('showCenterPasswordCheck', ['centerPassword']);
 });

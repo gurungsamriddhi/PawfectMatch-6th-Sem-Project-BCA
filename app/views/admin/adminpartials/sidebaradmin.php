@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Animal Management - PawfectMatch</title>
@@ -8,12 +9,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="/PawfectMatch/public/assets/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-   <link rel="stylesheet" href="/PawfectMatch/public/assets/css/admin.css" />
-  
+  <link rel="stylesheet" href="/PawfectMatch/public/assets/css/admin.css" />
+
 </head>
+
 <body>
 
-<div class="page-wrapper d-flex">
+  <div class="page-wrapper d-flex">
     <!-- Sidebar -->
     <aside class="left-sidebar d-flex flex-column">
       <div class="brand-logo text-center py-3 sticky-top" style="z-index: 2;">
@@ -46,11 +48,11 @@
             <a href="index.php?page=admin/contact_messages" class="sidebar-link"><i class="fas fa-envelope-open-text me-2"></i>Contact Messages</a>
           </li>
           <li class="sidebar-item">
-            <a href="#" class="sidebar-link"><i class="fas fa-handshake me-2"></i>Volunteer Requests</a>
+            <a href="index.php?page=admin/volunteer_management" class="sidebar-link"><i class="fas fa-handshake me-2"></i>Volunteer Requests</a>
           </li>
-          <li class="sidebar-item">
+          <!-- <li class="sidebar-item">
             <a href="#" class="sidebar-link"><i class="fas fa-comment-dots me-2"></i>View Feedback</a>
-          </li>
+          </li> -->
           <li class="sidebar-item">
             <a href="donation.php" class="sidebar-link"><i class="fas fa-donate me-2"></i>Donation</a>
           </li>
@@ -62,21 +64,21 @@
         </ul>
       </nav>
     </aside>
-    
- <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header border-0">
-          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to log out?
-        </div>
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <a href="index.php?page=logout" class="btn btn-danger">Logout</a>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to log out?
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <a href="index.php?page=logout" class="btn btn-danger">Logout</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>

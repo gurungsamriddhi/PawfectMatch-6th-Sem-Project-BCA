@@ -1,0 +1,218 @@
+savePets() triggered
+Insert failed: Data truncated for column 'gender' at row 1
+savePets() called
+Insert failed
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Pet insert FAILED
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Insert failed
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Insert failed
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Insert failed again: 
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Insert failed again: 
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Execute failed: Data truncated for column 'gender' at row 1
+Insert failed again: 
+savePets() called
+Posted by center_id: 2
+No image uploaded or upload error
+Execute failed: Data truncated for column 'gender' at row 1
+Insert failed
+Updating Pet ID: 2
+Data: Array
+(
+    [name] => Buddy
+    [type] => Dog
+    [breed] => Golden Retriever
+    [gender] => Male
+    [age] => 3.5
+    [date_arrival] => 2025-07-10
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Excellent
+    [characteristics] => 
+    [description] => A very friendly dog.
+    [health_notes] => 
+    [adoption_center] => Hart Rescue Center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => adopted
+)
+Updating Pet ID: 4
+Data: Array
+(
+    [name] => Sunny
+    [type] => Rabbit
+    [breed] => Parakeet
+    [gender] => Male
+    [age] => 2
+    [date_arrival] => 2025-07-11
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Fair
+    [characteristics] => 
+    [description] => curious and friendly
+    [health_notes] => 
+    [adoption_center] => Hart Rescue Center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Adopted
+)
+Updating Pet ID: 4
+Data: Array
+(
+    [name] => Sunny
+    [type] => Rabbit
+    [breed] => Parakeet
+    [gender] => Male
+    [age] => 2
+    [date_arrival] => 2025-07-11
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Fair
+    [characteristics] => 
+    [description] => curious and friendly
+    [health_notes] => 
+    [adoption_center] => Hart Rescue Center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Adopted
+)
+Updating Pet ID: 4
+Data: Array
+(
+    [name] => Sunny
+    [type] => Rabbit
+    [breed] => Parakeet
+    [gender] => Male
+    [age] => 2
+    [date_arrival] => 2025-07-11
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Fair
+    [characteristics] => 
+    [description] => curious and friendly
+    [health_notes] => 
+    [adoption_center] => Hart Rescue Center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Adopted
+)
+Updating Pet ID: 4
+Data: Array
+(
+    [name] => Sunny
+    [type] => Rabbit
+    [breed] => Parakeet
+    [gender] => Male
+    [age] => 2
+    [date_arrival] => 2025-07-11
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Fair
+    [characteristics] => 
+    [description] => curious and friendly
+    [health_notes] => 
+    [adoption_center] => Hart Rescue Center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Adopted
+)
+Updating Pet ID: 5
+Data: Array
+(
+    [name] => Oreo
+    [type] => Dog
+    [breed] => Chocolate Labrador
+    [gender] => Female
+    [age] => 5
+    [date_arrival] => 2025-07-11
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Excellent
+    [characteristics] => 
+    [description] => happy
+    [health_notes] => 
+    [adoption_center] => Himalayan rescue center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Adopted
+)
+Updating Pet ID: 5
+Data: Array
+(
+    [name] => Oreo
+    [type] => Dog
+    [breed] => Chocolate Labrador
+    [gender] => Female
+    [age] => 5
+    [date_arrival] => 2025-07-11
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Excellent
+    [characteristics] => 
+    [description] => happy
+    [health_notes] => 
+    [adoption_center] => Himalayan rescue center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Available
+)
+Updating Pet ID: 2
+Data: Array
+(
+    [name] => Buddy
+    [type] => Dog
+    [breed] => Golden Retriever
+    [gender] => Male
+    [age] => 3.5
+    [date_arrival] => 2025-07-10
+    [size] => Medium
+    [weight] => 0
+    [color] => 
+    [health_status] => Excellent
+    [characteristics] => 
+    [description] => A very friendly dog.
+    [health_notes] => 
+    [adoption_center] => Hart Rescue Center
+    [contact_phone] => 
+    [contact_email] => 
+    [center_address] => 
+    [center_website] => 
+    [status] => Adopted
+)

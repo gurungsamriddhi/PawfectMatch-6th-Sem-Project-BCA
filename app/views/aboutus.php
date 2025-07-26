@@ -86,7 +86,7 @@
 	<!-- End Why Choose Us Section -->
 
 	<!-- Start Team Section -->
-<div class="co-section">
+	<div class="co-section">
 		<div class="container pt-5">
 			<div class="row mb-5">
 				<div class="col-lg-5 mx-auto text-center">
@@ -102,7 +102,7 @@
 				<!-- Start Column 1 -->
 				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
 					<img src="public/assets/images/person_1.jpg" class="img-fluid mb-5 br-20">
-					<h3 ><a href="#">Sony Gurung</a></h3>
+					<h3><a href="#">Sony Gurung</a></h3>
 					<span class="d-block position mb-4">Volunteer, Animal Care & Rescue</span>
 					<p>With a heart full of compassion, Sony leads rescue efforts and provides hands-on care to animals in crisis. Her calm presence helps frightened animals feel safe and loved.</p>
 					<p class="mb-0"><a href="#" class="more dark">Learn More <span class="icon-arrow_forward"></span></a></p>
@@ -113,10 +113,10 @@
 				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
 					<img src="public/assets/images/person_1.jpg" class="img-fluid mb-5 br-20">
 
-					<h3 ><a href="#">Jeremy Walker</a></h3>
-					<span class="d-block position mb-4">CEO, Founder, Atty.</span>
-					<p>Separated they live in.
-						Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+					<h3><a href="#">Manish Poudel</a></h3>
+					<span class="d-block position mb-4">Founder, Pawfect Match</span>
+					<p>Manish envisioned a better future for stray and abandoned animals across Nepal.
+						He founded Pawfect Match to create a bridge between loving homes and rescued pets.</p>
 					<p class="mb-0"><a href="#" class="more dark">Learn More <span class="icon-arrow_forward"></span></a></p>
 
 				</div>
@@ -125,10 +125,9 @@
 				<!-- Start Column 3 -->
 				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
 					<img src="public/assets/images/person_1.jpg" class="img-fluid mb-5 br-20">
-					<h3 ><a href="#">Patrik  White</a></h3>
-					<span class="d-block position mb-4">CEO, Founder, Atty.</span>
-					<p>Separated they live in.
-						Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+					<h3><a href="#">Kritika Karki</a></h3>
+					<span class="d-block position mb-4">Adoption Coordinator</span>
+					<p>Kritika works directly with adopters and centers to ensure a smooth and safe transition for every animal into a new, loving family.</p>
 					<p class="mb-0"><a href="#" class="more dark">Learn More <span class="icon-arrow_forward"></span></a></p>
 				</div>
 				<!-- End Column 3 -->
@@ -137,10 +136,10 @@
 				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
 					<img src="public/assets/images/person_1.jpg" class="img-fluid mb-5 br-20">
 
-					<h3 ><a href="#">Kathryn Ryan</a></h3>
-					<span class="d-block position mb-4">CEO, Founder, Atty.</span>
-					<p>Separated they live in.
-						Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+					<h3><a href="#">Pratik Shrestha</a></h3>
+					<span class="d-block position mb-4">Volunteer head</span>
+					<p>Pratik manages our network of dedicated volunteers across various provinces,
+						ensuring every pet gets the care and attention they deserve while waiting for their forever home..</p>
 					<p class="mb-0"><a href="#" class="more dark">Learn More <span class="icon-arrow_forward"></span></a></p>
 
 
@@ -151,108 +150,12 @@
 
 			</div>
 		</div>
-</div>
+	</div>
 	<!-- End Team Section -->
 
 
 
-	<!-- Start Testimonial Slider -->
-	<div class="testimonial-section before-footer-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 mx-auto text-center">
-					<h2 class="section-title">Testimonials</h2>
-				</div>
-			</div>
 
-			<div class="row justify-content-center">
-				<div class="col-lg-12">
-					<div class="testimonial-slider-wrap text-center">
-
-						<div id="testimonial-nav">
-							<span class="prev" data-controls="prev"><span class="fa fa-chevron-left"></span></span>
-							<span class="next" data-controls="next"><span class="fa fa-chevron-right"></span></span>
-						</div>
-
-						<div class="testimonial-slider">
-
-							<div class="item">
-								<div class="row justify-content-center">
-									<div class="col-lg-8 mx-auto">
-
-										<div class="testimonial-block text-center">
-											<blockquote class="mb-5">
-												<p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer convallis volutpat dui quis scelerisque.&rdquo;</p>
-											</blockquote>
-
-											<div class="author-info">
-												<div class="author-pic">
-													<img src="public/assets/images/person-1.png" alt="Maria Jones" class="img-fluid">
-												</div>
-												<h3 class="font-weight-bold">Maria Jones</h3>
-												<span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!-- END item -->
-
-							<div class="item">
-								<div class="row justify-content-center">
-									<div class="col-lg-8 mx-auto">
-
-										<div class="testimonial-block text-center">
-											<blockquote class="mb-5">
-												<p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer convallis volutpat dui quis scelerisque.&rdquo;</p>
-											</blockquote>
-
-											<div class="author-info">
-												<div class="author-pic">
-													<img src="public/assets/images/person-1.png" alt="Maria Jones" class="img-fluid">
-												</div>
-												<h3 class="font-weight-bold">Maria Jones</h3>
-												<span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!-- END item -->
-
-							<div class="item">
-								<div class="row justify-content-center">
-									<div class="col-lg-8 mx-auto">
-
-										<div class="testimonial-block text-center">
-											<blockquote class="mb-5">
-												<p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer convallis volutpat dui quis scelerisque.&rdquo;</p>
-											</blockquote>
-
-											<div class="author-info">
-												<div class="author-pic">
-													<img src="public/assets/images/person-1.png" alt="Maria Jones" class="img-fluid">
-												</div>
-												<h3 class="font-weight-bold">Maria Jones</h3>
-												<span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!-- END item -->
-
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Testimonial Slider -->
 
 </main>
 <?php include 'app/views/partials/footer.php'; ?>

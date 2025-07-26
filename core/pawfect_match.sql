@@ -101,7 +101,6 @@ CREATE TABLE adoption_centers (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- 6. VOLUNTEERS TABLE
 CREATE TABLE volunteers (
     volunteer_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -112,6 +111,11 @@ CREATE TABLE volunteers (
     remarks TEXT,
     assigned_center_id INT DEFAULT NULL,
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   address_line1 VARCHAR(255),
+    address_line2 VARCHAR(255),
+    city VARCHAR(100),
+    province VARCHAR(100),
+    postal_code VARCHAR(20),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (assigned_center_id) REFERENCES adoption_centers(center_id) ON DELETE SET NULL
 );
@@ -142,9 +146,11 @@ CREATE TABLE training_tips (
 -- 9. DONATIONS TABLE
 CREATE TABLE donations (
     donation_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    amount DECIMAL(10,2),
-    message TEXT,
+    user_id INT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NULL,
+    message TEXT NULL,
     donated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -166,11 +172,16 @@ CREATE TABLE contact_messages (
 
 
 
-
-
-
-
-
-
-
-
+CREATE TABLE adoptions (
+    adoption_id INT AUTO_INCREMENT PRIMARY KEY,
+    pet_id INT NOT NULL,
+    adopter_id INT NOT NULL,
+    adoption_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    remarks TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE,
+    FOREIGN KEY (adopter_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

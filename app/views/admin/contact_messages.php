@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
 <!-- Main Content -->
 <div class="body-wrapper w-100">
     <!-- Header -->
@@ -14,7 +14,7 @@
     <!-- Content -->
     <div class="container-fluid py-4">
         <div class="top-actions">
-            <div class="filter-group">
+            <!-- <div class="filter-group">
                 <label for="typeFilter"><i class="fa-solid fa-folder-open"></i> Filter by msgname:</label>
                 <select class="filter" id="typeFilter" onchange="filterByType(this)">
                     <option value="All">All</option>
@@ -23,7 +23,7 @@
                     <option value="Chitwan">Chitwan</option>
                     <option value="Tanahun">Tanahun</option>
                 </select>
-            </div>
+            </div> -->
         </div>
         <div class="table-responsive">
             <table class="table view-table" id="msgTable">
@@ -40,10 +40,19 @@
                 </thead>
                 <tbody>
                     <?php foreach ($messages as $msg): ?>
+                        <?php
+                        $maxLength = 20; // max chars for preview
+                        $fullMessage = $msg['message'];
+                        $previewMessage = (strlen($fullMessage) > $maxLength)
+                            ? substr($fullMessage, 0, $maxLength) . '...'
+                            : $fullMessage;
+                        ?>
                         <tr>
                             <td><?= htmlspecialchars($msg['name']) ?></td>
                             <td><?= htmlspecialchars($msg['email']) ?></td>
-                            <td><?= nl2br(htmlspecialchars($msg['message'])) ?></td>
+                            <td title="<?= htmlspecialchars($fullMessage) ?>">
+                                <?= nl2br(htmlspecialchars($previewMessage)) ?>
+                            </td>
                             <td>
                                 <?php if ($msg['is_verified'] == 1): ?>
                                     <span class="status-badge status-active">Verified</span>
@@ -70,7 +79,7 @@
                                         data-message-id="<?= $msg['message_id'] ?>"
                                         data-name="<?= htmlspecialchars($msg['name'], ENT_QUOTES) ?>"
                                         data-email="<?= htmlspecialchars($msg['email'], ENT_QUOTES) ?>"
-                                        data-message="<?= htmlspecialchars($msg['message'], ENT_QUOTES) ?>"
+                                        data-message="<?= htmlspecialchars($fullMessage, ENT_QUOTES) ?>"
                                         data-is-verified="<?= $msg['is_verified'] ?>">
                                         Reply
                                     </button>
@@ -118,5 +127,5 @@
                     </form>
                 </div>
             </div>
-            <?php include 'app/views/partials/admin_footer.php'; ?>
+            <?php include 'app/views/admin/adminpartials/admin_footer.php'; ?>
             <script src="public/assets/js/contact_messages.js"></script>

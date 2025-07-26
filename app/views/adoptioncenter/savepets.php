@@ -1,8 +1,4 @@
-
-
-
-
-<?php include 'app/views/partials/sidebarcenter.php'; ?>
+<!-- <?php include 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
 <?php
 include '../../../core/databaseconn.php';
 
@@ -58,4 +54,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Image upload failed.";
     }
 }
-?>
+?> -->

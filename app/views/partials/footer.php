@@ -149,9 +149,3 @@
 	</body>
 
 	</html>
-
-
-
-	</body>
-
-	</html>

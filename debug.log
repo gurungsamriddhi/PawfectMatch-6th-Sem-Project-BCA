@@ -166,3 +166,15 @@ POST: Array
     [has_other_pets] => No
 )
 SESSION: 
+2025-07-19T10:06:03+02:00
+POST: Array
+(
+    [pet_id] => 5
+    [address] => Chhorepatan 17
+    [phone] => 9819103718
+    [reason] => Wanted to provide a home for this cat
+    [preferred_date] => 2025-07-26
+    [home_type] => Apartment
+    [has_other_pets] => Yes
+)
+SESSION: 

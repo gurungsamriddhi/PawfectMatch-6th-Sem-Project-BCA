@@ -89,7 +89,7 @@ class ContactController
         }
 
         // Save to database
-        $this->contactModel->saveMessage($userId, $fname, $email, $message);
+        $this->contactModel->saveMessage( $fname, $email, $message,$userId);
 
         // Send email
         $adminEmail = 'pawfectmatch27@gmail.com';
