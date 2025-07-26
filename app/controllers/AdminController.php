@@ -690,10 +690,10 @@ class AdminController
     {
         $volunteer_id = $_POST['volunteer_id'] ?? null;  // use POST here
 
-        if (!$volunteer_id || !is_numeric($volunteer_id)) {
-            echo "Invalid user ID.";
-            return;
-        }
+        // if (!$volunteer_id || !is_numeric($volunteer_id)) {
+        //     echo "Invalid user ID.";
+        //     return;
+        // }
 
         $volunteer = $this->volunteerModel->findVolunteerById((int)$volunteer_id);
 

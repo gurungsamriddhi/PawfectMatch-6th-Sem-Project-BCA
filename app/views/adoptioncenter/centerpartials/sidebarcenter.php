@@ -28,7 +28,7 @@
         <!-- Scrollable Sidebar Nav -->
         <nav class="sidebar-nav flex-grow-1 overflow-y-auto">
           <ul class="list-unstyled px-2">
-            <li class="nav-small-cap">Home</li>
+            <!-- <li class="nav-small-cap">Home</li> -->
             <li class="sidebar-item selected">
               <a href="index.php?page=adoptioncenter/center_dashboard" class="sidebar-link">
                 <i class="fas fa-home me-2"></i> Dashboard
@@ -42,23 +42,23 @@
             </li>
 
             <li class="sidebar-item">
-            <a class="sidebar-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#petManagementMenu" role="button" aria-expanded="false" aria-controls="petManagementMenu">
-              <span><i class="fas fa-paw me-2"></i> Pet Management</span>
-              <i class="fas fa-chevron-down"></i>
-            </a>
-            <ul class="collapse list-unstyled ps-4" id="petManagementMenu">
-              <li>
-                <a href="index.php?page=adoptioncenter/add_pets" class="sidebar-link">
-                  <i class="fa-solid fa-plus me-2"></i> Add Pet
-                </a>
-              </li>
-              <li>
-                <a href="index.php?page=adoptioncenter/managepets" class="sidebar-link">
-                  <i class="fa-solid fa-list me-2"></i> Manage Pets
-                </a>
-              </li>
-            </ul>
-          </li>
+              <a class="sidebar-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#petManagementMenu" role="button" aria-expanded="false" aria-controls="petManagementMenu">
+                <span><i class="fas fa-paw me-2"></i> Pet Management</span>
+                <i class="fas fa-chevron-down"></i>
+              </a>
+              <ul class="collapse list-unstyled ps-4" id="petManagementMenu">
+                <li>
+                  <a href="index.php?page=adoptioncenter/add_pets" class="sidebar-link">
+                    <i class="fa-solid fa-plus me-2"></i> Add Pet
+                  </a>
+                </li>
+                <li>
+                  <a href="index.php?page=adoptioncenter/managepets" class="sidebar-link">
+                    <i class="fa-solid fa-list me-2"></i> Manage Pets
+                  </a>
+                </li>
+              </ul>
+            </li>
 
 
 
@@ -74,12 +74,12 @@
               </a>
             </li>
 
-          </ul>
-          </li>
-          <li class="sidebar-item">
-            <a href="#" class="sidebar-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
-              <i class="fas fa-sign-out-alt me-2"></i> Logout</a>
-          </li>
+
+            </li>
+            <li class="sidebar-item">
+              <a href="#" class="sidebar-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+            </li>
           </ul>
         </nav>
       </aside>

@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebarcenter.php'; ?>
+<?php include 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
 
 <!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

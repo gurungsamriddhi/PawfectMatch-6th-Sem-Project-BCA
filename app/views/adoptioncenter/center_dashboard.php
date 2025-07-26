@@ -1,4 +1,4 @@
-<?php include_once 'app/views/partials/sidebarcenter.php'; ?>
+<?php include_once 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
 <!-- Main Content -->
 <div class="body-wrapper w-100">
   <!-- Header -->
@@ -73,17 +73,17 @@
               <i class="fas fa-plus"></i>Add New Pet
             </a>
             <a href="index.php?page=adoptioncenter/adoption_request" class="action-btn">
-              <i class="fas fa-envelope"></i>View Messages
+              <i class="fas fa-envelope"></i>View Adoption Requests
             </a>
             <a href="#" class="action-btn">
-              <i class="fas fa-user-check"></i>Approve Volunteers
+              <i class="fas fa-user-check"></i>View Volunteers
             </a>
-            <a href="report.php" class="action-btn">
-              <i class="fas fa-chart-bar"></i>View Reports
+            <a href="index.php?page=adoptioncenter/managepets" class="action-btn">
+              <i class="fas fa-chart-bar"></i>View Pets
             </a>
-            <a href="donation.php" class="action-btn">
-              <i class="fas fa-donate"></i>Donation
-            </a>
+            <!-- <a href="index.php?page=adoptioncenter/change_password" class="action-btn">
+              <i class="fas fa-donate"></i>Change Password
+            </a> -->
           </div>
         </div>
       </div>
@@ -91,4 +91,4 @@
   </div>
 </div>
 
-<?php include_once 'app/views/partials/admin_footer.php'; ?>
+<?php include_once 'app/views/adoptioncenter/centerpartials/center_footer.php'; ?>

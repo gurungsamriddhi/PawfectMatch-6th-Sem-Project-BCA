@@ -88,11 +88,11 @@
                 <a href="index.php?page=admin/contact_messages" class="action-btn">
                   <i class="fas fa-envelope"></i>View Messages
                 </a>
-                <a href="#" class="action-btn">
+                <a href="index.php?page=admin/volunteer_management" class="action-btn">
                   <i class="fas fa-user-check"></i>Approve Volunteers
                 </a>
-                <a href="report.php" class="action-btn">
-                  <i class="fas fa-chart-bar"></i>View Reports
+                <a href="index.php?page=admin/PetManagement" class="action-btn">
+                  <i class="fas fa-chart-bar"></i>View Pets
                 </a>
                 <a href="donation.php" class="action-btn">
                   <i class="fas fa-donate"></i>Donation

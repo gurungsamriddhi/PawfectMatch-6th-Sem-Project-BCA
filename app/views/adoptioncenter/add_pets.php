@@ -1,4 +1,4 @@
-  <?php include 'app/views/partials/sidebarcenter.php'; ?>
+  <?php include 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->

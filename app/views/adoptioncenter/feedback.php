@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebarcenter.php'; ?>
+<?php include 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
 
 <div class="container-fluid">
   <div class="row">
