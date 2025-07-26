@@ -60,14 +60,49 @@ class Adoption
         af.preferred_date,
         af.home_type,
         af.has_other_pets,
+        ar.request_status,
         u.name 
           AS requester_name, u.email AS requester_email, 
           p.name AS pet_name, p.type AS pet_type, p.breed, p.image_path
                 FROM adoption_form af
                 JOIN users u ON af.user_id = u.user_id
                 JOIN pets p ON af.pet_id = p.pet_id
+                INNER JOIN adoption_requests ar ON af.request_id = ar.request_id
                 ORDER BY af.form_id DESC";
         $result = $this->conn->query($sql);
+        $forms = [];
+        while ($row = $result->fetch_assoc()) {
+            $forms[] = $row;
+        }
+        return $forms;
+    }
+
+    public function getFormsByCenter($centerId)
+    {
+        $sql = "SELECT af.form_id, 
+        af.request_id, 
+        af.user_id, 
+        af.pet_id, 
+        af.address, 
+        af.phone, 
+        af.reason, 
+        af.preferred_date,
+        af.home_type,
+        af.has_other_pets,
+        ar.request_status,
+        u.name 
+          AS requester_name, u.email AS requester_email, 
+          p.name AS pet_name, p.type AS pet_type, p.breed, p.image_path
+                FROM adoption_form af
+                JOIN users u ON af.user_id = u.user_id
+                JOIN pets p ON af.pet_id = p.pet_id
+                INNER JOIN adoption_requests ar ON af.request_id = ar.request_id
+                WHERE p.posted_by = ?
+                ORDER BY af.form_id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $centerId);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $forms = [];
         while ($row = $result->fetch_assoc()) {
             $forms[] = $row;

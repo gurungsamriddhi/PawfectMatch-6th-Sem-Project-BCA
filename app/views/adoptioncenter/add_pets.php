@@ -1,4 +1,4 @@
-  <?php include 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
+<?php include 'app/views/adoptioncenter/centerpartials/sidebarcenter.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->
@@ -14,8 +14,27 @@
 
       <!-- Content -->
       <div class="container-fluid py-4">
-<form action="index.php?page=adoptioncenter/savePets" method="POST" enctype="multipart/form-data">
-          <div id="formMessage"></div>
+        <?php if (isset($_SESSION['success_message'])): ?>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['success_message']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['addpet_errors'])): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+              <?php foreach ($_SESSION['addpet_errors'] as $error): ?>
+                <li><?php echo $error; ?></li>
+              <?php endforeach; ?>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <?php unset($_SESSION['addpet_errors']); ?>
+        <?php endif; ?>
+
+        <form id="addPetForm" action="index.php?page=adoptioncenter/savePets" method="POST" enctype="multipart/form-data">
           <!-- Basic Info Section -->
           <div class="form-section">
             <div class="section-header">
@@ -88,19 +107,6 @@
                 <input type="file" id="photos" name="photos[]" multiple accept="image/*" style="display: none;">
               </div>
               <div class="preview-container" id="photoPreview"></div>
-            </div>
-
-            <div class="mb-4">
-              <label class="form-label">Upload Video (Optional)</label>
-              <div class="file-upload-area" id="videoUploadArea">
-                <div class="upload-icon">
-                  <i class="fas fa-video"></i>
-                </div>
-                <div class="upload-text">Click to upload video or drag and drop</div>
-                <div class="upload-hint">Supports: MP4, AVI, MOV (Max 50MB)</div>
-                <input type="file" id="video" name="video" accept="video/*" style="display: none;">
-              </div>
-              <div class="preview-container" id="videoPreview"></div>
             </div>
           </div>
 
@@ -200,11 +206,6 @@
               <label for="healthNotes" class="form-label">Health Notes</label>
               <textarea class="form-control" id="healthNotes" name="healthNotes" rows="3" placeholder="Any medical conditions, medications, or special care requirements..."></textarea>
             </div>
-
-            <div class="mb-3">
-              <label for="specialRequirements" class="form-label">Special Requirements</label>
-              <textarea class="form-control" id="specialRequirements" name="specialRequirements" rows="2" placeholder="Any special dietary needs, exercise requirements, or other care instructions..."></textarea>
-            </div>
           </div>
 
           <!-- Adoption Info Section -->
@@ -220,19 +221,19 @@
                 <input type="text" class="form-control" id="adoptionCenter" name="adoptionCenter" placeholder="e.g., Happy Paws Rescue Center" required>
               </div>
               <div class="form-col">
-                <label for="contactName" class="form-label">Contact Person Name *</label>
-                <input type="text" class="form-control" id="contactName" name="contactName" required>
+                <label for="contactPhone" class="form-label">Contact Phone *</label>
+                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" required>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-col">
-                <label for="contactPhone" class="form-label">Contact Phone *</label>
-                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" required>
-              </div>
-              <div class="form-col">
                 <label for="contactEmail" class="form-label">Contact Email *</label>
                 <input type="email" class="form-control" id="contactEmail" name="contactEmail" required>
+              </div>
+              <div class="form-col">
+                <label for="centerWebsite" class="form-label">Center Website (Optional)</label>
+                <input type="url" class="form-control" id="centerWebsite" name="centerWebsite" placeholder="https://www.example.com">
               </div>
             </div>
 
@@ -241,231 +242,158 @@
                 <label for="centerAddress" class="form-label">Center Address *</label>
                 <input type="text" class="form-control" id="centerAddress" name="centerAddress" placeholder="Full address of the adoption center" required>
               </div>
-              <div class="form-col">
-                <label for="centerWebsite" class="form-label">Center Website (Optional)</label>
-                <input type="url" class="form-control" id="centerWebsite" name="centerWebsite" placeholder="https://www.example.com">
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="adoptionNotes" class="form-label">Adoption Process Notes</label>
-              <textarea class="form-control" id="adoptionNotes" name="adoptionNotes" rows="3" placeholder="Any specific adoption requirements, process details, or special instructions for potential adopters..."></textarea>
             </div>
           </div>
 
+          <!-- Action Buttons -->
           <div class="action-buttons">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-save me-2"></i>Save Pet
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="resetForm()">
-          <i class="fas fa-undo me-2"></i>Reset Form
-        </button>
-        <button type="button" class="btn btn-danger" onclick="deletePet()">
-          <i class="fas fa-trash me-2"></i>Delete Pet
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-<!-- Reset Confirmation Modal -->
-<div class="modal fade" id="resetConfirmModal" tabindex="-1" aria-labelledby="resetConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Reset Confirmation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Do you really want to reset the form?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-warning" id="confirmResetBtn">Yes, Reset</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-2"></i>Save Pet
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+              <i class="fas fa-undo me-2"></i>Reset Form
+            </button>
+            <button type="button" class="btn btn-danger" onclick="deletePet()">
+              <i class="fas fa-trash me-2"></i>Delete Pet
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Delete Confirmation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Would you like to delete this pet?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
+  <script>
+    // Sidebar submenu toggle logic
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.sidebar-link.has-arrow').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          var parent = link.closest('.sidebar-item');
+          parent.classList.toggle('open');
+        });
+      });
 
-<!-- Form submission logic -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.sidebar-link.has-arrow').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      var parent = link.closest('.sidebar-item');
-      parent.classList.toggle('open');
-    });
-  });
-
-  setupFileUpload('photoUploadArea', 'photos', 'photoPreview', true);
-  setupFileUpload('videoUploadArea', 'video', 'videoPreview', false);
-
-  const form = document.getElementById('addPetForm');
-  form.addEventListener('submit', function (e) {
-    const requiredFields = [
-      'petName', 'petType', 'breed', 'gender', 'age', 'dateArrival',
-      'size', 'weight', 'color', 'healthStatus', 'description',
-      'adoptionCenter', 'contactName', 'contactPhone', 'contactEmail', 'centerAddress'
-    ];
-
-    let isValid = true;
-    requiredFields.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el.value.trim()) {
-        el.classList.add('is-invalid');
-        isValid = false;
-      } else {
-        el.classList.remove('is-invalid');
-      }
+      // File upload functionality
+      setupFileUpload('photoUploadArea', 'photos', 'photoPreview', true);
     });
 
-    if (!isValid) {
-      e.preventDefault(); // prevent form only if invalid
-      showMessage('Please fill in all required fields.', 'danger');
-      return;
+    function setupFileUpload(uploadAreaId, inputId, previewId, isMultiple) {
+      const uploadArea = document.getElementById(uploadAreaId);
+      const fileInput = document.getElementById(inputId);
+      const previewContainer = document.getElementById(previewId);
+
+      // Click to upload
+      uploadArea.addEventListener('click', () => fileInput.click());
+
+      // Drag and drop
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
+
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (isMultiple) {
+          handleFiles(files, previewContainer);
+        } else {
+          handleSingleFile(files[0], previewContainer);
+        }
+      });
+
+      // File input change
+      fileInput.addEventListener('change', (e) => {
+        if (isMultiple) {
+          handleFiles(e.target.files, previewContainer);
+        } else {
+          handleSingleFile(e.target.files[0], previewContainer);
+        }
+      });
     }
 
-    // let the form submit normally if valid
-  });
-});
+    function handleFiles(files, previewContainer) {
+      previewContainer.innerHTML = '';
+      Array.from(files).forEach(file => {
+        if (file.type.startsWith('image/')) {
+          createImagePreview(file, previewContainer);
+        }
+      });
+    }
 
-function setupFileUpload(uploadAreaId, inputId, previewId, isMultiple) {
-  const uploadArea = document.getElementById(uploadAreaId);
-  const fileInput = document.getElementById(inputId);
-  const previewContainer = document.getElementById(previewId);
+    function handleSingleFile(file, previewContainer) {
+      previewContainer.innerHTML = '';
+      if (file) {
+        if (file.type.startsWith('image/')) {
+          createImagePreview(file, previewContainer);
+        }
+      }
+    }
 
-  uploadArea.addEventListener('click', () => fileInput.click());
-  uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.classList.add('dragover');
-  });
-  uploadArea.addEventListener('dragleave', () => {
-    uploadArea.classList.remove('dragover');
-  });
-  uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    isMultiple ? handleFiles(files, previewContainer) : handleSingleFile(files[0], previewContainer);
-  });
-  fileInput.addEventListener('change', (e) => {
-    isMultiple ? handleFiles(e.target.files, previewContainer) : handleSingleFile(e.target.files[0], previewContainer);
-  });
-}
+    function createImagePreview(file, container) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const previewItem = document.createElement('div');
+        previewItem.className = 'preview-item';
+        previewItem.innerHTML = `
+          <img src="${e.target.result}" alt="Preview" style="max-width: 100px; max-height: 100px; border-radius: 8px; margin: 5px;">
+          <button type="button" class="remove-preview" onclick="removePreview(this)">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        container.appendChild(previewItem);
+      };
+      reader.readAsDataURL(file);
+    }
 
-function handleFiles(files, previewContainer) {
-  previewContainer.innerHTML = '';
-  Array.from(files).forEach(file => {
-    if (file.type.startsWith('image/')) createImagePreview(file, previewContainer);
-    else if (file.type.startsWith('video/')) createVideoPreview(file, previewContainer);
-  });
-}
+    function removePreview(button) {
+      button.closest('.preview-item').remove();
+    }
 
-function handleSingleFile(file, previewContainer) {
-  previewContainer.innerHTML = '';
-  if (file) {
-    if (file.type.startsWith('image/')) createImagePreview(file, previewContainer);
-    else if (file.type.startsWith('video/')) createVideoPreview(file, previewContainer);
-  }
-}
+    function resetForm() {
+      if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+        document.getElementById('addPetForm').reset();
+        document.getElementById('photoPreview').innerHTML = '';
+      }
+    }
 
-function createImagePreview(file, container) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const previewItem = document.createElement('div');
-    previewItem.className = 'preview-item';
-    previewItem.innerHTML = `
-      <img src="${e.target.result}" alt="Preview">
-      <button type="button" class="remove-preview" onclick="removePreview(this)">
-        <i class="fas fa-times"></i>
-      </button>`;
-    container.appendChild(previewItem);
-  };
-  reader.readAsDataURL(file);
-}
+    function deletePet() {
+      if (confirm('Are you sure you want to delete this pet? This action cannot be undone.')) {
+        // Add delete functionality here
+        alert('Pet deleted successfully!');
+      }
+    }
 
-function createVideoPreview(file, container) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const previewItem = document.createElement('div');
-    previewItem.className = 'preview-item';
-    previewItem.innerHTML = `
-      <video controls><source src="${e.target.result}" type="${file.type}"></video>
-      <button type="button" class="remove-preview" onclick="removePreview(this)">
-        <i class="fas fa-times"></i>
-      </button>`;
-    container.appendChild(previewItem);
-  };
-  reader.readAsDataURL(file);
-}
+    // Form submission
+    document.getElementById('addPetForm').addEventListener('submit', function(e) {
+      // Basic validation
+      const requiredFields = ['petName', 'petType', 'breed', 'gender', 'age', 'dateArrival', 'size', 'weight', 'color', 'healthStatus', 'description', 'adoptionCenter', 'contactPhone', 'contactEmail', 'centerAddress'];
+      let isValid = true;
+      
+      requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (!field.value.trim()) {
+          field.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          field.classList.remove('is-invalid');
+        }
+      });
 
-function removePreview(button) {
-  button.closest('.preview-item').remove();
-}
+      if (!isValid) {
+        e.preventDefault();
+        alert('Please fill in all required fields.');
+        return;
+      }
 
-function showMessage(message, type = 'success') {
-  const formMessage = document.getElementById('formMessage');
-  if (!formMessage) return;
-  formMessage.innerHTML = `
-    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>`;
-  setTimeout(() => {
-    formMessage.innerHTML = '';
-  }, 5000);
-}
+      // Form will submit to server for processing
+    });
+  </script>
+<script src="public/assets/js/bootstrap.bundle.min.js"></script><!--enables features like modals,dropdowns,tooltips-->
 
-// Reset modal logic
-function resetForm() {
-  const modal = new bootstrap.Modal(document.getElementById('resetConfirmModal'));
-  modal.show();
-}
-
-function deletePet() {
-  const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-  modal.show();
-}
-
-document.getElementById('confirmResetBtn').addEventListener('click', function () {
-  document.getElementById('addPetForm').reset();
-  document.getElementById('photoPreview').innerHTML = '';
-  document.getElementById('videoPreview').innerHTML = '';
-  bootstrap.Modal.getInstance(document.getElementById('resetConfirmModal')).hide();
-  showMessage('Form reset successfully.', 'info');
-});
-
-document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-  document.getElementById('addPetForm').reset();
-  document.getElementById('photoPreview').innerHTML = '';
-  document.getElementById('videoPreview').innerHTML = '';
-  bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide();
-  showMessage('Pet deleted successfully.', 'danger');
-});
-</script>
-
-
-
-<script src="public/assets/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

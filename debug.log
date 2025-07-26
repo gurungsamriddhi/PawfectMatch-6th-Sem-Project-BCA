@@ -178,3 +178,15 @@ POST: Array
     [has_other_pets] => Yes
 )
 SESSION: 
+2025-07-26T18:33:50+02:00
+POST: Array
+(
+    [pet_id] => 8
+    [address] => Nayabazar - 10
+    [phone] => 9826185639
+    [reason] => love pet
+    [preferred_date] => 2025-07-31
+    [home_type] => House
+    [has_other_pets] => Yes
+)
+SESSION: 

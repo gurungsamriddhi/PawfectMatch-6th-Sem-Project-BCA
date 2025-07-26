@@ -4,7 +4,7 @@
   <!-- Header -->
   <header class="app-header bg-dark text-white py-3 px-4">
     <div class="d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">Welcome To Adoption Center</h5>
+      <h5 class="mb-0">Welcome, <?= htmlspecialchars($_SESSION['center_name'] ?? 'Adoption Center') ?></h5>
       <div class="d-flex align-items-center gap-3">
         <i class="fas fa-bell"></i>
         <i class="fas fa-user-circle"></i>
@@ -38,7 +38,7 @@
         <div class="card stats-card text-center">
           <div class="card-body">
             <i class="fas fa-hand-holding-usd icon"></i>
-            <div class="number"><?= htmlspecialchars($stats['total_Donations'] ?? 0) ?></div>
+            <div class="number">₹<?= number_format($stats['total_Donations'] ?? 0) ?></div>
             <div class="label">Total Donations</div>
           </div>
         </div>
@@ -48,7 +48,7 @@
           <div class="card-body">
             <i class="fas fa-users icon"></i>
             <div class="number"><?= htmlspecialchars($stats['total_Volunteers'] ?? 0) ?></div>
-            <div class="label">Total Volunteers</div>
+            <div class="label">Assigned Volunteers</div>
           </div>
         </div>
       </div>
@@ -75,15 +75,12 @@
             <a href="index.php?page=adoptioncenter/adoption_request" class="action-btn">
               <i class="fas fa-envelope"></i>View Adoption Requests
             </a>
-            <a href="#" class="action-btn">
+            <a href="index.php?page=adoptioncenter/view_volunteers" class="action-btn">
               <i class="fas fa-user-check"></i>View Volunteers
             </a>
             <a href="index.php?page=adoptioncenter/managepets" class="action-btn">
-              <i class="fas fa-chart-bar"></i>View Pets
+              <i class="fas fa-chart-bar"></i>Manage Pets
             </a>
-            <!-- <a href="index.php?page=adoptioncenter/change_password" class="action-btn">
-              <i class="fas fa-donate"></i>Change Password
-            </a> -->
           </div>
         </div>
       </div>

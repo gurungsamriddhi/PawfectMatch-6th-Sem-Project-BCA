@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../models/Pet.php';
 require_once __DIR__ . '/../models/Center.php';
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Adoption.php';
 require_once __DIR__ . '/../../core/databaseconn.php';
 
 class CenterController
@@ -10,6 +11,7 @@ class CenterController
     private $petModel;
     private $centerModel;
     private $userModel;
+    private $adoptionModel;
 
     public function __construct()
     {
@@ -18,6 +20,7 @@ class CenterController
         $this->petModel = new Pet($this->conn);
         $this->centerModel = new Center();
         $this->userModel = new User();
+        $this->adoptionModel = new Adoption($this->conn);
     }
 
     private function loadCenterView($filename)
@@ -48,23 +51,51 @@ class CenterController
             'pending_Requests' => 0,
         ];
 
-        // Total pets listed
+        // Total pets listed by this center
         $stmt = $conn->prepare("SELECT COUNT(*) FROM pets WHERE posted_by = ?");
         $stmt->bind_param('i', $center_id);
         $stmt->execute();
-        $stmt->bind_result($stats['totalPets']);
+        $stmt->bind_result($stats['total_Pets']);
         $stmt->fetch();
-        // $stats['total_Pets'] = $totalPets;
         $stmt->close();
 
         // Total adoptions completed (based on pet status = 'adopted', case-insensitive)
         $stmt = $conn->prepare("SELECT COUNT(*) FROM pets WHERE posted_by = ? AND LOWER(status) = 'adopted'");
         $stmt->bind_param('i', $center_id);
         $stmt->execute();
-        $stmt->bind_result($stats['totalAdoptions']);
+        $stmt->bind_result($stats['total_Adoptions']);
         $stmt->fetch();
-        // $stats['total_Adoptions'] = $totalAdoptions;
         $stmt->close();
+
+        // Total donations (all donations to the platform)
+        $stmt = $conn->prepare("SELECT COALESCE(SUM(amount), 0) FROM donations");
+        $stmt->execute();
+        $stmt->bind_result($stats['total_Donations']);
+        $stmt->fetch();
+        $stmt->close();
+
+        // Total volunteers assigned to this center
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM volunteers WHERE assigned_center_id = ? AND status = 'assigned'");
+        $stmt->bind_param('i', $center_id);
+        $stmt->execute();
+        $stmt->bind_result($stats['total_Volunteers']);
+        $stmt->fetch();
+        $stmt->close();
+
+        // Pending adoption requests for pets posted by this center
+        $stmt = $conn->prepare("
+            SELECT COUNT(*) FROM adoption_requests ar 
+            JOIN pets p ON ar.pet_id = p.pet_id 
+            WHERE p.posted_by = ? AND ar.request_status = 'pending'
+        ");
+        $stmt->bind_param('i', $center_id);
+        $stmt->execute();
+        $stmt->bind_result($stats['pending_Requests']);
+        $stmt->fetch();
+        $stmt->close();
+
+        // Debug: Log the stats to see what's being calculated
+        error_log("Center Dashboard Stats for center_id $center_id: " . json_encode($stats));
 
         include __DIR__ . '/../views/adoptioncenter/center_dashboard.php';
     }
@@ -286,121 +317,83 @@ class CenterController
 
     public function savePets()
     {
-        // Check login session
-        if (!isset($_SESSION['center_id'])) {
-            $_SESSION['errors'] = ["You must be logged in as an adoption center to add pets."];
-            header("Location: index.php?page=adoptioncenter/center_login");
-            exit;
-        }
-
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $_SESSION['errors'] = ["Invalid request method."];
             header("Location: index.php?page=adoptioncenter/add_pets");
-            exit;
+            exit();
         }
 
-        $posted_by = $_SESSION['center_id']; // user_id of adoption_center
-        $adoption_center_name = $_SESSION['center_name'] ?? 'Unknown Center';
-
-        // Collect and sanitize form data
-        $name = trim($_POST['petName'] ?? '');
-        $type = trim($_POST['petType'] ?? '');
-        $breed = trim($_POST['breed'] ?? '');
-        $gender = $_POST['gender'] ?? '';
-        $age = floatval($_POST['age'] ?? 0);
-        $date_arrival = $_POST['date_arrival'] ?? date('Y-m-d'); // default today
-        $size = $_POST['size'] ?? 'Medium'; // use form value or default
-        $weight = floatval($_POST['weight'] ?? 0);
-        $color = trim($_POST['color'] ?? '');
-        $health_status = $_POST['healthStatus'] ?? 'Good'; // must be one of enum values: 'Excellent', 'Good', 'Fair', 'Poor'
-        $characteristics = $_POST['characteristics'] ?? '';
-        if (is_array($characteristics)) {
-            $characteristics = implode(", ", $characteristics); // Join array values as a comma-separated string
-        }
-        $characteristics = trim($characteristics);
-        $description = trim($_POST['description'] ?? '');
-        $health_notes = trim($_POST['healthNotes'] ?? '');
-        $contact_phone = trim($_POST['contactPhone'] ?? '');
-        $contact_email = trim($_POST['contactEmail'] ?? '');
-        $center_address = trim($_POST['centerAddress'] ?? '');
-        $center_website = trim($_POST['centerWebsite'] ?? '');
-        $status = 'available'; // default status
-
-        // Validate gender: must be 'Male' or 'Female' exactly (enum)
-        if (!in_array($gender, ['Male', 'Female'])) {
-            $_SESSION['errors'] = ["Invalid gender selected."];
-            header("Location: index.php?page=adoptioncenter/add_pets");
-            exit;
+        if (!isset($_SESSION['center_id'])) {
+            header("Location: index.php?page=adoptioncenter/center_login");
+            exit();
         }
 
-        // Validate health_status
-        if (!in_array($health_status, ['Excellent', 'Good', 'Fair', 'Poor'])) {
-            $health_status = 'Good'; // fallback default
-        }
+        // Validate required fields
+        $required_fields = ['petName', 'petType', 'breed', 'gender', 'age', 'dateArrival', 'size', 'weight', 'color', 'healthStatus', 'description', 'adoptionCenter', 'contactPhone', 'contactEmail', 'centerAddress'];
+        $errors = [];
+        $data = [];
 
-        // Handle image upload
-        $image_path = null;
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = "uploads/";
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-
-            $fileTmpPath = $_FILES['image']['tmp_name'];
-            $fileName = basename($_FILES['image']['name']);
-            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-            // Sanitize filename or generate unique
-            $newFileName = uniqid('pet_', true) . '.' . $fileExtension;
-            $destPath = $uploadDir . $newFileName;
-
-            if (move_uploaded_file($fileTmpPath, $destPath)) {
-                $image_path = $destPath;
+        foreach ($required_fields as $field) {
+            if (empty($_POST[$field])) {
+                $errors[$field] = ucfirst(str_replace(['pet', 'Name', 'Type'], ['', ' Name', ' Type'], $field)) . " is required.";
             } else {
-                $_SESSION['errors'] = ["Failed to upload image."];
-                header("Location: index.php?page=adoptioncenter/add_pets");
-                exit;
+                $data[$field] = trim($_POST[$field]);
             }
         }
 
-        // Prepare data array for insertion
-        $petData = [
-            'name' => $name,
-            'type' => $type,
-            'breed' => $breed,
-            'gender' => $gender,
-            'age' => $age,
-            'date_arrival' => $date_arrival,
-            'size' => $size,
-            'weight' => $weight,
-            'color' => $color,
-            'health_status' => $health_status,
-            'characteristics' => $characteristics,
-            'description' => $description,
-            'health_notes' => $health_notes,
-            'adoption_center' => $adoption_center_name,
-            'contact_phone' => $contact_phone,
-            'contact_email' => $contact_email,
-            'center_address' => $center_address,
-            'center_website' => $center_website,
-            'image_path' => $image_path,
-            'status' => $status,
-            'posted_by' => $posted_by
-        ];
+        // Handle characteristics
+        $characteristics = $_POST['characteristics'] ?? [];
+        $data['characteristics'] = !empty($characteristics) ? implode(',', $characteristics) : '';
 
-        // Insert pet using model
-        $petModel = new Pet($this->conn);
-        $inserted = $petModel->insertPet($petData);
+        // Handle optional fields
+        $data['healthNotes'] = $_POST['healthNotes'] ?? '';
+        $data['centerWebsite'] = $_POST['centerWebsite'] ?? '';
+        $data['imagePath'] = 'public/assets/images/pets.png'; // Default image path
+        $data['postedBy'] = $_SESSION['center_id'] ?? 0;
 
-        if ($inserted) {
-            $_SESSION['success'] = "Pet added successfully!";
-            header("Location: index.php?page=adoptioncenter/managepets");
-            exit;
-        } else {
-            $_SESSION['errors'] = ["Failed to add pet. Please try again."];
-            header("Location: index.php?page=adoptioncenter/add_pets");
-            exit;
+        // Handle file upload
+        if (isset($_FILES['photos']) && !empty($_FILES['photos']['name'][0])) {
+            $uploadDir = 'public/assets/images/pets/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $uploadedFiles = [];
+            foreach ($_FILES['photos']['tmp_name'] as $key => $tmp_name) {
+                if ($_FILES['photos']['error'][$key] === UPLOAD_ERR_OK) {
+                    $fileName = uniqid() . '_' . $_FILES['photos']['name'][$key];
+                    $filePath = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmp_name, $filePath)) {
+                        $uploadedFiles[] = $filePath;
+                    }
+                }
+            }
+
+            if (!empty($uploadedFiles)) {
+                $data['imagePath'] = $uploadedFiles[0]; // Use first image as main image
+            }
         }
+
+        if (!empty($errors)) {
+            $_SESSION['addpet_errors'] = $errors;
+            $_SESSION['addpet_old'] = $data;
+            header('Location: index.php?page=adoptioncenter/add_pets');
+            exit();
+        }
+
+        // Add pet to database
+        $petModel = new Pet($this->conn);
+        $success = $petModel->addPet($data);
+
+        if ($success) {
+            $_SESSION['success_message'] = 'Pet added successfully!';
+            header('Location: index.php?page=adoptioncenter/managepets');
+        } else {
+            $_SESSION['addpet_errors'] = ['general' => 'Failed to add pet. Please try again.'];
+            $_SESSION['addpet_old'] = $data;
+            header('Location: index.php?page=adoptioncenter/add_pets');
+        }
+        exit();
     }
 
     public function updatePet()
@@ -494,7 +487,16 @@ class CenterController
 
     public function adoption_request()
     {
-        $this->loadCenterView('adoption_request.php');
+        if (!isset($_SESSION['center_id'])) {
+            header("Location: index.php?page=adoptioncenter/center_login");
+            exit;
+        }
+
+        $center_id = $_SESSION['center_id'];
+        $requests = $this->adoptionModel->getFormsByCenter($center_id);
+        
+        // Pass the requests data to the view
+        include __DIR__ . '/../views/adoptioncenter/adoption_request.php';
     }
 
     public function viewAssignedVolunteers()

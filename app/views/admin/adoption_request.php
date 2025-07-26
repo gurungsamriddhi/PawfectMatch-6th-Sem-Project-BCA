@@ -137,7 +137,20 @@
           <div class="adoption-details">
             <div class="adoption-name">
               <?= htmlspecialchars($form['requester_name']) ?>
-              <span class="status-badge status-pending">Pending</span>
+              <?php 
+                $status = $form['request_status'] ?? 'pending';
+                $statusClass = 'status-pending';
+                $statusText = 'Pending';
+                
+                if (strtolower($status) === 'approved' || strtolower($status) === 'accepted') {
+                    $statusClass = 'status-accepted';
+                    $statusText = 'Accepted';
+                } elseif (strtolower($status) === 'rejected') {
+                    $statusClass = 'status-rejected';
+                    $statusText = 'Rejected';
+                }
+              ?>
+              <span class="status-badge <?= $statusClass ?>"><?= $statusText ?></span>
             </div>
             <div class="adoption-phone"><i class="fa fa-phone me-1"></i><?= htmlspecialchars($form['phone']) ?></div>
             <div class="adoption-date"><i class="fa fa-calendar-alt me-1"></i><?= htmlspecialchars($form['preferred_date']) ?></div>
@@ -145,8 +158,15 @@
           </div>
           <div class="adoption-actions ms-auto">
             <button class="view-btn btn btn-sm" data-bs-toggle="modal" data-bs-target="#viewAdoptionModal" onclick='showAdoptionDetails(<?= json_encode($form, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'><i class="fa fa-eye me-1"></i>View</button>
-            <button class="accept-btn btn btn-sm" onclick="handleAdoptionAction('approve', <?= $form['request_id'] ?>)"><i class="fa fa-check me-1"></i>Accept</button>
-            <button class="reject-btn btn btn-sm" onclick="handleAdoptionAction('reject', <?= $form['request_id'] ?>)"><i class="fa fa-times me-1"></i>Reject</button>
+            <?php 
+              $status = $form['request_status'] ?? 'pending';
+              $isPending = (strtolower($status) === 'pending' || empty($status) || $status === null);
+              // Debug: echo "<!-- Debug: Status='$status', isPending=" . ($isPending ? 'true' : 'false') . " -->";
+            ?>
+            <?php if ($isPending): ?>
+              <button class="accept-btn btn btn-sm" onclick="handleAdoptionAction('approve', <?= $form['request_id'] ?>)"><i class="fa fa-check me-1"></i>Accept</button>
+              <button class="reject-btn btn btn-sm" onclick="handleAdoptionAction('reject', <?= $form['request_id'] ?>)"><i class="fa fa-times me-1"></i>Reject</button>
+            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>
@@ -171,8 +191,10 @@
         <!-- Details will be injected by JS -->
       </div>
       <div class="modal-footer d-flex justify-content-end gap-3 flex-wrap" style="background:#f8fafc; border-radius:0 0 20px 20px; border-top:1.5px solid #e2e9e8;">
-        <button class="rounded-pill px-4" id="modalAcceptBtn" style="font-weight:600; min-width:120px; background:#28a745; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-check me-1"></i>Accept</button>
-        <button class="rounded-pill px-4" id="modalRejectBtn" style="font-weight:600; min-width:120px; background:#dc3545; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-times me-1"></i>Reject</button>
+        <div id="modalActionButtons" style="display: none;">
+          <button class="rounded-pill px-4" id="modalAcceptBtn" style="font-weight:600; min-width:120px; background:#28a745; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-check me-1"></i>Accept</button>
+          <button class="rounded-pill px-4" id="modalRejectBtn" style="font-weight:600; min-width:120px; background:#dc3545; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-times me-1"></i>Reject</button>
+        </div>
       </div>
     </div>
   </div>
@@ -200,6 +222,15 @@ function showAdoptionDetails(form) {
     statusText = 'Pending'; 
   }
   document.getElementById('modalStatusBadge').innerHTML = `<span class='badge ${statusClass}' style='font-size:1em; padding:6px 18px; border-radius:14px; font-weight:600;'>${statusText}</span>`;
+  
+  // Show/hide action buttons based on status
+  const actionButtons = document.getElementById('modalActionButtons');
+  const isPending = (status.toLowerCase() === 'pending' || !status || status === '');
+  if (isPending) {
+    actionButtons.style.display = 'flex';
+  } else {
+    actionButtons.style.display = 'none';
+  }
 
   let html = `
     <div class='row g-4 align-items-center mb-4 flex-wrap'>
