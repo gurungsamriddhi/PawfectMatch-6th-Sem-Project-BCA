@@ -423,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
     adoptionForm.onsubmit = function(e) {
       e.preventDefault();
       const formData = new FormData(this);
-      fetch('debug_db.php', {
+      fetch('adoption_handler.php', {
         method: 'POST',
         body: formData,
         credentials: 'same-origin'

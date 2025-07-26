@@ -15,6 +15,24 @@ class Pet
         $result = $this->conn->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
+    public function getRecentAvailablePets($limit = 3)
+    {
+        $query = "SELECT * FROM pets WHERE status = 'available' ORDER BY created_at DESC LIMIT ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param("i", $limit);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $pets = [];
+            while ($row = $result->fetch_assoc()) {
+                $pets[] = $row;
+            }
+            $stmt->close();
+            return $pets;
+        }
+        return [];
+    }
     // ✅ Get pets posted by a specific user (used in adoption center view)
     public function getPetsByUserId($user_id)
     {
