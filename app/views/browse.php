@@ -141,8 +141,10 @@ function handleProtectedAction(action, petId) {
     if (action === 'favorite') {
       toggleFavorite(petId);
     } else if (action === 'adopt') {
-      // You can add adoption logic here
-      alert('Proceeding to adoption process for pet ID: ' + petId);
+      // Show adoption form modal
+      document.getElementById('adoptPetId').value = petId;
+      let modal = new bootstrap.Modal(document.getElementById('adoptionRequestModal'));
+      modal.show();
     }
     return true;
   }
@@ -299,6 +301,50 @@ function formatCharacteristics(characteristics) {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Browse page loaded, rendering pets...');
   renderPets();
+  // Adoption form submit handler
+  const adoptionForm = document.getElementById('adoptionRequestForm');
+  if (adoptionForm) {
+    adoptionForm.onsubmit = function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch('debug_db.php', {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+      })
+      .then(async res => {
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          // If response is not JSON but status is 200, treat as success
+          if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('adoptionRequestModal')).hide();
+            setTimeout(function() {
+              let thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+              thankYouModal.show();
+            }, 500);
+            return;
+          } else {
+            showErrorModal('An error occurred.');
+            return;
+          }
+        }
+        if (data && data.success) {
+          bootstrap.Modal.getInstance(document.getElementById('adoptionRequestModal')).hide();
+          setTimeout(function() {
+            let thankYouModal = new bootstrap.Modal(document.getElementById('thankYouModal'));
+            thankYouModal.show();
+          }, 500);
+        } else {
+          showErrorModal((data && data.message) || 'Unknown error');
+        }
+      })
+      .catch(() => {
+        showErrorModal('An error occurred.');
+      });
+    };
+  }
 });
 
 // Add event delegation for View Details buttons
@@ -313,97 +359,71 @@ document.addEventListener('click', function(e) {
     let availabilityClass = getAvailabilityBadge(pet.status);
     let healthColor = getHealthStatusColor(pet.health_status);
     
-    // Build modal content with all pet information
+    // Build improved modal content with image and summary
     let html = `
-      <div class="text-center mb-3">
-        <div class="position-relative d-inline-block">
-          <img src="${pet.image_path || 'public/assets/images/pets.png'}" alt="${pet.name}" style="width: 100%; max-width: 500px; height: 280px; object-fit: cover; border-radius: 12px; border: 2px solid #e2e9e8; box-shadow: 0 6px 20px rgba(0,0,0,0.08);">
-          <div class="position-absolute top-0 end-0 m-2">
-            <span class="${availabilityClass} fs-6 px-2 py-1">${pet.status}</span>
+      <div class="pet-details-section mb-4">
+        <div class="text-center mb-3">
+          <div class="position-relative d-inline-block">
+            <img src="${pet.image_path || 'public/assets/images/pets.png'}" alt="${pet.name}" style="width: 100%; max-width: 420px; height: 240px; object-fit: cover; border-radius: 12px; border: 2px solid #e2e9e8; box-shadow: 0 6px 20px rgba(0,0,0,0.08);">
+            <div class="position-absolute top-0 end-0 m-2">
+              <span class="${availabilityClass} fs-6 px-2 py-1">${pet.status}</span>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="text-center mb-3">
-        <h3 class="fw-bold mb-1" style="color: #3b5d50; font-size: 1.5rem;">${pet.name}</h3>
-        <p class="text-muted mb-0" style="font-size: 1rem;">${pet.breed} ${pet.type || 'Pet'}</p>
-      </div>
-      
-      <div class="row g-2 mb-3">
-        <div class="col-6">
-          <div class="bg-light rounded-2 p-2 text-center h-100" style="border: 1px solid #e9ecef;">
-            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-birthday-cake"></i></div>
-            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.age} year${pet.age>1?'s':''} old</div>
+        <div class="text-center mb-1">
+          <h3 class="fw-bold mb-1" style="color: #3b5d50; font-size: 1.5rem;">${pet.name}</h3>
+          <p class="text-muted mb-0" style="font-size: 1rem;">${pet.breed} • ${pet.gender} • ${pet.age} yr${pet.age>1?'s':''}</p>
+        </div>
+        <div class="pet-summary-meta mb-3 text-muted" style="font-size: 1.05rem;">
+          <span><i class="fas fa-dog me-1"></i> ${pet.type || 'Pet'}</span>
+          <span class="mx-2">•</span>
+          <span><i class="fas fa-ruler-combined me-1"></i> ${pet.size || 'Unknown'}</span>
+          <span class="mx-2">•</span>
+          <span><i class="fas fa-weight-hanging me-1"></i> ${pet.weight || 'Unknown'} kg</span>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="info-block">
+              <h6><i class="fas fa-palette me-1"></i> <strong>Color</strong></h6>
+              <div>${pet.color || 'Unknown'}</div>
+            </div>
+            <div class="info-block">
+              <h6><i class="fas fa-heartbeat me-1"></i> <strong>Health Status</strong></h6>
+              <span class="badge bg-${healthColor}">${pet.health_status}</span>
+              ${pet.health_notes ? `<div class='mt-2'>${pet.health_notes}</div>` : ''}
+            </div>
+            ${pet.characteristics ? `
+            <div class="info-block">
+              <h6><i class="fas fa-check-circle me-1"></i> <strong>Characteristics</strong></h6>
+              <div>${formatCharacteristics(pet.characteristics)}</div>
+            </div>
+            ` : ''}
+          </div>
+          <div class="col-md-6">
+            <div class="info-block">
+              <h6><i class="fas fa-info-circle me-1"></i> <strong>About ${pet.name}</strong></h6>
+              <div>${pet.description}</div>
+            </div>
+            <div class="info-block">
+              <h6><i class="fas fa-building me-1"></i> <strong>Adoption Center</strong></h6>
+              <div>
+                <div><strong>${pet.adoption_center}</strong></div>
+                <div><i class="fas fa-map-marker-alt me-1"></i>${pet.center_address}</div>
+                <div><i class="fas fa-phone me-1"></i>${pet.contact_phone}</div>
+                <div><i class="fas fa-envelope me-1"></i>${pet.contact_email}</div>
+                ${pet.center_website ? `<div><i class='fas fa-globe me-1'></i><a href='${pet.center_website}' target='_blank'>${pet.center_website}</a></div>` : ''}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="bg-light rounded-2 p-2 text-center h-100" style="border: 1px solid #e9ecef;">
-            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-venus-mars"></i></div>
-            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.gender}</div>
-          </div>
+        <div class="d-flex gap-3 justify-content-center mt-4">
+          <button type="button" class="btn btn-success btn-lg px-4" onclick="closePetModalAndAdopt(${pet.pet_id})">
+            <i class="fas fa-heart me-1"></i>Adopt Me
+          </button>
+          <button type="button" class="btn btn-outline-secondary btn-lg px-4" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>Close
+          </button>
         </div>
-        <div class="col-6">
-          <div class="bg-light rounded-2 p-2 text-center h-100" style="border: 1px solid #e9ecef;">
-            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-ruler-combined"></i></div>
-            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.size}</div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="bg-light rounded-2 p-2 text-center h-100" style="border: 1px solid #e9ecef;">
-            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-weight-hanging"></i></div>
-            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.weight || 'Unknown'} kg</div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="bg-light rounded-2 p-2" style="border: 1px solid #e9ecef;">
-            <div class="text-primary mb-1" style="font-size: 0.9rem;"><i class="fas fa-palette me-1"></i><strong>Color</strong></div>
-            <div class="fw-semibold" style="font-size: 0.9rem;">${pet.color || 'Unknown'}</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="mb-3">
-        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-heartbeat me-1"></i>Health Status</h6>
-        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
-          <span class="badge bg-${healthColor} me-2">${pet.health_status}</span>
-          ${pet.health_notes ? `<p class="mb-0 mt-2" style="line-height: 1.5; font-size: 0.9rem;">${pet.health_notes}</p>` : ''}
-        </div>
-      </div>
-      
-      ${pet.characteristics ? `
-      <div class="mb-3">
-        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-check-circle me-1"></i>Characteristics</h6>
-        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
-          <p class="mb-0" style="line-height: 1.5; font-size: 0.9rem;">${formatCharacteristics(pet.characteristics)}</p>
-        </div>
-      </div>
-      ` : ''}
-      
-      <div class="mb-3">
-        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-info-circle me-1"></i>About ${pet.name}</h6>
-        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
-          <p class="mb-0" style="line-height: 1.5; font-size: 0.9rem;">${pet.description}</p>
-        </div>
-      </div>
-      
-      <div class="mb-3">
-        <h6 class="fw-bold mb-2" style="color: #3b5d50; font-size: 1rem;"><i class="fas fa-building me-1"></i>Adoption Center</h6>
-        <div class="bg-light rounded-2 p-2" style="border-left: 3px solid #3b5d50; border: 1px solid #e9ecef;">
-          <p class="mb-1 fw-semibold">${pet.adoption_center}</p>
-          <p class="mb-1"><i class="fas fa-map-marker-alt me-1"></i>${pet.center_address}</p>
-          <p class="mb-1"><i class="fas fa-phone me-1"></i>${pet.contact_phone}</p>
-          <p class="mb-0"><i class="fas fa-envelope me-1"></i>${pet.contact_email}</p>
-          ${pet.center_website ? `<p class="mb-0 mt-2"><i class="fas fa-globe me-1"></i><a href="${pet.center_website}" target="_blank">${pet.center_website}</a></p>` : ''}
-        </div>
-      </div>
-      
-      <div class="d-flex gap-2">
-        <button type="button" class="btn btn-success flex-fill py-2 fw-semibold" onclick="handleProtectedAction('adopt', ${pet.pet_id})" style="border-radius: 8px; font-size: 0.9rem;">
-          <i class="fas fa-heart me-1"></i>Adopt Me
-        </button>
-        <button type="button" class="btn btn-outline-secondary flex-fill py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px; font-size: 0.9rem;">
-          <i class="fas fa-times me-1"></i>Close
-        </button>
       </div>
     `;
     document.getElementById('petQuickViewBody').innerHTML = html;
@@ -412,12 +432,28 @@ document.addEventListener('click', function(e) {
     modal.show();
   }
 });
+
+function closePetModalAndAdopt(petId) {
+  // Close the pet details modal first
+  const petModal = bootstrap.Modal.getInstance(document.getElementById('petQuickViewModal'));
+  if (petModal) petModal.hide();
+  // Wait a bit longer for modal to close and backdrop to be removed
+  setTimeout(() => {
+    handleProtectedAction('adopt', petId);
+  }, 500); // Increased delay to 500ms
+}
+
+function showErrorModal(message) {
+  document.getElementById('errorModalMessage').textContent = message;
+  let errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+  errorModal.show();
+}
 </script>
 <?php include 'app/views/partials/footer.php'; ?>
 
 <!-- Pet Quick View Modal -->
 <div class="modal fade" id="petQuickViewModal" tabindex="-1" aria-labelledby="petQuickViewLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered custom-pet-details-modal"> <!-- Added custom class for width -->
     <div class="modal-content">
       <div class="modal-header border-0 d-flex justify-content-between align-items-center">
         <h5 class="modal-title mb-0" id="petQuickViewLabel">Pet Details</h5>
@@ -450,5 +486,94 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
+<!-- Adoption Request Modal -->
+<div class="modal fade" id="adoptionRequestModal" tabindex="-1" aria-labelledby="adoptionRequestLabel" aria-hidden="true">
+  <div class="modal-dialog custom-wide-modal modal-dialog-centered"> <!-- Use custom class for width -->
+    <form class="modal-content" id="adoptionRequestForm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="adoptionRequestLabel">Adoption Request</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="pet_id" id="adoptPetId">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" name="address" required>
+          </div>
+          <div class="col-md-6">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" required>
+          </div>
+          <div class="col-md-6">
+            <label for="reason" class="form-label">Reason for Adoption</label>
+            <textarea class="form-control" name="reason" rows="2" required></textarea>
+          </div>
+          <div class="col-md-6">
+            <label for="preferred_date" class="form-label">Preferred Date</label>
+            <input type="date" class="form-control" name="preferred_date" required>
+          </div>
+          <div class="col-md-6">
+            <label for="home_type" class="form-label">Home Type</label>
+            <select class="form-select" name="home_type" required>
+              <option value="">Select</option>
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Farm">Farm</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="has_other_pets" class="form-label">Do you have other pets?</label>
+            <select class="form-select" name="has_other_pets" required>
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary" style="background: #3b5d50; border-color: #3b5d50; min-width: 200px;">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Thank You Modal -->
+<div class="modal fade" id="thankYouModal" tabindex="-1" aria-labelledby="thankYouLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 18px; background: #f6fff8; box-shadow: 0 8px 32px rgba(60,120,80,0.10);">
+      <div class="modal-header border-0 d-flex align-items-center justify-content-between" style="background: #e6f9ed; border-radius: 18px 18px 0 0; padding: 1.2rem 1.5rem 1rem 1.5rem;">
+        <h5 class="modal-title w-100 text-success fw-bold m-0" id="thankYouLabel" style="font-size: 1.6rem; letter-spacing: 1px;">Thank You!</h5>
+        <button type="button" class="btn-close ms-2" style="position: static;" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" style="font-family: 'Segoe UI', 'Arial', sans-serif;">
+        <div class="mb-3" style="font-size:2.5rem; color:#7c4dff; line-height:1;">
+          <span style="font-size:2.2rem; vertical-align:middle;">&#128062;</span>
+          <span style="font-size:2.2rem; vertical-align:middle; margin-left:-0.5rem;">&#128062;</span>
+        </div>
+        <div class="mb-3 fs-5" style="color:#2d4739; font-weight: 500;">Thank you for your adoption request!<br>We appreciate your kindness and will contact you soon.</div>
+        <button class="btn btn-success px-4 py-2 mt-2" style="border-radius: 24px; font-size: 1.1rem; min-width: 120px;" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title w-100 text-danger" id="errorModalLabel">Error</h5>
+        <button type="button" class="btn-close position-absolute end-0 me-3 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="mb-3" style="font-size:2.5rem;"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="mb-3 fs-5" id="errorModalMessage">An error occurred.</div>
+        <button class="btn btn-danger px-4" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 	
 	

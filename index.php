@@ -12,6 +12,7 @@ require_once 'app/controllers/AdminController.php';
 require_once 'app/controllers/DonateController.php';
 require_once 'app/controllers/CenterController.php';
 require_once 'app/controllers/ContactController.php';
+require_once 'app/controllers/VolunteerController.php';
 
 // 2. Start session
 session_start();
@@ -26,22 +27,28 @@ $routes = [
     'aboutus' => ['HomeController', 'aboutus'],
     'volunteer' => ['HomeController', 'volunteer'],
     'petdetails' => ['PetController', 'showpetdetails'],
-    'login'=>['UserController', 'Login'],
-    'register'=>['UserController', 'Register'],
+    'login' => ['UserController', 'Login'],
+    'register' => ['UserController', 'Register'],
     'donate' => ['DonateController', 'donate'],
 
     // Logout route as a closure
     'logout' => function () {
-        $redirect = 'index.php?page=home'; // default redirect
+        $wasAdmin = !empty($_SESSION['admin']);
+        $wasCenter = !empty($_SESSION['adoptioncenter']);
 
-        if (!empty($_SESSION['admin'])) {
-            $redirect = 'index.php?page=admin/admin_login';
-        } elseif (!empty($_SESSION['adoptioncenter'])) {
-            $redirect = 'index.php?page=adoptioncenter/center_login';
-        }
-
+        // Destroy session
         session_unset();
         session_destroy();
+
+        // Decide redirect based on what the user was before logging out
+        if ($wasAdmin) {
+            $redirect = 'index.php?page=admin/admin_login';
+        } elseif ($wasCenter) {
+            $redirect = 'index.php?page=adoptioncenter/center_login';
+        } else {
+            $redirect = 'index.php?page=home';
+        }
+
         header("Location: $redirect");
         exit();
     },
@@ -56,6 +63,14 @@ $routes = [
     // 'contactsubmit' => ['UserController', 'contactSubmit'],
 
     // Admin Routes (with admin_auth middleware)
+
+
+    //volunteer routes
+    'volunteer/apply' => ['VolunteerController', 'apply'],
+
+
+
+    // Admin Routes
     'admin/admin_login' => ['AdminController', 'showadminloginform'],
     'admin/verify_admin' => ['AdminController', 'verify_adminLogin'],
     'admin/admin_dashboard' => ['AdminController', 'showdashboard', 'admin_auth'],
@@ -73,9 +88,18 @@ $routes = [
     'admin/delete_center_user' => ['AdminController', 'delete_center_user', 'admin_auth'],
     'admin/add_Center' => ['AdminController', 'addAdoptionCenter', 'admin_auth'],
     'admin/userManagement' => ['AdminController', 'ManageUsers', 'admin_auth'],
+    'admin/volunteer_management' => ['AdminController', 'viewVolunteerRequests', 'admin_auth'],
     'admin/reset_password' => ['AdminController', 'resetCenterPassword', 'admin_auth'],
     'admin/contact_messages' => ['AdminController', 'showContactMessages', 'admin_auth'],
     'admin/send_contact_reply' => ['AdminController', 'sendContactReply', 'admin_auth'],
+    'admin/adoption_request' => ['AdminController', 'showAdoptionRequests', 'admin_auth'],
+    'admin/user_view' => ['AdminController', 'user_view', 'admin_auth'],
+    'admin/user_suspend' => ['AdminController', 'user_suspend', 'admin_auth'],
+    'admin/user_delete' => ['AdminController', 'user_delete', 'admin_auth'],
+    'admin/update_adoption_status' => ['AdminController', 'updateAdoptionStatus', 'admin_auth'],
+    'admin/volunteer_view' => ['AdminController', 'volunteer_view', 'admin_auth'],
+
+
 
     // Adoption Center Routes (with center_auth middleware)
     'adoptioncenter/center_login' => ['CenterController', 'showLoginForm'],

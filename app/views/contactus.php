@@ -113,9 +113,9 @@ $success = $data['success'] ?? '';
                     </div>
 
                     <div class="form-group mb-3">
-                      <label for="email">Email Address</label>
-                      <input type="email" class="form-control" name="email" id="email"
-                             value="<?= htmlspecialchars($email) ?>" required>
+                      <label for="contactEmail">Email Address</label>
+                      <input type="email" class="form-control" name="email" id="contactEmail"
+                             value="<?= htmlspecialchars($email) ?>" required autocomplete="email">
                     </div>
 
                     <div class="form-group mb-3">
@@ -160,9 +160,23 @@ $success = $data['success'] ?? '';
   <!-- End Contact Section -->
 </main>
 <?php if (!empty($errors) || !empty($success)): ?>
-  <script>
-    window.location.hash = 'container';//to focus
-  </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Scroll smoothly to the contact form container or main form element
+        const form = document.getElementById('contact-form');
+        if (form) {
+            form.scrollIntoView({behavior: 'smooth'});
+
+            // Focus first invalid input, or the form itself
+            const invalidInput = form.querySelector('.is-invalid, input:invalid, textarea:invalid');
+            if (invalidInput) {
+                invalidInput.focus();
+            } else {
+                form.focus();
+            }
+        }
+    });
+</script>
 <?php endif; ?>
 
 <?php include 'app/views/partials/footer.php'; ?>

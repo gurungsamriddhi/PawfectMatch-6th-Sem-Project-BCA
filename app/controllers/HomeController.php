@@ -15,7 +15,7 @@ class HomeController {
          include 'app/views/adoptionprocess.php';
     }
     public function volunteer() {
-        include 'app/views/volunteer.php';
+        include 'app/views/volunteer_form.php';
 }
 
 }

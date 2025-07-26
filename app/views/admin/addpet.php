@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
     <!-- Main Content -->
     <div class="body-wrapper w-100">
       <!-- Header -->

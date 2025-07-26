@@ -97,7 +97,7 @@
 	<script src="public/assets/js/tiny-slider.js"></script> <!--this ensures dom is fully loaded before scipt runs-->
 	<script src="public/assets/js/custom.js"></script>
 	<script src="public/assets/js/authentication.js"></script>
-	
+
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			// Prevent guests from interacting with certain form elements
@@ -128,6 +128,22 @@
 				}
 			}
 		});
+	</script>
+	<script>
+		window.onload = function() {
+			const volunteerSection = document.getElementById('volunteerForm');
+			if (!volunteerSection) return;
+
+			const hasAlert = volunteerSection.querySelector('.alert') !== null;
+			const hasInvalid = volunteerSection.querySelector('.is-invalid') !== null;
+
+			if (hasAlert || hasInvalid) {
+				volunteerSection.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start'
+				});
+			}
+		};
 	</script>
 
 	</body>

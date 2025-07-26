@@ -1,4 +1,6 @@
 <?php
+//use stmt closee
+//not necessary recommended to use pdo instead of myssqli
 class Contact
 {
     private $conn;

@@ -12,7 +12,7 @@
  
   public function getAllAdoptionCenterUsers()
     {
-        $stmt = $this->conn->prepare("SELECT user_id, name, user_type, email, status FROM users WHERE user_type = 'adoption_center'");
+        $stmt = $this->conn->prepare("SELECT user_id, name, user_type, email, status FROM users WHERE user_type = 'adoption_center' AND status!='deleted'");
         $stmt->execute();
 
         $result = $stmt->get_result();  // works only if mysqlnd is installed
@@ -53,7 +53,7 @@
 
     public function deleteCenterUser($user_id)
     {
-        $stmt = $this->conn->prepare("DELETE FROM users WHERE user_id = ? AND user_type = 'adoption_center'");
+        $stmt = $this->conn->prepare("UPDATE users SET status = 'deleted' WHERE user_id = ? AND user_type = 'adoption_center'");
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         return $stmt->affected_rows > 0;

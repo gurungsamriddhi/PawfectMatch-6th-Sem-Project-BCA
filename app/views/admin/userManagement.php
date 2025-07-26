@@ -1,4 +1,4 @@
-<?php include 'app/views/partials/sidebaradmin.php'; ?>
+<?php include 'app/views/admin/adminpartials/sidebaradmin.php'; ?>
 <!-- Main Content -->
 <div class="body-wrapper w-100">
   <!-- Header -->
@@ -79,23 +79,20 @@
                     <i class="fa-solid fa-eye"></i> View
                   </button>
 
-                  <!--Edit Button
-                  <button type="button"
-                    class="edit-btn  "
-                    data-action="edit"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edituserModal"
-                    data-userid=<= $user['user_id'] ?>">
-                    <i class="fa-solid fa-pen"></i> Edit
-                  </button>-->
+                  <?php
+                  // $isSuspended = ($user['status'] === 'suspended');
 
-                  <!-- Suspend Button -->
-                  <button type="button"
-                    class=" suspend-btn "
-                    data-action="suspend"
-                    data-userid="<?= $user['user_id'] ?>">
-                    <i class="fa-solid fa-exclamation"></i> Suspend
-                  </button>
+                  // echo '<button type="button"
+                  //   class="suspend-btn"
+                  //   data-action="suspend"
+                  //   data-userid="' . $user['user_id'] . '"
+                  //   data-status="' . $user['status'] . '">
+                  //   <i class="fa-solid fa-exclamation"></i> ' . ($isSuspended ? 'Unsuspend' : 'Suspend') . '
+                  // </button>';
+                  ?>
+
+
+
 
                   <!-- Delete Button -->
                   <button type="button"
@@ -115,10 +112,7 @@
     <div class="modal fade" id="viewuserModal" tabindex="-1" aria-labelledby="viewLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">User Details</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
+         
           <div class="modal-body">
             <!-- Content filled via AJAX -->
 
@@ -128,6 +122,24 @@
     </div>
 
 
+    <!-- Suspend Confirmation Modal -->
+    <!-- <div class="modal fade" id="suspendConfirmModal" tabindex="-1" aria-labelledby="suspendConfirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Suspend User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to suspend this user?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-warning" id="confirmSuspendBtn">Suspend</button>
+          </div>
+        </div>
+      </div>
+    </div> -->
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
@@ -149,4 +161,5 @@
     </div>
 
 
-    <?php include 'app/views/partials/admin_footer.php'; ?>
+    <?php include 'app/views/admin/adminpartials/admin_footer.php'; ?>
+    <script src="public/assets/js/user_management.js"></script>
