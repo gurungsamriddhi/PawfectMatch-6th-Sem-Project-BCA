@@ -299,4 +299,45 @@ class Pet
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+
+    public function getSavedByUser($userId) {
+        $sql = "SELECT p.pet_id, p.name, p.type, p.breed, p.image_path, p.status, p.age, p.gender, p.adoption_center
+                FROM wishlist w
+                JOIN pets p ON w.pet_id = p.pet_id
+                WHERE w.user_id = ?
+                ORDER BY w.added_at DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $pets = [];
+        while ($row = $result->fetch_assoc()) {
+            $pets[] = $row;
+        }
+        return $pets;
+    }
+
+    public function addToWishlist($userId, $petId) {
+        $sql = "INSERT INTO wishlist (user_id, pet_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE added_at = CURRENT_TIMESTAMP";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('ii', $userId, $petId);
+        return $stmt->execute();
+    }
+
+    public function removeFromWishlist($userId, $petId) {
+        $sql = "DELETE FROM wishlist WHERE user_id = ? AND pet_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('ii', $userId, $petId);
+        return $stmt->execute();
+    }
+
+    public function isInWishlist($userId, $petId) {
+        $sql = "SELECT COUNT(*) as count FROM wishlist WHERE user_id = ? AND pet_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('ii', $userId, $petId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['count'] > 0;
+    }
 }

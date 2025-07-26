@@ -88,22 +88,130 @@
 // Get pets data from PHP
 const pets = <?php echo $petsJson ?? '[]'; ?>;
 
-// Favorites (localStorage)
-function getFavorites() {
-  return JSON.parse(localStorage.getItem('petFavorites') || '[]');
-}
-function setFavorites(favs) {
-  localStorage.setItem('petFavorites', JSON.stringify(favs));
-}
-function toggleFavorite(id) {
-  let favs = getFavorites();
-  if (favs.includes(id)) {
-    favs = favs.filter(f => f !== id);
-  } else {
-    favs.push(id);
+// Wishlist functionality with AJAX
+let wishlistPets = new Set();
+
+// Load user's wishlist on page load
+async function loadWishlist() {
+  if (!window.isLoggedIn) {
+    console.log('User not logged in, skipping wishlist load');
+    return Promise.resolve(); // Return resolved promise for non-logged in users
   }
-  setFavorites(favs);
-  renderPets();
+  
+  try {
+    console.log('Loading wishlist for logged in user...');
+    const response = await fetch('wishlist_handler.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'action=check_all'
+    });
+    const data = await response.json();
+    console.log('Wishlist response:', data);
+    if (data.success && data.wishlist) {
+      wishlistPets = new Set(data.wishlist.map(pet => parseInt(pet.pet_id)));
+      console.log('Wishlist loaded:', Array.from(wishlistPets));
+    } else {
+      console.log('No wishlist data or error in response');
+    }
+  } catch (error) {
+    console.error('Error loading wishlist:', error);
+  }
+}
+
+async function toggleFavorite(petId) {
+  if (!window.isLoggedIn) {
+    handleProtectedAction('favorite', petId);
+    return;
+  }
+
+  // Get the heart element for immediate visual feedback
+  const heartElement = event.target.closest('.pet-fav');
+  const heartIcon = heartElement.querySelector('i');
+  const isCurrentlyFavorited = wishlistPets.has(parseInt(petId));
+
+  // Immediately update the visual state for better UX
+  if (isCurrentlyFavorited) {
+    // Remove from wishlist
+    heartElement.classList.remove('favorited');
+    heartIcon.className = 'far fa-heart';
+    wishlistPets.delete(parseInt(petId));
+  } else {
+    // Add to wishlist
+    heartElement.classList.add('favorited');
+    heartIcon.className = 'fas fa-heart';
+    wishlistPets.add(parseInt(petId));
+  }
+
+  try {
+    const response = await fetch('wishlist_handler.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `action=toggle&pet_id=${petId}`
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      if (data.action === 'added') {
+        showToast('Added to wishlist!', 'success');
+      } else {
+        showToast('Removed from wishlist!', 'info');
+      }
+      // Re-render pets to update all heart icons
+      renderPets();
+    } else {
+      // Revert the visual state if the server request failed
+      if (isCurrentlyFavorited) {
+        heartElement.classList.add('favorited');
+        heartIcon.className = 'fas fa-heart';
+        wishlistPets.add(parseInt(petId));
+      } else {
+        heartElement.classList.remove('favorited');
+        heartIcon.className = 'far fa-heart';
+        wishlistPets.delete(parseInt(petId));
+      }
+      showToast(data.message || 'Error updating wishlist', 'error');
+    }
+  } catch (error) {
+    // Revert the visual state if there was an error
+    if (isCurrentlyFavorited) {
+      heartElement.classList.add('favorited');
+      heartIcon.className = 'fas fa-heart';
+      wishlistPets.add(parseInt(petId));
+    } else {
+      heartElement.classList.remove('favorited');
+      heartIcon.className = 'far fa-heart';
+      wishlistPets.delete(parseInt(petId));
+    }
+    console.error('Error toggling favorite:', error);
+    showToast('Error updating wishlist', 'error');
+  }
+}
+
+function showToast(message, type = 'info') {
+  // Create toast notification
+  const toast = document.createElement('div');
+  toast.className = `toast-notification toast-${type}`;
+  toast.innerHTML = `
+    <div class="toast-content">
+      <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(toast);
+  
+  // Show toast
+  setTimeout(() => toast.classList.add('show'), 100);
+  
+  // Remove toast after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => document.body.removeChild(toast), 300);
+  }, 3000);
 }
 
 // Pass login status from PHP to JS
@@ -163,7 +271,6 @@ function renderPets() {
   
   // Simulate loading delay for better UX
   setTimeout(() => {
-    const favs = getFavorites();
     let filtered = [...pets];
     
     // Search
@@ -218,14 +325,16 @@ function renderPets() {
     }
     
     filtered.forEach(pet => {
-      const isFav = favs.includes(pet.pet_id);
+      const isFav = wishlistPets.has(parseInt(pet.pet_id));
       const healthColor = getHealthStatusColor(pet.health_status);
       const availabilityBadge = getAvailabilityBadge(pet.status);
+      
+      console.log(`Pet ${pet.pet_id} (${pet.name}): isFav = ${isFav}, wishlistPets has: ${wishlistPets.has(parseInt(pet.pet_id))}`);
       
       grid.innerHTML += `
         <div class="col-12 col-md-6 col-lg-4 d-flex">
           <div class="pet-card flex-fill">
-            <div class="pet-fav ${isFav ? 'favorited' : ''}" onclick="handleProtectedAction('favorite', ${pet.pet_id})">
+            <div class="pet-fav ${isFav ? 'favorited' : ''}" onclick="toggleFavorite(${pet.pet_id})">
               <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
             </div>
             <div class="position-relative">
@@ -300,7 +409,14 @@ function formatCharacteristics(characteristics) {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Browse page loaded, rendering pets...');
-  renderPets();
+  console.log('User logged in:', window.isLoggedIn);
+  console.log('Initial wishlistPets:', Array.from(wishlistPets));
+  
+  loadWishlist().then(() => {
+    console.log('Wishlist loaded, now rendering pets...');
+    console.log('Final wishlistPets:', Array.from(wishlistPets));
+    renderPets();
+  });
   // Adoption form submit handler
   const adoptionForm = document.getElementById('adoptionRequestForm');
   if (adoptionForm) {

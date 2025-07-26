@@ -48,4 +48,20 @@ class Contact
         $stmt->execute([$id]);
         return $stmt->fetch(MYSQLI_ASSOC);
     }
+
+    public function getMessagesByUser($userId) {
+        $sql = "SELECT message, reply_message, submitted_at as date FROM contact_messages WHERE user_id = ? ORDER BY submitted_at DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $messages = [];
+        while ($row = $result->fetch_assoc()) {
+            $messages[] = [
+                'content' => $row['message'] . ($row['reply_message'] ? ' (Reply: ' . $row['reply_message'] . ')' : ''),
+                'date' => $row['date']
+            ];
+        }
+        return $messages;
+    }
 }

@@ -27,6 +27,13 @@ $routes = [
     'login'=>['UserController', 'Login'],
     'register'=>['UserController', 'Register'],
     'donate' => ['DonateController', 'donate'],
+    'user_dashboard' => ['UserController', 'dashboard'],
+    'user_profile' => ['UserController', 'user_profile'],
+    'user_saved_pets' => ['UserController', 'user_saved_pets'],
+    'user_adoption_requests' => ['UserController', 'user_adoption_requests'],
+    'user_donations' => ['UserController', 'user_donations'],
+    'user_messages' => ['UserController', 'user_messages'],
+    'user_volunteer_status' => ['UserController', 'user_volunteer_status'],
 
     'logout' => function () {
         $redirect = 'index.php?page=home'; // default

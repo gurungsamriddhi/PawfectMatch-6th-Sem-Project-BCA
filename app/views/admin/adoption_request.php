@@ -145,8 +145,8 @@
           </div>
           <div class="adoption-actions ms-auto">
             <button class="view-btn btn btn-sm" data-bs-toggle="modal" data-bs-target="#viewAdoptionModal" onclick='showAdoptionDetails(<?= json_encode($form, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'><i class="fa fa-eye me-1"></i>View</button>
-            <button class="accept-btn btn btn-sm"><i class="fa fa-check me-1"></i>Accept</button>
-            <button class="reject-btn btn btn-sm"><i class="fa fa-times me-1"></i>Reject</button>
+            <button class="accept-btn btn btn-sm" onclick="handleAdoptionAction('approve', <?= $form['request_id'] ?>)"><i class="fa fa-check me-1"></i>Accept</button>
+            <button class="reject-btn btn btn-sm" onclick="handleAdoptionAction('reject', <?= $form['request_id'] ?>)"><i class="fa fa-times me-1"></i>Reject</button>
           </div>
         </div>
       <?php endforeach; ?>
@@ -171,21 +171,34 @@
         <!-- Details will be injected by JS -->
       </div>
       <div class="modal-footer d-flex justify-content-end gap-3 flex-wrap" style="background:#f8fafc; border-radius:0 0 20px 20px; border-top:1.5px solid #e2e9e8;">
-        <button class="rounded-pill px-4" style="font-weight:600; min-width:120px; background:#28a745; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-check me-1"></i>Accept</button>
-        <button class="rounded-pill px-4" style="font-weight:600; min-width:120px; background:#dc3545; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-times me-1"></i>Reject</button>
+        <button class="rounded-pill px-4" id="modalAcceptBtn" style="font-weight:600; min-width:120px; background:#28a745; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-check me-1"></i>Accept</button>
+        <button class="rounded-pill px-4" id="modalRejectBtn" style="font-weight:600; min-width:120px; background:#dc3545; color:#fff; border:none; font-size:1.1rem;"><i class="fa fa-times me-1"></i>Reject</button>
       </div>
     </div>
   </div>
 </div>
 <script>
+let currentRequestId = null;
+
 function showAdoptionDetails(form) {
-  // Status badge logic (for now, always pending)
-  let status = form.request_status || 'Pending';
+  currentRequestId = form.request_id;
+  
+  // Status badge logic
+  let status = form.request_status || 'pending';
   let statusClass = 'bg-secondary';
   let statusText = 'Pending';
-  if (status.toLowerCase() === 'approved' || status.toLowerCase() === 'accepted') { statusClass = 'bg-success'; statusText = 'Accepted'; }
-  else if (status.toLowerCase() === 'rejected') { statusClass = 'bg-danger'; statusText = 'Rejected'; }
-  else { statusClass = 'bg-warning text-dark'; statusText = 'Pending'; }
+  if (status.toLowerCase() === 'approved' || status.toLowerCase() === 'accepted') { 
+    statusClass = 'bg-success'; 
+    statusText = 'Accepted'; 
+  }
+  else if (status.toLowerCase() === 'rejected') { 
+    statusClass = 'bg-danger'; 
+    statusText = 'Rejected'; 
+  }
+  else { 
+    statusClass = 'bg-warning text-dark'; 
+    statusText = 'Pending'; 
+  }
   document.getElementById('modalStatusBadge').innerHTML = `<span class='badge ${statusClass}' style='font-size:1em; padding:6px 18px; border-radius:14px; font-weight:600;'>${statusText}</span>`;
 
   let html = `
@@ -227,6 +240,52 @@ function showAdoptionDetails(form) {
     </div>
   `;
   document.getElementById('adoptionDetailsBody').innerHTML = html;
+  
+  // Set up modal button handlers
+  document.getElementById('modalAcceptBtn').onclick = () => handleAdoptionAction('approve', currentRequestId);
+  document.getElementById('modalRejectBtn').onclick = () => handleAdoptionAction('reject', currentRequestId);
+}
+
+async function handleAdoptionAction(action, requestId) {
+  if (!requestId) {
+    alert('Invalid request ID');
+    return;
+  }
+
+  const confirmMessage = action === 'approve' ? 
+    'Are you sure you want to approve this adoption request?' : 
+    'Are you sure you want to reject this adoption request?';
+  
+  if (!confirm(confirmMessage)) {
+    return;
+  }
+
+  try {
+    const response = await fetch('adoption_handler.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `action=${action}&request_id=${requestId}`
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      alert(data.message);
+      // Close modal if open
+      const modal = bootstrap.Modal.getInstance(document.getElementById('viewAdoptionModal'));
+      if (modal) {
+        modal.hide();
+      }
+      // Reload page to show updated status
+      location.reload();
+    } else {
+      alert('Error: ' + (data.message || 'Unknown error'));
+    }
+  } catch (error) {
+    console.error('Error handling adoption action:', error);
+    alert('Error processing request. Please try again.');
+  }
 }
 </script>
 <?php include 'app/views/partials/admin_footer.php'; ?> 

@@ -53,4 +53,58 @@ class Adoption {
         }
         return $forms;
     }
+
+    public static function getRequestsByUser($userId) {
+        $db = new Database();
+        $conn = $db->connect();
+        $sql = "SELECT ar.request_id, ar.request_date as date, ar.request_status as status, 
+                       p.name AS pet_name, p.type AS pet_type, p.breed, p.image_path,
+                       p.adoption_center AS center_name, p.center_address
+                FROM adoption_requests ar
+                JOIN pets p ON ar.pet_id = p.pet_id
+                WHERE ar.user_id = ?
+                ORDER BY ar.request_date DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $requests[] = $row;
+        }
+        return $requests;
+    }
+
+    public static function updateRequestStatus($requestId, $status) {
+        $db = new Database();
+        $conn = $db->connect();
+        $sql = "UPDATE adoption_requests SET request_status = ? WHERE request_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('si', $status, $requestId);
+        return $stmt->execute();
+    }
+
+    public static function getRequestById($requestId) {
+        $db = new Database();
+        $conn = $db->connect();
+        $sql = "SELECT ar.*, u.name AS requester_name, u.email AS requester_email, p.name AS pet_name, p.type AS pet_type, p.breed, p.image_path
+                FROM adoption_requests ar
+                JOIN users u ON ar.user_id = u.user_id
+                JOIN pets p ON ar.pet_id = p.pet_id
+                WHERE ar.request_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $requestId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+    public static function updatePetStatus($petId, $status) {
+        $db = new Database();
+        $conn = $db->connect();
+        $sql = "UPDATE pets SET status = ? WHERE pet_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('si', $status, $petId);
+        return $stmt->execute();
+    }
 }

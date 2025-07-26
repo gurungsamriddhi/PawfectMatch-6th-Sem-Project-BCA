@@ -116,6 +116,140 @@ class UserController
         exit();
     }
 
+    public function dashboard() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=login');
+            exit();
+        }
+        $userId = $_SESSION['user']['id'];
+        $db = new Database();
+        $conn = $db->connect();
+        // Models
+        require_once __DIR__ . '/../models/Adoption.php';
+        require_once __DIR__ . '/../models/Pet.php';
+        require_once __DIR__ . '/../models/Donation.php';
+        require_once __DIR__ . '/../models/Volunteer.php';
+        require_once __DIR__ . '/../models/Contact.php';
+        $adoptionRequests = Adoption::getRequestsByUser($userId);
+        $petModel = new Pet($conn);
+        $savedPets = $petModel->getSavedByUser($userId);
+        $donationModel = new Donation($conn);
+        $donations = $donationModel->getByUser($userId);
+        $donationTotal = $donationModel->getTotalByUser($userId);
+        $volunteerModel = new Volunteer($conn);
+        $volunteerStatus = $volunteerModel->getStatusByUser($userId);
+        $contactModel = new Contact($conn);
+        $messages = $contactModel->getMessagesByUser($userId);
+        $user = $this->userModel->findByEmail($_SESSION['user']['email']);
+        include 'app/views/user_dashboard.php';
+    }
    
+    public function user_profile() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=login');
+            exit();
+        }
+        $user = $this->userModel->findByEmail($_SESSION['user']['email']);
+        include 'app/views/user_profile.php';
+    }
+
+    public function update_profile() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=login');
+            exit();
+        }
+        $user = $this->userModel->findByEmail($_SESSION['user']['email']);
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $current_password = $_POST['current_password'] ?? '';
+        $new_password = $_POST['new_password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+        $profile_error = '';
+        $profile_success = '';
+        // Require current password for any change
+        if (!$current_password || !password_verify($current_password, $user['password'])) {
+            $profile_error = 'Current password is incorrect.';
+            include 'app/views/user_profile.php';
+            return;
+        }
+        // Validate new password if provided
+        if ($new_password || $confirm_password) {
+            if ($new_password !== $confirm_password) {
+                $profile_error = 'New passwords do not match.';
+                include 'app/views/user_profile.php';
+                return;
+            }
+            if ($new_password && !preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $new_password)) {
+                $profile_error = 'Password must be at least 8 characters, include uppercase, lowercase, number, and special character.';
+                include 'app/views/user_profile.php';
+                return;
+            }
+        }
+        // Check if email is changing and not already taken
+        if ($email !== $user['email']) {
+            $existing = $this->userModel->findByEmail($email);
+            if ($existing && $existing['user_id'] != $user['user_id']) {
+                $profile_error = 'This email is already registered.';
+                include 'app/views/user_profile.php';
+                return;
+            }
+        }
+        // Update name/email
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare("UPDATE users SET name=?, email=? WHERE user_id=?");
+        $stmt->bind_param('ssi', $name, $email, $user['user_id']);
+        $stmt->execute();
+        // Update password if provided
+        if ($new_password) {
+            $hashed = password_hash($new_password, PASSWORD_DEFAULT);
+            $this->userModel->updatePassword($user['user_id'], $hashed);
+        }
+        // Update session if email or name changed
+        $_SESSION['user']['name'] = $name;
+        $_SESSION['user']['email'] = $email;
+        $profile_success = 'Profile updated successfully!';
+        $user = $this->userModel->findByEmail($email);
+        include 'app/views/user_profile.php';
+    }
+
+    public function user_saved_pets() {
+        if (!isset($_SESSION['user'])) { header('Location: index.php?page=login'); exit(); }
+        $db = new Database(); $conn = $db->connect();
+        require_once __DIR__ . '/../models/Pet.php';
+        $petModel = new Pet($conn);
+        $savedPets = $petModel->getSavedByUser($_SESSION['user']['id']);
+        include 'app/views/user_saved_pets.php';
+    }
+    public function user_adoption_requests() {
+        if (!isset($_SESSION['user'])) { header('Location: index.php?page=login'); exit(); }
+        require_once __DIR__ . '/../models/Adoption.php';
+        $adoptionRequests = Adoption::getRequestsByUser($_SESSION['user']['id']);
+        include 'app/views/user_adoption_requests.php';
+    }
+    public function user_donations() {
+        if (!isset($_SESSION['user'])) { header('Location: index.php?page=login'); exit(); }
+        require_once __DIR__ . '/../models/Donation.php';
+        $db = new Database(); $conn = $db->connect();
+        $donationModel = new Donation($conn);
+        $donations = $donationModel->getByUser($_SESSION['user']['id']);
+        include 'app/views/user_donations.php';
+    }
+    public function user_messages() {
+        if (!isset($_SESSION['user'])) { header('Location: index.php?page=login'); exit(); }
+        require_once __DIR__ . '/../models/Contact.php';
+        $db = new Database(); $conn = $db->connect();
+        $contactModel = new Contact($conn);
+        $messages = $contactModel->getMessagesByUser($_SESSION['user']['id']);
+        include 'app/views/user_messages.php';
+    }
+    public function user_volunteer_status() {
+        if (!isset($_SESSION['user'])) { header('Location: index.php?page=login'); exit(); }
+        require_once __DIR__ . '/../models/Volunteer.php';
+        $db = new Database(); $conn = $db->connect();
+        $volunteerModel = new Volunteer($conn);
+        $volunteerStatus = $volunteerModel->getStatusByUser($_SESSION['user']['id']);
+        include 'app/views/user_volunteer_status.php';
+    }
 }
 ?>

@@ -107,20 +107,26 @@ unset(
 						<a class="nav-link" href="index.php?page=contactus">Contact us</a>
 					</li>
 					<?php if (isset($_SESSION['user'])): ?>
-						<li class="nav-item">
-							<span class="nav-link text-light">Welcome, <?= htmlspecialchars($_SESSION['user']['name']) ?></span>
-						</li>
-
-					<?php endif; ?>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="toggleUserDropdown(event)">
+            <i class="fas fa-user-circle me-2" style="font-size: 1.2rem;"></i>
+            <span><?= htmlspecialchars($_SESSION['user']['name']) ?></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu" aria-labelledby="userDropdown" style="display: none;">
+            <li><a class="dropdown-item" href="index.php?page=user_dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+            <li><a class="dropdown-item" href="index.php?page=user_profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+    </li>
+<?php endif; ?>
 				</ul>
 				<!-- Auth buttons -->
 				<div class="d-flex">
-					<?php if (isset($_SESSION['user'])): ?>
-						<button class="btn login-btn " data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
-					<?php else: ?>
-						<button class="btn login-btn " data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
-					<?php endif; ?>
-				</div>
+    <?php if (!isset($_SESSION['user'])): ?>
+        <button class="btn login-btn " data-bs-toggle="modal" data-bs-target="#loginModal">Login/Register</button>
+    <?php endif; ?>
+</div>
 
 			</div>
 	</nav>
@@ -342,3 +348,59 @@ unset(
 			});
 		</script>
 	<?php endif; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Custom dropdown functionality
+function toggleUserDropdown(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const dropdownMenu = document.getElementById('userDropdownMenu');
+    const isVisible = dropdownMenu.style.display === 'block';
+    
+    // Close all other dropdowns first
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.style.display = 'none';
+    });
+    
+    // Toggle current dropdown
+    dropdownMenu.style.display = isVisible ? 'none' : 'block';
+    
+    console.log('Dropdown toggled, visible:', !isVisible);
+}
+
+function confirmLogout(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+    logoutModal.show();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, setting up dropdown...');
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdownMenu = document.getElementById('userDropdownMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (dropdownMenu && !userDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+    
+    // Close dropdown when pressing Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const dropdownMenu = document.getElementById('userDropdownMenu');
+            if (dropdownMenu) {
+                dropdownMenu.style.display = 'none';
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
