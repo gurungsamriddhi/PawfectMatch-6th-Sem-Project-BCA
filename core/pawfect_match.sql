@@ -146,10 +146,11 @@ CREATE TABLE training_tips (
 -- 9. DONATIONS TABLE
 CREATE TABLE donations (
     donation_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-   
-    amount DECIMAL(10,2),
-    message TEXT,
+    user_id INT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NULL,
+    message TEXT NULL,
     donated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
