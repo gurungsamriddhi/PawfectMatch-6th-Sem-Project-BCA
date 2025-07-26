@@ -620,8 +620,34 @@ class AdminController
     public function viewVolunteerRequests()
     {
         $requests = $this->volunteerModel->getAllRequests();
-        $this->loadAdminView('volunteer_management.php', ['requests' => $requests]);
+        $centers = $this->adoptionCenterModel->getAllAdoptionCenterUsers();
+
+        $this->loadAdminView('volunteer_management.php', ['requests' => $requests, 'centers' => $centers]);
     }
+
+    public function approveAndAssignVolunteer()
+    {
+        // Get POST data safely
+        $volunteer_id = $_POST['volunteer_id'] ?? null;
+        $center_id = $_POST['center_id'] ?? null;
+
+        if (!$volunteer_id || !$center_id) {
+            echo json_encode(['success' => false, 'message' => 'Missing data']);
+            return;
+        }
+
+        // Update volunteer status and assign center
+        $result = $this->volunteerModel->assignVolunteerToCenter($volunteer_id, $center_id);
+
+        if ($result) {
+            // Optional: send email notification here (explained below)
+
+            echo json_encode(['success' => true, 'message' => 'Volunteer approved and assigned successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to assign volunteer']);
+        }
+    }
+
 
     //view all the adoption request for the pets added by the admin
     public function showAdoptionRequests()
@@ -660,4 +686,21 @@ class AdminController
     //         }
     //     }
     // }
+    public function volunteer_view()
+    {
+        $volunteer_id = $_POST['volunteer_id'] ?? null;  // use POST here
+
+        if (!$volunteer_id || !is_numeric($volunteer_id)) {
+            echo "Invalid user ID.";
+            return;
+        }
+
+        $volunteer = $this->volunteerModel->findVolunteerById((int)$volunteer_id);
+
+        if ($volunteer) {
+            include 'app/views/admin/adminpartials/volunteer_view.php';
+        } else {
+            echo "No volunteer data found.";
+        }
+    }
 }

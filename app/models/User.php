@@ -84,6 +84,7 @@ class User
         $result = $stmt->get_result();  // works only if mysqlnd is installed
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    
     public function findUserById($user_id)
     {
         $query = "

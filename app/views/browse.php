@@ -488,7 +488,7 @@ function showErrorModal(message) {
 
 <!-- Adoption Request Modal -->
 <div class="modal fade" id="adoptionRequestModal" tabindex="-1" aria-labelledby="adoptionRequestLabel" aria-hidden="true">
-  <div class="modal-dialog custom-wide-modal"> <!-- Use custom class for width -->
+  <div class="modal-dialog custom-wide-modal modal-dialog-centered"> <!-- Use custom class for width -->
     <form class="modal-content" id="adoptionRequestForm">
       <div class="modal-header">
         <h3 class="modal-title" id="adoptionRequestLabel">Adoption Request</h3>

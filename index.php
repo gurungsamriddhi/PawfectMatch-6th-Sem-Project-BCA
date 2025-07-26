@@ -84,6 +84,7 @@ $routes = [
     'admin/delete_center_user' => ['AdminController', 'delete_center_user', 'admin_auth'],
     'admin/add_Center' => ['AdminController', 'addAdoptionCenter', 'admin_auth'],
     'admin/userManagement' => ['AdminController', 'ManageUsers', 'admin_auth'],
+    'admin/volunteer_management' => ['AdminController', 'viewVolunteerRequests', 'admin_auth'],
     'admin/reset_password' => ['AdminController', 'resetCenterPassword', 'admin_auth'],
     'admin/contact_messages' => ['AdminController', 'showContactMessages', 'admin_auth'],
     'admin/send_contact_reply' => ['AdminController', 'sendContactReply', 'admin_auth'],
@@ -92,6 +93,7 @@ $routes = [
     'admin/user_suspend' => ['AdminController', 'user_suspend', 'admin_auth'],
     'admin/user_delete' => ['AdminController', 'user_delete', 'admin_auth'],
     'admin/update_adoption_status' => ['AdminController', 'updateAdoptionStatus', 'admin_auth'],
+    'admin/volunteer_view' => ['AdminController', 'volunteer_view', 'admin_auth'],
 
 
 
