@@ -44,7 +44,7 @@ $routes = [
 
     'logout' => function () {
         $wasAdmin = !empty($_SESSION['admin']);
-        $wasCenter = !empty($_SESSION['center']);
+        $wasCenter = !empty($_SESSION['adoptioncenter']);
 
         // Destroy session
         session_unset();
@@ -132,6 +132,7 @@ $routes = [
     'adoptioncenter/adoption_request' => ['CenterController', 'adoption_request', 'center_auth'],
     'adoptioncenter/feedback' => ['CenterController', 'feedback', 'center_auth'],
     'adoptioncenter/view_volunteers' => ['CenterController', 'viewAssignedVolunteers', 'center_auth'],
+    'adoptioncenter/volunteer_view'=> ['CenterController', 'viewVolunteer', 'center_auth'],
 ];
 
 // 4. Get current page requested

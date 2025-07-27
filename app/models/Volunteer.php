@@ -148,9 +148,10 @@ class Volunteer
 
     public function getVolunteersByCenter($centerId)
     {
-        $query = "SELECT v.*, u.name, u.email 
-              FROM volunteers v 
+        $query = "SELECT v.*, u.name, u.email, ac.name AS assigned_center
+              FROM volunteers v
               JOIN users u ON v.user_id = u.user_id
+              JOIN adoption_centers ac ON v.assigned_center_id = ac.center_id
               WHERE v.assigned_center_id = ? AND v.status = 'assigned'";
 
         $stmt = $this->conn->prepare($query);

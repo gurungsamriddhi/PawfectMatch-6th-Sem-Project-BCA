@@ -70,6 +70,15 @@
             return $result->fetch_assoc();
         }
 
+        public function GetCenterIdandName($user_id)
+        {
+            $stmt = $this->conn->prepare("SELECT center_id, name FROM adoption_centers WHERE user_id = ?");
+            $stmt->bind_param('i', $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();  // Returns ['center_id' => ..., 'name' => ...] or null if not found
+        }
+
         public function getCenterIdByUserId($user_id)
         {
             $stmt = $this->conn->prepare("SELECT center_id FROM adoption_centers WHERE user_id = ?");
